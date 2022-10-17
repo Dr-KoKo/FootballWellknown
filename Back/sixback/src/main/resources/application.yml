@@ -1,0 +1,15 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enable: true
+      force: true
+
+#spring:
+#  datasource:
+#    drive-class-name: com.mysql.cj.jdbc.Driver
+#    url: six-back.ctrdpnalnhn6.ap-northeast-2.rds.amazonaws.com/six_back:3306
+#    username: admin
+#    password: rhehdgnjs123
