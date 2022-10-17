@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class MessageController {
 
-    private final SimpMessageSendingOperations simpMessageSendingOperations;
+    private final MessageService messageService;
 
     /*
         /sub/channel/12345      - 구독(channelId:12345)
@@ -18,6 +18,6 @@ public class MessageController {
 
     @MessageMapping("/chat")
     public void message(Message message) {
-        simpMessageSendingOperations.convertAndSend("/sub/channel/" + message.getChannelId(), message.getData());
+        messageService.message(message);
     }
 }
