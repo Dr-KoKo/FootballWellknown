@@ -15,9 +15,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Player {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id", columnDefinition = "INT")
-    private int id;
+    @Column(name="id", columnDefinition = "BIGINT")
+    private long id;
 
     @Column(name="name", length = 45)
     private String name;
@@ -36,7 +35,14 @@ public class Player {
 
     @Column
     private int goals;
-
+    @Column
+    private String country;
+    @Column
+    private Integer number;
+    @Column
+    private int joinMatches;
+    @Column
+    private String position;
     @ManyToOne
     @JoinColumn(name="team_id")
     private Team team;
