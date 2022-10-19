@@ -37,6 +37,8 @@ public class Player {
     @Column
     private int goals;
     @Column
+    private int assists;
+    @Column
     private String country;
     @Column
     private Integer number;
