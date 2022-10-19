@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TeamDet {
+public class TeamPlayers {
     private List<PlayerVO> players;
     private String coachName;
     private String coachImage;

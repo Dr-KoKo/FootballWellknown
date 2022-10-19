@@ -7,7 +7,7 @@ import com.a203.sixback.db.repo.CoachRepo;
 import com.a203.sixback.db.repo.PlayerRepo;
 import com.a203.sixback.db.repo.TeamRepo;
 import com.a203.sixback.team.vo.PlayerVO;
-import com.a203.sixback.team.vo.TeamDet;
+import com.a203.sixback.team.vo.TeamPlayers;
 import com.a203.sixback.team.vo.TeamInfo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -50,8 +50,8 @@ public class TeamService {
         return result;
     }
 
-    public TeamDet getTeamPlayers(int teamId) {
-        TeamDet result = new TeamDet();
+    public TeamPlayers getTeamPlayers(int teamId) {
+        TeamPlayers result = new TeamPlayers();
         List<Player> list = playerRepo.findAllByTeam_Id(teamId);
         List<PlayerVO> players = list.stream().map(player -> modelMapper.map(player, PlayerVO.class)).collect(Collectors.toList());
         System.out.println(players);
