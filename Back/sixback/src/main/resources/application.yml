@@ -20,10 +20,3 @@ spring:
   redis:
     port: 6379
 
-
-## Oauth - google
-
-
-## Oauth - kakao
-
-
