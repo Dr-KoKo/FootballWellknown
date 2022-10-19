@@ -1,7 +1,9 @@
 package com.a203.sixback.team;
 
+import com.a203.sixback.team.res.TeamDetRes;
 import com.a203.sixback.team.res.TeamPlayersRes;
 import com.a203.sixback.team.res.TeamRankRes;
+import com.a203.sixback.team.vo.TeamDetVO;
 import com.a203.sixback.team.vo.TeamPlayers;
 import com.a203.sixback.team.vo.TeamInfo;
 import com.a203.sixback.util.model.BaseResponseBody;
@@ -39,7 +41,8 @@ public class TeamController {
     // 팀 세부정보 조회
     @GetMapping("/{teamId}/details")
     public ResponseEntity<BaseResponseBody> getTeamDetails(@PathVariable("teamId") int teamId){
-        TeamInfoP
+        TeamDetVO result = teamService.getTeamDetails(teamId);
+        return ResponseEntity.status(200).body(TeamDetRes.of(200,"Success",result));
     }
     // 전체 팀 순위조회
     @GetMapping("/ranks")

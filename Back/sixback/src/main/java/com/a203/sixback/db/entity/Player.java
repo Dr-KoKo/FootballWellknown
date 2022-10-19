@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -46,4 +47,6 @@ public class Player {
     @ManyToOne
     @JoinColumn(name="team_id")
     private Team team;
+    @OneToMany(mappedBy = "player")
+    private List<PlayerMatch> playerMatchList;
 }

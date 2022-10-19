@@ -11,25 +11,46 @@ import com.a203.sixback.db.repo.MatchDetRepo;
 import com.a203.sixback.db.repo.MatchHistoryRepo;
 import com.a203.sixback.db.repo.MatchesRepo;
 import com.a203.sixback.db.repo.TeamRepo;
+import com.a203.sixback.match.res.AllMatchRes;
+import com.a203.sixback.match.vo.MatchStatusVO;
+import com.a203.sixback.team.res.TeamDetRes;
+import com.a203.sixback.team.vo.MatchVO;
+import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/matches")
 public class MatchController {
     @Value("${API-KEY}")
     public String apiKey;
+    private final MatchService matchService;
 
+    @GetMapping("/round")
+    public ResponseEntity<BaseResponseBody> getMatchesByRound(@RequestParam int round){
+        List<MatchStatusVO> result = matchService.getMatchesByRound(round);
+        return ResponseEntity.status(200).body(AllMatchRes.of(200,"Success",result));
+    }
+    @GetMapping("/dates")
+    public ResponseEntity<BaseResponseBody> getMatchesByMonth(@RequestParam int year, @RequestParam int month){
+        List<MatchStatusVO> result = matchService.getMatchesByMonth(year,month);
+        return ResponseEntity.status(200).body(AllMatchRes.of(200,"Success",result));
+    }
 //    private final TeamRepo teamRepo;
 //    private final MatchesRepo matchesRepo;
 //    private final MatchHistoryRepo matchHistoryRepo;
@@ -39,7 +60,7 @@ public class MatchController {
 //    @GetMapping("/match")
 //    public void getMatchData() throws Exception {
 //        JSONArray jsonArray = new JSONArray();
-//        String str = "https://apiv3.apifootball.com/?action=get_events&from=2022-10-18&to=2022-10-19&league_id=152&APIkey=" + apiKey;
+//        String str = "https://apiv3.apifootball.com/?action=get_events&from=2022-08-01&to=2022-11-14&league_id=152&APIkey=" + apiKey;
 //        URL url = new URL(str);
 //        InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
 //        jsonArray = (JSONArray) JSONValue.parseWithException(isr);
@@ -55,6 +76,11 @@ public class MatchController {
 //            if(matchStatus.equals("FIN")){
 //                homeScore = Integer.parseInt(jsonObject.get("match_hometeam_score").toString());
 //                awayScore = Integer.parseInt(jsonObject.get("match_awayteam_score").toString());
+//            }
+//            else{
+//                if(jsonObject.get("match_status").toString().equals("Postponed")){
+//                    matchStatus = "DELAY";
+//                }
 //            }
 //            int round = Integer.parseInt(jsonObject.get("match_round").toString());
 //            String stadium = jsonObject.get("match_stadium").toString();
@@ -176,12 +202,14 @@ public class MatchController {
 //            JSONArray dets = (JSONArray)jsonObject.get("statistics");
 //            for(int j=0;j<dets.size();j++){
 //                JSONObject det = (JSONObject) dets.get(j);
-//                System.out.println(det);
 //                String type = det.get("type").toString();
 //
 //                if(type.equals("Penalty")){
-//                    penalty[0][0] = Integer.parseInt(det.get("home").toString());
-//                    penalty[0][1] = Integer.parseInt(det.get("away").toString());
+//                    if(!det.get("home").toString().equals("")){
+//                        penalty[0][0] = Integer.parseInt(det.get("home").toString());
+//                        penalty[0][1] = Integer.parseInt(det.get("away").toString());
+//                    }
+//
 //                }
 //                else if(type.equals("Shots Total")){
 //                    shot[0][0] = Integer.parseInt(det.get("home").toString());
@@ -246,4 +274,5 @@ public class MatchController {
 //            }
 //        }
 //    }
+
 }

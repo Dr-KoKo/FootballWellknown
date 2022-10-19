@@ -39,6 +39,8 @@ public class Matches {
     @OneToMany(mappedBy = "matches")
     private List<MatchHistory> matchHistoryList;
     @OneToMany(mappedBy = "matches")
+    private List<PlayerMatch> playerMatchList;
+    @OneToMany(mappedBy = "matches")
     private List<MatchDet> matchDetList;
     @ManyToOne
     @JoinColumn(name = "away")

@@ -33,6 +33,8 @@ public class MatchDet {
     @Column
     private String possession;
     @Column
+    private String formation;
+    @Column
     private int yellow;
     @Column
     private int red;

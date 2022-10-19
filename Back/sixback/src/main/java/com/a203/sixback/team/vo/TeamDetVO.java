@@ -14,5 +14,5 @@ import java.util.List;
 public class TeamDetVO {
     private TeamInfo teamInfo;
     private List<MatchVO> finMatch;
-    private MatchVO yetMatch;
+    private List<MatchVO> yetMatch;
 }
