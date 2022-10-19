@@ -1,0 +1,29 @@
+
+## Context Path
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+
+spring:
+## JPA
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+## Redis
+  redis:
+    port: 6379
+
+
+## Oauth - google
+
+
+## Oauth - kakao
+
+
