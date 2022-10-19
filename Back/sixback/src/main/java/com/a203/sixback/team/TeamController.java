@@ -1,10 +1,14 @@
 package com.a203.sixback.team;
 
+import com.a203.sixback.db.entity.Coach;
 import com.a203.sixback.db.entity.Player;
 import com.a203.sixback.db.entity.Team;
+import com.a203.sixback.db.repo.CoachRepo;
 import com.a203.sixback.db.repo.PlayerRepo;
 import com.a203.sixback.db.repo.TeamRepo;
+import com.a203.sixback.team.res.TeamInfoDetRes;
 import com.a203.sixback.team.res.TeamRankRes;
+import com.a203.sixback.team.vo.TeamDet;
 import com.a203.sixback.team.vo.TeamInfo;
 import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.Getter;
@@ -16,6 +20,8 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -26,14 +32,30 @@ import java.net.URL;
 import java.util.ArrayList;
 
 @RestController
+@RequestMapping("/teams")
 @RequiredArgsConstructor
 public class TeamController {
 //    private final TeamRepo teamRepo;
+//    private final CoachRepo coachRepo;
 //    private final PlayerRepo playerRepo;
     private final TeamService teamService;
     @Value("${API-KEY}")
     public String apiKey;
-    @GetMapping("/teams/ranks")
+
+    @GetMapping("/{teamId}")
+    public ResponseEntity<BaseResponseBody> getTeamInfo(){
+        return null;
+    }
+    @GetMapping("/{teamId}/players")
+    public ResponseEntity<BaseResponseBody> getTeamPlayers(@PathVariable("teamId") int teamId){
+        TeamDet result = teamService.getTeamPlayers(teamId);
+        return ResponseEntity.status(200).body(TeamInfoDetRes.of(200,"Success",result));
+    }
+    @GetMapping("/{teamId}/details")
+    public ResponseEntity<BaseResponseBody> getTeamDetails(@PathVariable("teamId") int teamId){
+        return null;
+    }
+    @GetMapping("/ranks")
     public ResponseEntity<BaseResponseBody> getTeamsRanks(){
         ArrayList<TeamInfo> result = teamService.getTeamRanks();
         return ResponseEntity.status(200).body(TeamRankRes.of(200,"Success",result));
@@ -61,7 +83,7 @@ public class TeamController {
 //            teamRepo.save(team);
 //        }
 //    }
-    // 전체 팀 정보 저장하기
+////     전체 팀 정보 저장하기
 //    @GetMapping("/team")
 //    public void test() throws IOException, ParseException {
 //        JSONArray jsonArray = new JSONArray();
@@ -82,10 +104,16 @@ public class TeamController {
 //                    .id(teamId)
 //                    .name(teamName)
 //                    .image(teamImage)
-//                    .coachName(coachName)
 //                    .build();
 //            teamRepo.save(newTeam);
-//
+//            Coach coach = Coach.builder()
+//                    .age(0)
+//                    .image(null)
+//                    .country(null)
+//                    .team(newTeam)
+//                    .name(coachName)
+//                    .build();
+//            coachRepo.save(coach);
 //            for (int j = 0; j < players.size(); j++) {
 //                JSONObject player = ((JSONObject) players.get(j));
 //                long playerId = Long.parseLong(player.get("player_id").toString());

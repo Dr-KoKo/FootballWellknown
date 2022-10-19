@@ -24,12 +24,7 @@ public class Team {
 
     @Column(name="image")
     private String image;
-    @Column(name="coachName")
-    private String coachName;
-    @Column(name="coachAge")
-    private int coachAge;
-    @Column(name="coachCountry")
-    private String country;
+
     @Column
     private int win;
     @Column
@@ -42,7 +37,8 @@ public class Team {
     private int loseGoals;
     @OneToMany(mappedBy = "team")
     private List<Player> players;
-
+    @OneToOne(mappedBy = "team")
+    private Coach coach;
     public void setTeamInfo(int[] arr){
         this.win = arr[0];
         this.draw = arr[1];
