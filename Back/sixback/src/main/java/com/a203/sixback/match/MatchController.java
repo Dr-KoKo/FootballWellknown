@@ -1,20 +1,14 @@
 package com.a203.sixback.match;
 
-import com.a203.sixback.db.entity.MatchDet;
-import com.a203.sixback.db.entity.MatchHistory;
-import com.a203.sixback.db.entity.Matches;
-import com.a203.sixback.db.entity.Team;
+import com.a203.sixback.db.entity.*;
 import com.a203.sixback.db.enums.History;
 import com.a203.sixback.db.enums.MatchStatus;
 import com.a203.sixback.db.enums.TeamType;
-import com.a203.sixback.db.repo.MatchDetRepo;
-import com.a203.sixback.db.repo.MatchHistoryRepo;
-import com.a203.sixback.db.repo.MatchesRepo;
-import com.a203.sixback.db.repo.TeamRepo;
+import com.a203.sixback.db.repo.*;
 import com.a203.sixback.match.res.AllMatchRes;
+import com.a203.sixback.match.res.AllPlayersRes;
+import com.a203.sixback.match.vo.LineUpVO;
 import com.a203.sixback.match.vo.MatchStatusVO;
-import com.a203.sixback.team.res.TeamDetRes;
-import com.a203.sixback.team.vo.MatchVO;
 import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -22,16 +16,14 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,7 +34,7 @@ public class MatchController {
     private final MatchService matchService;
 
     @GetMapping("/round")
-    public ResponseEntity<BaseResponseBody> getMatchesByRound(@RequestParam int round){
+    public ResponseEntity<BaseResponseBody> getMatchesByRound(@RequestParam int round) throws Exception{
         List<MatchStatusVO> result = matchService.getMatchesByRound(round);
         return ResponseEntity.status(200).body(AllMatchRes.of(200,"Success",result));
     }
@@ -51,12 +43,19 @@ public class MatchController {
         List<MatchStatusVO> result = matchService.getMatchesByMonth(year,month);
         return ResponseEntity.status(200).body(AllMatchRes.of(200,"Success",result));
     }
+
+    @GetMapping("/{matchId}/lineUps")
+    public ResponseEntity<BaseResponseBody> getLineUps(@PathVariable("matchId") long matchId){
+        List<LineUpVO> result = matchService.getLineUps(matchId);
+        return ResponseEntity.status(200).body(AllPlayersRes.of(200,"Success",result));
+    }
     private final TeamRepo teamRepo;
+    private final PlayerRepo playerRepo;
     private final MatchesRepo matchesRepo;
     private final MatchHistoryRepo matchHistoryRepo;
     private final MatchDetRepo matchDetRepo;
+    private final PlayerMatchRepo playerMatchRepo;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
     @GetMapping("/match")
     public void getMatchData() throws Exception {
         JSONArray jsonArray = new JSONArray();
@@ -105,9 +104,18 @@ public class MatchController {
             //매치 History 가져오기
             JSONArray goals = (JSONArray) jsonObject.get("goalscorer");
             JSONArray cards = (JSONArray) jsonObject.get("cards");
+            JSONObject lineups = (JSONObject) jsonObject.get("lineup");
             JSONObject subs = (JSONObject) jsonObject.get("substitutions");
             JSONArray homeSubs = (JSONArray) subs.get("home");
             JSONArray awaySubs = (JSONArray) subs.get("away");
+            JSONObject homeLineups = (JSONObject) lineups.get("home");
+            JSONObject awayLineups = (JSONObject) lineups.get("away");
+            JSONArray homeStarts = (JSONArray) homeLineups.get("starting_lineups");
+            JSONArray homeSubsPlayer = (JSONArray) homeLineups.get("substitutes");
+            JSONArray awayStarts = (JSONArray) awayLineups.get("starting_lineups");
+            JSONArray awaySubsPlayer = (JSONArray) awayLineups.get("substitutes");
+
+
 
             for (int j = 0; j < goals.size(); j++) {
                 JSONObject goal = (JSONObject) goals.get(j);
@@ -274,6 +282,52 @@ public class MatchController {
                                 .shotOn(shotOn[0][t])
                                 .save(save[0][t])
                                 .teamType(TeamType.valueOf(type))
+                        .build());
+            }
+
+            //매치 라인업 저장하기
+            // 홈 스타트 멤버
+            for(int t=0;t<homeStarts.size();t++){
+                JSONObject start = (JSONObject) homeStarts.get(t);
+                Optional<Player> player = playerRepo.findById(Long.parseLong(start.get("player_key").toString()));
+                playerMatchRepo.save(PlayerMatch.builder()
+                        .position(Integer.parseInt(start.get("lineup_position").toString()))
+                        .player(player.isPresent()?player.get():null)
+                        .team("HOME")
+                        .matches(savedMatches)
+                        .build());
+            }
+            // 홈 서브 멤버
+            for(int t=0;t<homeSubsPlayer.size();t++){
+                JSONObject start = (JSONObject) homeSubsPlayer.get(t);
+                Optional<Player> player = playerRepo.findById(Long.parseLong(start.get("player_key").toString()));
+                playerMatchRepo.save(PlayerMatch.builder()
+                        .position(Integer.parseInt(start.get("lineup_position").toString()))
+                        .player(player.isPresent()?player.get():null)
+                        .matches(savedMatches)
+                        .team("HOME")
+                        .build());
+            }
+            // 어웨이 스타트 멤버
+            for(int t=0;t<awayStarts.size();t++){
+                JSONObject start = (JSONObject) awayStarts.get(t);
+                Optional<Player> player = playerRepo.findById(Long.parseLong(start.get("player_key").toString()));
+                playerMatchRepo.save(PlayerMatch.builder()
+                        .position(Integer.parseInt(start.get("lineup_position").toString()))
+                        .player(player.isPresent()?player.get():null)
+                        .team("AWAY")
+                        .matches(savedMatches)
+                        .build());
+            }
+            // 어웨이 서브 멤버
+            for(int t=0;t<awaySubsPlayer.size();t++){
+                JSONObject start = (JSONObject) awaySubsPlayer.get(t);
+                Optional<Player> player = playerRepo.findById(Long.parseLong(start.get("player_key").toString()));
+                playerMatchRepo.save(PlayerMatch.builder()
+                        .position(Integer.parseInt(start.get("lineup_position").toString()))
+                        .player(player.isPresent()?player.get():null)
+                        .matches(savedMatches)
+                        .team("AWAY")
                         .build());
             }
         }

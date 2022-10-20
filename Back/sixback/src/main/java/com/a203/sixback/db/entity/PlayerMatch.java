@@ -54,7 +54,7 @@ public class PlayerMatch {
     @Column
     private int red;
     @Column
-    private int sub;
+    private String team;
     @ManyToOne
     @JoinColumn(name = "matches_id")
     private Matches matches;

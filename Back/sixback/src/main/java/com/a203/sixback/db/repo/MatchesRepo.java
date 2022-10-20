@@ -4,6 +4,7 @@ import com.a203.sixback.db.entity.Matches;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,4 +20,7 @@ public interface MatchesRepo extends JpaRepository<Matches, Long> {
     List<Matches> findAllByRound(int round);
     @Query(nativeQuery = true, value="select * from matches where year(match_date)=:year and month(match_date)=:month ;")
     List<Matches> findAllByYearAndMonth(@Param("year") int year, @Param("month") int month);
+
+    @Query(nativeQuery = true, value="select * from matches where year(match_date)=:year and month(match_date)=:month and day(match_date)=:day;")
+    List<Matches> findAllByYearAndMonth(@Param("year") int year, @Param("month") int month, @Param("day") int day);
 }
