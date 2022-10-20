@@ -49,6 +49,51 @@ public class MatchController {
         List<LineUpVO> result = matchService.getLineUps(matchId);
         return ResponseEntity.status(200).body(AllPlayersRes.of(200,"Success",result));
     }
+    @GetMapping("/player/save")
+    public void saveMatchPlayer() throws Exception{
+
+        List<Long> matchesList = matchesRepo.findAllByStatus();
+        for(long matchId : matchesList){
+            JSONObject jsonObject = new JSONObject();
+            String str = "https://apiv3.apifootball.com/?action=get_statistics&match_id="+matchId+"&APIkey=" + apiKey;
+            URL url = new URL(str);
+            InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
+            jsonObject = (JSONObject) JSONValue.parseWithException(isr);
+            System.out.println(jsonObject);
+            JSONObject j2 = (JSONObject)jsonObject.get(Long.toString(matchId));
+            System.out.println(j2);
+            JSONArray playersStats = (JSONArray) j2.get("player_statistics");
+            for(int i=0;i<playersStats.size();i++){
+                JSONObject playerStat = (JSONObject)playersStats.get(i);
+                Optional<Player> player = playerRepo.findById(Long.parseLong(playerStat.get("player_key").toString()));
+                if(!player.isPresent()){
+                    continue;
+                }
+                PlayerMatch playerMatch = playerMatchRepo.findByMatches_IdAndPlayer_Id(matchId, player.get().getId());
+                playerMatch.setGoal(Integer.parseInt(playerStat.get("player_goals").toString()));
+                playerMatch.setAssist(Integer.parseInt(playerStat.get("player_assists").toString()));
+                playerMatch.setClear(Integer.parseInt(playerStat.get("player_clearances").toString()));
+                playerMatch.setCrossed(Integer.parseInt(playerStat.get("player_total_crosses").toString()));
+                playerMatch.setCrossedOn(Integer.parseInt(playerStat.get("player_acc_crosses").toString()));
+                playerMatch.setDribble(Integer.parseInt(playerStat.get("player_dribble_attempts").toString()));
+                playerMatch.setDribbleOn(Integer.parseInt(playerStat.get("player_dribble_succ").toString()));
+                playerMatch.setExpertRate(Integer.parseInt(playerStat.get("player_rating").toString()));
+                playerMatch.setFoul(Integer.parseInt(playerStat.get("player_fouls_commited").toString()));
+                playerMatch.setPass(Integer.parseInt(playerStat.get("player_passes").toString()));
+                playerMatch.setPassOn(Integer.parseInt(playerStat.get("player_passes_acc").toString()));
+                playerMatch.setYellow(Integer.parseInt(playerStat.get("player_yellowcards").toString()));
+                playerMatch.setRed(Integer.parseInt(playerStat.get("player_redcards").toString()));
+                playerMatch.setShot(Integer.parseInt(playerStat.get("player_shots_total").toString()));
+                playerMatch.setShotOn(Integer.parseInt(playerStat.get("player_shots_on_goal").toString()));
+                playerMatch.setTackle(Integer.parseInt(playerStat.get("player_tackles").toString()));
+                playerMatch.setTeam(playerStat.get("team_name").toString().toUpperCase());
+                playerMatchRepo.save(playerMatch);
+            }
+        }
+
+
+
+    }
     private final TeamRepo teamRepo;
     private final PlayerRepo playerRepo;
     private final MatchesRepo matchesRepo;

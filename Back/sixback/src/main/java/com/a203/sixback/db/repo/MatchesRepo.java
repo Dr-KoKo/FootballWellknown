@@ -11,6 +11,8 @@ import java.util.List;
 
 @Repository
 public interface MatchesRepo extends JpaRepository<Matches, Long> {
+    @Query(nativeQuery = true, value="select id from matches where match_status='FIN';")
+    List<Long> findAllByStatus();
     @Query(nativeQuery = true, value="select * from matches where (home=:teamId or away=:teamId) and match_status='FIN' order by match_date desc LIMIT 3;")
     List<Matches> findRecentFINMatches(@Param("teamId") int teamId);
 

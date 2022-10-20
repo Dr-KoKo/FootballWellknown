@@ -6,12 +6,11 @@ import com.a203.sixback.db.entity.Team;
 import com.a203.sixback.db.repo.CoachRepo;
 import com.a203.sixback.db.repo.PlayerRepo;
 import com.a203.sixback.db.repo.TeamRepo;
+import com.a203.sixback.team.res.PlayerDetRes;
 import com.a203.sixback.team.res.TeamDetRes;
 import com.a203.sixback.team.res.TeamPlayersRes;
 import com.a203.sixback.team.res.TeamRankRes;
-import com.a203.sixback.team.vo.TeamDetVO;
-import com.a203.sixback.team.vo.TeamPlayers;
-import com.a203.sixback.team.vo.TeamInfo;
+import com.a203.sixback.team.vo.*;
 import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -62,6 +61,12 @@ public class TeamController {
     public ResponseEntity<BaseResponseBody> getTeamsRanks(){
         ArrayList<TeamInfo> result = teamService.getTeamRanks();
         return ResponseEntity.status(200).body(TeamRankRes.of(200,"Success",result));
+    }
+    // 선수 세부정보 조회
+    @GetMapping("/players/{playerId}")
+    public ResponseEntity<BaseResponseBody> getPlayerDetails(@PathVariable("playerId") long playerId){
+        PlayerDetVO result = teamService.getPlayerDetails(playerId);
+        return ResponseEntity.status(200).body(PlayerDetRes.of(200,"Success",result));
     }
 //     팀 순위 기록 저장
     @GetMapping("/teamInfo")
@@ -130,11 +135,13 @@ public class TeamController {
                 String position = player.get("player_type").toString();
                 int matchNum = Integer.parseInt(player.get("player_match_played").toString());
                 int goal = Integer.parseInt(player.get("player_goals").toString());
+                int assists = Integer.parseInt(player.get("player_assists").toString());
                 String birth = player.get("player_birthdate").toString();
                 Player newPlayer = Player.builder()
                         .id(playerId)
                         .team(newTeam)
                         .goals(goal)
+                        .assists(assists)
                         .joinMatches(matchNum)
                         .position(position)
                         .image(playerImage)

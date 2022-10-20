@@ -1,17 +1,13 @@
 package com.a203.sixback.team.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlayerVO {
+public class PlayerDetVO {
     private long id;
     private String name;
     private String image;
@@ -24,4 +20,5 @@ public class PlayerVO {
     private Integer number;
     private int joinMatches;
     private String position;
+    private String history;
 }

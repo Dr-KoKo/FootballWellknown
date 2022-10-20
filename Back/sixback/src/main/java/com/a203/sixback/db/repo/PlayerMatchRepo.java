@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PlayerMatchRepo extends JpaRepository<PlayerMatch, Long> {
     List<PlayerMatch> findAllByMatches_Id(long matchId);
+
+    PlayerMatch findByMatches_IdAndPlayer_Id(long matchId, long id);
 }

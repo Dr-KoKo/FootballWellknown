@@ -117,4 +117,23 @@ public class TeamService {
         result.setYetMatch(readyMatchVOs);
         return result;
     }
+
+    public PlayerDetVO getPlayerDetails(long playerId) {
+        Player player = playerRepo.findById(playerId).get();
+        PlayerDetVO result = PlayerDetVO.builder()
+                .assists(player.getAssists())
+                .birth(player.getBirth())
+                .country(player.getCountry())
+                .height(player.getHeight())
+                .history(player.getHistory())
+                .joinMatches(player.getJoinMatches())
+                .number(player.getNumber())
+                .position(player.getPosition())
+                .weight(player.getWeight())
+                .goals(player.getGoals())
+                .image(player.getImage())
+                .name(player.getName())
+                .build();
+        return result;
+    }
 }
