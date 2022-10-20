@@ -33,6 +33,8 @@ public class Player {
 
     @Column
     private int weight;
+    @Column
+    private String history;
 
     @Column
     private int goals;
