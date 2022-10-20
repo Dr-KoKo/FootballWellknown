@@ -20,61 +20,8 @@ import java.util.concurrent.ScheduledFuture;
 
 @Slf4j
 @Service
-@Configuration
-@EnableScheduling
-@ComponentScan
-@Component
 public class SchedulerService {
     private Map<Long, ScheduledFuture<?>> scheduledTasks = new ConcurrentHashMap<>();
-
-    @Autowired
-    private TaskScheduler taskScheduler;
-
-    private static AnnotationConfigApplicationContext CONTEXT = null;
-
-    @Autowired
-    private ThreadPoolTaskScheduler scheduler;
-
-    public static SchedulerService getInstance() {
-        if (!isValidBean()) {
-            CONTEXT = new AnnotationConfigApplicationContext(SchedulerService.class);
-        }
-
-        return CONTEXT.getBean(SchedulerService.class);
-    }
-
-    @Bean
-    public ThreadPoolTaskScheduler taskScheduler() {
-        return new ThreadPoolTaskScheduler();
-    }
-
-    public void start(Runnable task, String scheduleExpression, long matchId) throws Exception {
-        log.info("Scheduler start");
-        register(matchId, scheduler.schedule(task, new CronTrigger(scheduleExpression)));
-    }
-
-    public void start(Runnable task, Long delay, long matchId) throws Exception {
-        register(matchId, scheduler.scheduleWithFixedDelay(task, delay));
-    }
-
-    public void stopAll() {
-        scheduler.shutdown();
-        CONTEXT.close();
-    }
-
-    private static boolean isValidBean() {
-        if (CONTEXT == null || !CONTEXT.isActive()) {
-            return false;
-        }
-
-        try {
-            CONTEXT.getBean(SchedulerService.class);
-        } catch (NoSuchBeanDefinitionException ex) {
-            return false;
-        }
-
-        return true;
-    }
 
     public void register(Long scheduleId, ScheduledFuture<?> task) {
         log.info("Schedule 등록. schedule Id : {}", scheduleId);
