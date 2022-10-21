@@ -39,3 +39,4 @@ out/
 ### application.yml ###
 application.yml
 application-security.yml
+application-oauth.yml
