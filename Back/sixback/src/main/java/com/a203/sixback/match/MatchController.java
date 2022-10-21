@@ -7,8 +7,10 @@ import com.a203.sixback.db.enums.TeamType;
 import com.a203.sixback.db.repo.*;
 import com.a203.sixback.match.res.AllMatchRes;
 import com.a203.sixback.match.res.AllPlayersRes;
+import com.a203.sixback.match.res.PlayerMatchRes;
 import com.a203.sixback.match.vo.LineUpVO;
 import com.a203.sixback.match.vo.MatchStatusVO;
+import com.a203.sixback.match.vo.PlayerMatchVO;
 import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -49,4 +51,16 @@ public class MatchController {
         List<LineUpVO> result = matchService.getLineUps(matchId);
         return ResponseEntity.status(200).body(AllPlayersRes.of(200,"Success",result));
     }
+    @GetMapping("/statistics/{matchId}")
+    public ResponseEntity<BaseResponseBody> getPlayerMatches(@PathVariable long matchId){
+        List<PlayerMatchVO> result = matchService.getAllPlayerMatch(matchId);
+        return ResponseEntity.status(200).body(PlayerMatchRes.of(200,"Success",result));
+    }
+
+    @PostMapping("/player")
+    public ResponseEntity<BaseResponseBody> EvaluatePlayer(@RequestBody PlayerEvaluate playerEvaluate){
+        matchService.updatePlayerEvaluation(playerEvaluate);
+        return ResponseEntity.status(200).body(null);
+    }
+
 }

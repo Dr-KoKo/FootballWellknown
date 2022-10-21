@@ -2,13 +2,16 @@ package com.a203.sixback.match;
 
 import com.a203.sixback.db.entity.MatchDet;
 import com.a203.sixback.db.entity.Matches;
+import com.a203.sixback.db.entity.PlayerEvaluate;
 import com.a203.sixback.db.entity.PlayerMatch;
 import com.a203.sixback.db.repo.MatchDetRepo;
 import com.a203.sixback.db.repo.MatchesRepo;
+import com.a203.sixback.db.repo.PlayerEvaluateRepo;
 import com.a203.sixback.db.repo.PlayerMatchRepo;
 import com.a203.sixback.match.vo.LineUp;
 import com.a203.sixback.match.vo.LineUpVO;
 import com.a203.sixback.match.vo.MatchStatusVO;
+import com.a203.sixback.match.vo.PlayerMatchVO;
 import com.a203.sixback.team.vo.MatchVO;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -27,6 +30,7 @@ public class MatchService {
     private final MatchesRepo matchesRepo;
     private final MatchDetRepo matchDetRepo;
     private final PlayerMatchRepo playerMatchRepo;
+    private final PlayerEvaluateRepo evaluateRepo;
     public List<MatchStatusVO> getMatchesByRound(int round) {
         List<Matches> matches = matchesRepo.findAllByRound(round);
         List<MatchStatusVO> result = new ArrayList<>();
@@ -138,5 +142,41 @@ public class MatchService {
         jsonArray = (JSONArray) JSONValue.parseWithException(isr);
         return jsonArray;
     }
+
+    public List<PlayerMatchVO> getAllPlayerMatch(long match_id) {
+        List<PlayerMatch> playerMatchList = playerMatchRepo.findAllByMatches_Id(match_id);
+        List<PlayerMatchVO> playerMatchVOList = new ArrayList<>();
+        for(PlayerMatch pm : playerMatchList){
+            if(pm.getPlayer() == null) continue;
+            PlayerMatchVO vo = PlayerMatchVO.builder()
+                    .goal(pm.getGoal())
+                    .assist(pm.getAssist())
+                    .shot(pm.getShot())
+                    .shotOn(pm.getShotOn())
+                    .pass(pm.getPass())
+                    .passOn(pm.getPassOn())
+                    .foul(pm.getFoul())
+                    .crossed(pm.getCrossed())
+                    .crossedOn(pm.getCrossedOn())
+                    .dribble(pm.getDribble())
+                    .dribbleOn(pm.getDribbleOn())
+                    .tackle(pm.getTackle())
+                    .clear(pm.getClear())
+                    .yellow(pm.getYellow())
+                    .red(pm.getRed())
+                    .match_id(pm.getMatches().getId())
+                    .player_id(pm.getPlayer().getId())
+                    .team(pm.getTeam())
+                    .build();
+            playerMatchVOList.add(vo);
+        }
+        return playerMatchVOList;
+    }
+
+    public void updatePlayerEvaluation(PlayerEvaluate playerEvaluate) {
+//        있으면 update, 없으면 insert
+        PlayerEvaluate temp = evaluateRepo.findById(playerEvaluate.getId());
+    }
+
 
 }
