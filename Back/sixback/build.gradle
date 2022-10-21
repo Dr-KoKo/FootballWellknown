@@ -36,13 +36,16 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
 	// oauth2
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.6.2'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
 	// log
 	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
 	// apache commons lang 랜덤 문자열 생성
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
+
+	annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
 
 }
 

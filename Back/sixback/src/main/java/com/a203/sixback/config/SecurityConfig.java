@@ -1,20 +1,25 @@
 package com.a203.sixback.config;
 
+import com.a203.sixback.auth.AppProperties;
 import com.a203.sixback.auth.CustomUserDetailsService;
 import com.a203.sixback.auth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.a203.sixback.db.repo.RefreshTokenRepository;
+import com.a203.sixback.handler.OAuth2AuthenticationFailureHandler;
 import com.a203.sixback.handler.OAuth2AuthenticationSuccessHandler;
 import com.a203.sixback.handler.RestAuthenticationEntryPoint;
 import com.a203.sixback.handler.TokenAccessDeniedHandler;
-import com.a203.sixback.jwt.JwtProvider;
-import com.a203.sixback.jwt.JwtSecurityConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -34,7 +39,6 @@ public class SecurityConfig {
     };
 
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
-    private final CorsProperties corsProperties;
     private final AppProperties appProperties;
     private final AuthTokenProvider tokenProvider;
     private final CustomUserDetailsService userDetailsService;
@@ -43,14 +47,12 @@ public class SecurityConfig {
     private final String frontUrl;
 
     public SecurityConfig(TokenAccessDeniedHandler tokenAccessDeniedHandler,
-                          CorsProperties corsProperties,
                           AppProperties appProperties,
                           AuthTokenProvider tokenProvider,
                           CustomUserDetailsService userDetailsService,
                           RefreshTokenRepository userRefreshTokenRepository,
-                          String frontUrl) {
+                          @Value("${frontUrl}") String frontUrl) {
         this.tokenAccessDeniedHandler = tokenAccessDeniedHandler;
-        this.corsProperties = corsProperties;
         this.appProperties = appProperties;
         this.tokenProvider = tokenProvider;
         this.userDetailsService = userDetailsService;
@@ -97,10 +99,10 @@ public class SecurityConfig {
     /*
      * auth 매니저 설정
      * */
-    @Override
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     /*
