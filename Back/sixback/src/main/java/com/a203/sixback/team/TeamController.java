@@ -26,10 +26,6 @@ public class TeamController {
     @Value("${API-KEY}")
     public String apiKey;
 
-    @GetMapping("/{teamId}")
-    public ResponseEntity<BaseResponseBody> getTeamInfo(){
-        return null;
-    }
     // 팀선수, 감독 조회
     @GetMapping("/{teamId}/players")
     public ResponseEntity<BaseResponseBody> getTeamPlayers(@PathVariable("teamId") int teamId){

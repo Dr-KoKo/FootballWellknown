@@ -46,7 +46,7 @@ public class MatchController {
         return ResponseEntity.status(200).body(AllMatchRes.of(200,"Success",result));
     }
 
-    @GetMapping("/{matchId}/lineUps")
+    @GetMapping("/{matchId}/lineups")
     public ResponseEntity<BaseResponseBody> getLineUps(@PathVariable("matchId") long matchId){
         List<LineUpVO> result = matchService.getLineUps(matchId);
         return ResponseEntity.status(200).body(AllPlayersRes.of(200,"Success",result));
