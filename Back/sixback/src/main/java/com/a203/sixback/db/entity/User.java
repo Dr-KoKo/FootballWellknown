@@ -3,14 +3,16 @@ package com.a203.sixback.db.entity;
 import com.a203.sixback.db.enums.ProviderType;
 import com.a203.sixback.db.enums.RoleType;
 import com.a203.sixback.db.enums.Status;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Builder
+@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id

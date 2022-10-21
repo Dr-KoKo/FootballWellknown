@@ -3,7 +3,7 @@ package com.a203.sixback.config;
 import com.a203.sixback.auth.AppProperties;
 import com.a203.sixback.auth.CustomUserDetailsService;
 import com.a203.sixback.auth.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.a203.sixback.db.repo.RefreshTokenRepository;
+import com.a203.sixback.db.repo.UserRefreshTokenRepository;
 import com.a203.sixback.handler.OAuth2AuthenticationFailureHandler;
 import com.a203.sixback.handler.OAuth2AuthenticationSuccessHandler;
 import com.a203.sixback.handler.RestAuthenticationEntryPoint;
@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,21 +39,21 @@ public class SecurityConfig {
 
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final AppProperties appProperties;
-    private final AuthTokenProvider tokenProvider;
+    private final JwtProvider jwtProvider;
     private final CustomUserDetailsService userDetailsService;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final UserRefreshTokenRepository refreshTokenRepository;
 
     private final String frontUrl;
 
     public SecurityConfig(TokenAccessDeniedHandler tokenAccessDeniedHandler,
                           AppProperties appProperties,
-                          AuthTokenProvider tokenProvider,
+                          JwtProvider jwtProvider,
                           CustomUserDetailsService userDetailsService,
-                          RefreshTokenRepository userRefreshTokenRepository,
+                          UserRefreshTokenRepository userRefreshTokenRepository,
                           @Value("${frontUrl}") String frontUrl) {
         this.tokenAccessDeniedHandler = tokenAccessDeniedHandler;
         this.appProperties = appProperties;
-        this.tokenProvider = tokenProvider;
+        this.jwtProvider = jwtProvider;
         this.userDetailsService = userDetailsService;
         this.refreshTokenRepository = userRefreshTokenRepository;
         this.frontUrl = frontUrl;

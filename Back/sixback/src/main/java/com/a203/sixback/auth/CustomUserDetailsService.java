@@ -7,6 +7,7 @@ import com.a203.sixback.exception.OAuthProviderMissMatchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -16,7 +17,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 
 import java.time.LocalDateTime;
-
+// TODO CustomOAuth2UserService.java 와 CustomUserDetailsService.java 파일 구분 및 작성 해야함.
+// TODO CustomOAuth2UserServce.java부터 작업시작하면 됨.
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService extends DefaultOAuth2UserService {
@@ -41,7 +43,9 @@ public class CustomUserDetailsService extends DefaultOAuth2UserService {
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        User savedUser = userRepo.findByEmail(userInfo.getEmail());
+        User savedUser = userRepo.findByEmail(userInfo.getEmail()).orElseThrow(
+                () -> new UsernameNotFoundException("User ID Not Found")
+        );
 
         if (savedUser != null) {
             if (providerType != savedUser.getProviderType()) {

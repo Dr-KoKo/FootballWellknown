@@ -1,13 +1,10 @@
 package com.a203.sixback.handler;
 
-import com.a203.sixback.auth.AppProperties;
-import com.a203.sixback.auth.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.a203.sixback.auth.OAuth2UserInfo;
-import com.a203.sixback.auth.OAuth2UserInfoFactory;
-import com.a203.sixback.db.entity.RefreshToken;
+import com.a203.sixback.auth.*;
+import com.a203.sixback.db.entity.UserRefreshToken;
 import com.a203.sixback.db.enums.ProviderType;
 import com.a203.sixback.db.enums.RoleType;
-import com.a203.sixback.db.repo.RefreshTokenRepository;
+import com.a203.sixback.db.repo.UserRefreshTokenRepository;
 import com.a203.sixback.util.CookieUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -37,7 +34,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final AuthTokenProvider tokenProvider;
     private final AppProperties appProperties;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final UserRefreshTokenRepository refreshTokenRepository;
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
 
     @Override
@@ -75,7 +72,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Date now = new Date();
         AuthToken accessToken = tokenProvider.createAuthToken(
                 userInfo.getId(),
-                roleType.getCode(),
+                roleType.getValue(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
 
@@ -88,11 +85,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         );
 
         // DB 저장
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userInfo.getId());
+        UserRefreshToken refreshToken = refreshTokenRepository.findByUserId(userInfo.getId());
         if (refreshToken != null) {
             refreshToken.setRefreshToken(refreshToken.getToken());
         } else {
-            refreshToken = new RefreshToken(userInfo.getId(), refreshToken.getToken());
+            refreshToken = new UserRefreshToken(userInfo.getId(), refreshToken.getToken());
             refreshTokenRepository.saveAndFlush(refreshToken);
         }
 
