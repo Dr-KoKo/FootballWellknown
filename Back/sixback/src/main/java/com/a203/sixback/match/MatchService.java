@@ -51,7 +51,7 @@ public class MatchService {
         return result;
     }
     public List<MatchStatusVO> getMatchesByDate(int year, int month, int day){
-        List<Matches> matches = matchesRepo.findAllByYearAndMonth(year,month,day);
+        List<Matches> matches = matchesRepo.findAllByYearAndMonthAndDay(year,month,day);
         List<MatchStatusVO> result = new ArrayList<>();
         for(Matches match : matches){
             MatchVO matchVO = MatchVO.builder()
