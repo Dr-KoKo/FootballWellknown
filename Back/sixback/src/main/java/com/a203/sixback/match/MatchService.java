@@ -30,7 +30,7 @@ public class MatchService {
     private final MatchesRepo matchesRepo;
     private final MatchDetRepo matchDetRepo;
     private final PlayerMatchRepo playerMatchRepo;
-    private final PlayerEvaluateRepo evaluateRepo;
+    private final PlayerEvaluateRepo playerEvaluateRepo;
     public List<MatchStatusVO> getMatchesByRound(int round) {
         List<Matches> matches = matchesRepo.findAllByRound(round);
         List<MatchStatusVO> result = new ArrayList<>();
@@ -174,8 +174,8 @@ public class MatchService {
     }
 
     public void updatePlayerEvaluation(PlayerEvaluate playerEvaluate) {
-//        있으면 update, 없으면 insert
-        PlayerEvaluate temp = evaluateRepo.findById(playerEvaluate.getId());
+        PlayerEvaluate temp = playerEvaluateRepo.findById(playerEvaluate.getId());
+        playerEvaluateRepo.save(playerEvaluate);
     }
 
 
