@@ -7,17 +7,22 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
+import java.io.InputStreamReader;
+import java.net.URL;
 
 @Slf4j
 public class MatchTask implements Runnable{
     private long matchId;
-    private
+    private String apiKey;
+    private MatchService matchService;
 
-    @Autowired
-    MatchService matchService;
 
-    public MatchTask(long matchId) {
+    public MatchTask(long matchId, String apiKey, MatchService matchService) {
         this.matchId = matchId;
+        this.apiKey = apiKey;
+        this.matchService = matchService;
     }
 
     @Override
@@ -32,6 +37,7 @@ public class MatchTask implements Runnable{
                 String matchStatus = jsonObject.get("match_status").toString();
 
                 if("Finished".equals(matchStatus)) {
+                    log.info("경기가 끝났습니다.");
                     MainScheduler.getInstance().stop(matchId);
                 }
             }
