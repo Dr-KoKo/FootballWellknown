@@ -5,7 +5,6 @@ import com.a203.sixback.db.entity.UserRefreshToken;
 import com.a203.sixback.db.enums.ProviderType;
 import com.a203.sixback.db.enums.RoleType;
 import com.a203.sixback.db.repo.UserRefreshTokenRepository;
-import com.a203.sixback.util.CookieUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,26 +33,27 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final AuthTokenProvider tokenProvider;
     private final AppProperties appProperties;
-    private final UserRefreshTokenRepository refreshTokenRepository;
+    private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String targetUrl = determineTargetUrl(request, response, authentication);
-
+        System.out.println("HI");
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
-
+        System.out.println("Tar" + targetUrl);
         clearAuthenticationAttributes(request, response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+        System.out.println("er1");
+        Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
-
+        System.out.println("er2");
         if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
             throw new IllegalArgumentException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
         }
@@ -67,12 +67,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
         Collection<? extends GrantedAuthority> authorities = ((OidcUser) authentication.getPrincipal()).getAuthorities();
 
-        RoleType roleType = hasAuthority(authorities, RoleType.ROLE_ADMIN.getValue()) ? RoleType.ROLE_ADMIN : RoleType.ROLE_USER;
+        RoleType roleType = hasAuthority(authorities, RoleType.ADMIN.getCode()) ? RoleType.ADMIN : RoleType.USER;
 
         Date now = new Date();
         AuthToken accessToken = tokenProvider.createAuthToken(
                 userInfo.getId(),
-                roleType.getValue(),
+                roleType.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
 
@@ -85,18 +85,18 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         );
 
         // DB 저장
-        UserRefreshToken refreshToken = refreshTokenRepository.findByUserId(userInfo.getId());
-        if (refreshToken != null) {
-            refreshToken.setRefreshToken(refreshToken.getToken());
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userInfo.getId());
+        if (userRefreshToken != null) {
+            userRefreshToken.setRefreshToken(refreshToken.getToken());
         } else {
-            refreshToken = new UserRefreshToken(userInfo.getId(), refreshToken.getToken());
-            refreshTokenRepository.saveAndFlush(refreshToken);
+            userRefreshToken = new UserRefreshToken(userInfo.getId(), refreshToken.getToken());
+            userRefreshTokenRepository.saveAndFlush(userRefreshToken);
         }
 
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
 
-        CookieUtils.deleteCookie(request, response, REFRESH_TOKEN);
-        CookieUtils.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
+        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
+        CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", accessToken.getToken())

@@ -9,10 +9,10 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Builder
-@RequiredArgsConstructor
-@NoArgsConstructor
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class User {
 
     @Id

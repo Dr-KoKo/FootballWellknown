@@ -12,6 +12,10 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	all {
+		exclude group: 'ch.qos.logback', module: 'logback-classic'
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	}
 }
 
 repositories {
@@ -51,9 +55,9 @@ dependencies {
 
 	annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
 
-	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
 
 }
 

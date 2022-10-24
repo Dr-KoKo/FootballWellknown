@@ -1,83 +1,26 @@
 package com.a203.sixback.auth;
 
-import com.a203.sixback.db.enums.ProviderType;
 import com.a203.sixback.db.entity.User;
 import com.a203.sixback.db.repo.UserRepo;
-import com.a203.sixback.exception.OAuthProviderMissMatchException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.core.AuthenticationException;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang3.RandomStringUtils;
 
-
-import java.time.LocalDateTime;
-// TODO CustomOAuth2UserService.java 와 CustomUserDetailsService.java 파일 구분 및 작성 해야함.
-// TODO CustomOAuth2UserServce.java부터 작업시작하면 됨.
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService extends DefaultOAuth2UserService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepo userRepo;
 
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User user = super.loadUser(userRequest);
-
-        try {
-            return this.process(userRequest, user);
-        } catch (AuthenticationException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepo.findByEmail(username);
+        if(user == null){
+            throw new UsernameNotFoundException("이메일을 찾을 수 없습니다.");
         }
+        return UserPrincipal.create(user);
     }
-
-    private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
-        ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
-
-        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        User savedUser = userRepo.findByEmail(userInfo.getEmail()).orElseThrow(
-                () -> new UsernameNotFoundException("User ID Not Found")
-        );
-
-        if (savedUser != null) {
-            if (providerType != savedUser.getProviderType()) {
-                throw new OAuthProviderMissMatchException(
-                        "Looks like you're signed up with " + providerType +
-                                " account. Please use your " + savedUser.getProviderType() + " account to login."
-                );
-            }
-        } else {
-            savedUser = createUser(userInfo, providerType);
-        }
-
-        return UserPrincipal.create(savedUser, user.getAttributes());
-    }
-
-    private User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
-        LocalDateTime now = LocalDateTime.now();
-
-        String nickname;
-        User tempUser;
-
-        do {
-            nickname = providerType.toString().substring(0, 3) + RandomStringUtils.randomNumeric(10);
-        } while (userRepo.existsByNickname(nickname));
-
-        User user = User.builder()
-                .nickname(nickname)
-                .email(userInfo.getEmail())
-                .providerType(providerType)
-                .build();
-
-        return userRepo.saveAndFlush(user);
-    }
-
 }
