@@ -5,12 +5,11 @@ import Layout from './components/Layout';
 import { Route, Routes } from 'react-router';
 
 function App() {
-  const currentMonth = new Date().getMonth();
   return (
     <Layout>
       <Routes>
         <Route path="/" element={<Home/>} />
-        <Route path="/match" element={<MatchMain month={currentMonth}/>}/>
+        <Route path="/match" element={<MatchMain/>}/>
       </Routes>
     </Layout>
   );
