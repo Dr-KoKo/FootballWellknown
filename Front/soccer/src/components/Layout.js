@@ -1,10 +1,12 @@
-import React, { Fragment } from "react";
-function Layout(props) {
+import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
+
+const Layout = (props) => {
   return (
     <Fragment>
-      <main>{props.chldren}</main>
+        <main>{props.children}</main>
     </Fragment>
   );
-}
+};
 
 export default Layout;
