@@ -4,11 +4,12 @@ import axios from "axios";
 
 const MatchMain = () => {
   const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth();
+  const currentMonth = new Date().getMonth() + 1;
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(currentMonth);
   const [matches, setMatches] = useState(
     [{matchVO:{
+        matchId: 0,
         date: "",
         stadium: "",
         homeScore: "",
@@ -20,6 +21,10 @@ const MatchMain = () => {
     setYear(y);
     setMonth(m);
   };
+
+  const moveToDetail = (matchId) => {
+    window.location.href = `/match/${matchId}`;
+  }
 
   useEffect(() => {
     axios.get(`http://localhost:8080/api/v1/matches/dates?year=${year}&month=${month}`)
@@ -46,7 +51,7 @@ const MatchMain = () => {
             </thead>
             <tbody>
                 {matches.map((data, index) => (
-                    <tr key={index}>
+                    <tr key={index} onClick={() => moveToDetail(data.matchVO.matchId)}>
                         <td>{data.matchVO.date.split('T')[0]}</td>
                         <td>{data.matchVO.date.split('T')[1]}</td>
                         <td>{data.matchVO.stadium}</td>
