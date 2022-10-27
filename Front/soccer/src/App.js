@@ -5,6 +5,11 @@ import { Route, Routes } from "react-router";
 import TeamInfo from "./pages/Team/TeamInfo";
 import MatchMain from './pages/MatchPage/MatchMain';
 import MatchDetail from './pages/MatchPage/MatchDetail';
+import Chatting from "components/Match/Chatting";
+import LineUp from "components/Match/LineUp";
+import MatchPredict from "components/Match/MatchPredict";
+import Padlet from "components/Match/Padlet";
+import PlayerEvaluate from "components/Match/PlayerEvaluate";
 
 function App() {
   return (
@@ -13,7 +18,13 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/teaminfo" element={<TeamInfo />} />
         <Route path="/match" element={<MatchMain/>}/>
-        <Route path="/match/:matchId" element={<MatchDetail/>}/>
+        <Route path="/match/:matchId" element={<MatchDetail/>}>
+          <Route path="Chatting" element={<Chatting/>}/>
+          <Route path="LineUp" element={<LineUp/>}/>
+          <Route path="MatchPredict" element={<MatchPredict/>}/>
+          <Route path="Padlet" element={<Padlet/>}/>
+          <Route path="PlayerEvaluate" element={<PlayerEvaluate/>}/>
+        </Route>
       </Routes>
     </Layout>
   );

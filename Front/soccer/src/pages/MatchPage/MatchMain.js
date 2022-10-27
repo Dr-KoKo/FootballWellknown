@@ -23,7 +23,7 @@ const MatchMain = () => {
   };
 
   const moveToDetail = (matchId) => {
-    window.location.href = `/match/${matchId}`;
+    window.location.href = `/match/${matchId}/MatchPredict`;
   }
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const MatchMain = () => {
     .then((res) => {
         setMatches(res.data.result);
     });
-  },[month]);
+  },[year, month]);
 
   return (
     <Fragment>

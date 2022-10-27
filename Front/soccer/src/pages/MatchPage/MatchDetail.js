@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { Fragment, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { Outlet, useParams } from 'react-router';
 import { Grid, Box } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const MatchDetail = () => {
   const params = useParams();
@@ -24,7 +25,6 @@ const MatchDetail = () => {
     axios.get(`http://localhost:8080/api/v1/matches/match/${matchId}`)
     .then((res) => {
         setMatch(res.data.result.matchVO);
-        console.log(match);
         if(res.data.result.matchStatus === "FIN"){
           setMatchStatus("경기종료");
         }
@@ -64,11 +64,15 @@ const MatchDetail = () => {
       </Box>
       <br/>
       <Fragment>
-        <span>승부예측 | </span>
-        <span>라인업 | </span>
-        <span>선수평가 | </span>
-        <span>패들릿 | </span>
-        <span>오픈톡 | </span>
+        <Link to="MatchPredict">승부예측 | </Link>
+        <Link to="LineUp">라인업 | </Link>
+        <Link to="PlayerEvaluate">선수평가 | </Link>
+        <Link to="Padlet">패들릿 | </Link>
+        <Link to="Chatting">채팅 | </Link>
+      </Fragment>
+      <br/>
+      <Fragment>
+        <Outlet />
       </Fragment>
     </Fragment>
   );
