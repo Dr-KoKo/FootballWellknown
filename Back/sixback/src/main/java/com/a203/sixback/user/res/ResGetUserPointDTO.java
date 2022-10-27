@@ -1,7 +1,11 @@
 package com.a203.sixback.user.res;
 
 import com.a203.sixback.util.model.BaseResponseBody;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class ResGetUserPointDTO extends BaseResponseBody {
 
     private Integer point;
@@ -11,7 +15,7 @@ public class ResGetUserPointDTO extends BaseResponseBody {
 
         body.setStatusCode(statusCode);
         body.setMessage(message);
-        body.point = point;
+        body.setPoint(point);
 
         return body;
     }

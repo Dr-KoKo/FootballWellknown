@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,10 +41,16 @@ public class UserService {
 
         User user = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 
-        List<Board> boardList = boardRepo.findAllByUser(user);
+//        List<Board> boardList = boardRepo.findAllByUser(user);
 
-        return ResGetUserBoardsDTO.of(200, "성공", boardList);
+        List<ResGetUserBoardsDTO.GetBoardDTO> userBoardList = boardRepo.findAllByUser(user).stream()
+                .map(board->new ResGetUserBoardsDTO.GetBoardDTO(board,user,board.getMatch().getId())).collect(Collectors.toList());
 
+//        for (Board board : boardList) {
+//            userBoardList.add(new ResGetUserBoardsDTO.GetBoardDTO(board,user,board.getMatch().getId()));
+//        }
+
+        return ResGetUserBoardsDTO.of(200, "성공", userBoardList);
     }
 
 //    public ResGetUserCommentsDTO getUserComments() {

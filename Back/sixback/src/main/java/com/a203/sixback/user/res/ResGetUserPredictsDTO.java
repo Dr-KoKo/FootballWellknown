@@ -3,11 +3,12 @@ package com.a203.sixback.user.res;
 import com.a203.sixback.db.entity.Predict;
 import com.a203.sixback.db.enums.MatchResult;
 import com.a203.sixback.util.model.BaseResponseBody;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Getter
 public class ResGetUserPredictsDTO extends BaseResponseBody {
 
     List<UserPredictDTO> userPredictDTOList;
@@ -22,7 +23,7 @@ public class ResGetUserPredictsDTO extends BaseResponseBody {
         return body;
     }
 
-
+    @Getter
     private static class UserPredictDTO {
         private String home;
         private String homeImg;
