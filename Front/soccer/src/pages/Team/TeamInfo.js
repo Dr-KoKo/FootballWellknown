@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Loading from "components/Loading";
 import "./TeamInfo.css";
 const TeamInfo = () => {
   const [datas, setDatas] = useState([{ name: "1234" }]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     axios.get("http://localhost:8080/api/v1/teams/ranks").then((response) => {
       setDatas(response.data.result);
+      setLoading(false);
     });
   }, []);
-
+  function goTeamDetail(id){
+    window.location.href=`/teamdetail/${id}`;
+  } 
   return (
+    
     <div id="teamDiv">
+      {loading ? <Loading /> :
       <table className="table" id="teamTable">
         <thead id="teamTableHead">
           <tr id="teamTableHeadTr">
@@ -28,7 +35,7 @@ const TeamInfo = () => {
         </thead>
         <tbody id="teamTableBody">
           {datas.map((data) => (
-            <tr id="teamTableBodyTr" key={data.name}>
+            <tr id="teamTableBodyTr" key={data.name} onClick={()=>goTeamDetail(data.teamId)} >
               <td className="rank">{data.rank}</td>
               <td className="name" id="teamTableTeam">
                 <img id="teamLogo" src={data.image} alt="" />
@@ -46,7 +53,8 @@ const TeamInfo = () => {
           ))}
         </tbody>
       </table>
-    </div>
+      }
+    </div>  
   );
 };
 
