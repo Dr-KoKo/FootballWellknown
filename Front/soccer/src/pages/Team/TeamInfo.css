@@ -1,0 +1,60 @@
+#teamDiv{
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    margin-left: 10%;
+}
+
+#teamTable{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#teamTableHead{
+    display: flex;
+    width: 100%;
+    margin-bottom:3%;
+}
+
+#teamTableHeadTr{
+    display: flex;
+    width: 100%;
+    justify-content:space-between;
+    background-color: aqua;
+}
+.rank{
+    text-align: center;
+    width: 8%;
+}
+.name{
+    width:26%;
+}
+.th{
+    width: 8%;
+    text-align: center;
+}
+#teamTableBody{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+#teamTableBodyTr{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5%;
+}
+#teamTableTeam{
+    display: flex;
+    align-items: center;
+}
+#teamLogo{
+    margin-left: 5%;
+    width: 25%;
+}
+#teamName{
+    width: 70%;
+    text-align: center;
+}
