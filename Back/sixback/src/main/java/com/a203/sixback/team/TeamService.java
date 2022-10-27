@@ -67,8 +67,25 @@ public class TeamService {
 
     public TeamDetVO getTeamDetails(int teamId) {
         TeamDetVO result = new TeamDetVO();
-
+        List<Team> list = teamRepo.findAll();
+        Collections.sort(list,new Comparator<Team>() {
+            @Override
+            public int compare(Team o1, Team o2) {
+                int pts1 = o1.getWin() * 3 + o1.getDraw();
+                int pts2 = o2.getWin() * 3 + o2.getDraw();
+                if(pts1==pts2){
+                    return (o2.getGoals()-o2.getLoseGoals()) - (o1.getGoals()-o1.getLoseGoals());
+                }
+                return pts2-pts1;
+            }
+        });
         Team team = teamRepo.findById(teamId).get();
+        int rank =0;
+        for(int i=0;i<list.size();i++){
+            if(team.getId()==list.get(i).getId()){
+                rank = i+1;
+            }
+        }
         TeamInfo teamInfo = TeamInfo.builder()
                 .draw(team.getDraw())
                 .goals(team.getGoals())
@@ -76,6 +93,7 @@ public class TeamService {
                 .name(team.getName())
                 .win(team.getWin())
                 .lose(team.getLose())
+                .rank(rank)
                 .loseGoals(team.getLoseGoals())
                 .pts(team.getWin()*3+team.getDraw())
                 .build();
