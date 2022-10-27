@@ -30,6 +30,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
     private final RoleType roleType;
     private final Collection<GrantedAuthority> authorities;
     private Map<String, Object> attributes;
+    private final User user;
 
     @Override
     public Map<String, Object> getAttributes() {
@@ -43,7 +44,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 
     @Override
     public String getPassword() {
-        return null;
+        return nickname;
     }
 
     @Override
@@ -97,7 +98,8 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
                 user.getNickname(),
                 user.getProviderType(),
                 RoleType.USER,
-                Collections.singletonList(new SimpleGrantedAuthority(RoleType.USER.getCode()))
+                Collections.singletonList(new SimpleGrantedAuthority(RoleType.USER.getCode())),
+                user
         );
     }
 

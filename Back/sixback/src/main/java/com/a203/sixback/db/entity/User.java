@@ -26,19 +26,20 @@ public class User {
     @Column(unique = true, nullable = false)
     private String nickname;
 
+    @Column(nullable = false)
     @ColumnDefault("0")
     private Integer point;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "varchar(20) default 'ACTIVATED'")
-    private Status status;
+//    @Column(nullable = false, columnDefinition = "varchar(20) default 'ACTIVATED'")
+    private Status status = Status.ACTIVATED;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "varchar(20)")
+//    @Column(nullable = false, columnDefinition = "varchar(20)")
     private ProviderType providerType;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "varchar(20) default 'ROLE_USER'")
-    private RoleType roleType;
+//    @Column(nullable = false, columnDefinition = "varchar(20) default 'USER'")
+    private RoleType roleType = RoleType.USER;
 
 }
