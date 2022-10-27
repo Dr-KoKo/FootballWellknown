@@ -28,7 +28,6 @@ public class CommentService {
     private final BoardRepo boardRepo;
     private final CommentRepoMySQL commentRepo;
 
-    @Autowired
     private final CommentRepoMongoDB commentRepoMongo;
 
     public ResponseEntity postComment(Long userId, PostCommentDTO postCommentDTO) {
@@ -85,7 +84,7 @@ public class CommentService {
 
         CommentMongo commentMongo = CommentMongo.builder()
                 .comment(postCommentDTO.getComment())
-                .aurtor(user.getNickname())
+                .author(user.getNickname())
                 .boardId(board.getId())
                 .createDate(LocalDateTime.now())
                 .build();
@@ -100,13 +99,12 @@ public class CommentService {
 
         for(CommentMongo comment : comments){
             getComments.add(new GetCommentResDTO().builder()
-                    .author(comment.getAurtor())
+                    .author(comment.getAuthor())
                     .comment(comment.getComment())
                     .build()
             );
         }
         return getComments;
-
     }
 
     public ResponseEntity updateComment(Long userId, UpdateCommentDTO updateCommentDTO) {
@@ -123,7 +121,7 @@ public class CommentService {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No Comment"));
         }
 
-        if(!comment.getAurtor().equals(user.getNickname())){
+        if(!comment.getAuthor().equals(user.getNickname())){
 //        if(board.getUser() != user || user.getRoll().eqauls("ADMIN")){
             return ResponseEntity.status(405).body(BaseResponseBody.of(405,  "No Authorization"));
         }
@@ -147,7 +145,7 @@ public class CommentService {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No Comment"));
         }
 
-        if(!comment.getAurtor().equals(user.getNickname())){
+        if(!comment.getAuthor().equals(user.getNickname())){
 //        if(board.getUser() != user || user.getRoll().eqauls("ADMIN")){
             return ResponseEntity.status(405).body(BaseResponseBody.of(405,  "No Authorization"));
         }

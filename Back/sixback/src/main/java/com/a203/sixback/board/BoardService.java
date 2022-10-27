@@ -174,7 +174,7 @@ public class BoardService {
 
             System.out.println(board);
         }
-        return ResponseEntity.status(200).body(BoardRes.of(200, "Get Match Board Success", getBoards));
+        return ResponseEntity.status(200).body(BoardRes.of(200, "Get Match Board Success", getBoards, getBoards.size() / 10 + 1));
     }
 
     public List<GetBoardResDTO> getBoardList(int page) {
