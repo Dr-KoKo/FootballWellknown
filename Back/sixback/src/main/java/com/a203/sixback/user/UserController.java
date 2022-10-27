@@ -1,7 +1,6 @@
 package com.a203.sixback.user;
 
-import com.a203.sixback.user.res.ResGetUserBoardsDTO;
-import com.a203.sixback.user.res.ResGetUserDetailsDTO;
+import com.a203.sixback.user.res.*;
 import com.a203.sixback.util.model.BaseResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,20 +25,55 @@ public class UserController {
         try{
             responseBody = userService.getUserDetails();
         } catch (Exception e){
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BaseResponseBody.of(400,"잘못된 요청입니다."));
         }
         return ResponseEntity.ok().body(responseBody);
     }
 
-//    @GetMapping("/boards")
-//    public ResponseEntity<? extends BaseResponseBody> getUserBoards(){
-//        ResGetUserBoardsDTO responseBody;
+    @GetMapping("/boards")
+    public ResponseEntity<? extends BaseResponseBody> getUserBoards(){
+        ResGetUserBoardsDTO responseBody;
+        try{
+            responseBody = userService.getUserBoards();
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(BaseResponseBody.of(400,"잘못된 요청입니다."));
+        }
+        return ResponseEntity.ok().body(responseBody);
+
+    }
+
+//    @GetMapping("/comments")
+//    public ResponseEntity<? extends BaseResponseBody> getUserComments(){
+//        ResGetUserCommentsDTO responseBody;
 //        try{
-//            responseBody = userService.getUserBoards();
+//            responseBody = userService.getUserComments();
 //        } catch (Exception e){
-//            return ResponseEntity.badRequest().body(responseBody.of(400,"잘못된 요청입니다."));
+//            return ResponseEntity.badRequest().body(BaseResponseBody.of(400,"잘못된 요청입니다."));
 //        }
 //        return ResponseEntity.ok().body(responseBody);
-//
 //    }
+
+    @GetMapping("/predicts")
+    public ResponseEntity<? extends BaseResponseBody> getUserPredicts(){
+        ResGetUserPredictsDTO responseBody;
+        try{
+            responseBody = userService.getUserPredicts();
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(BaseResponseBody.of(400,"잘못된 요청입니다."));
+        }
+        return ResponseEntity.ok().body(responseBody);
+    }
+
+    @GetMapping("/points")
+    public ResponseEntity<? extends BaseResponseBody> getUserPoints(){
+        ResGetUserPointDTO responseBody;
+        try{
+            responseBody = userService.getUserPoint();
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(BaseResponseBody.of(400,"잘못된 요청입니다."));
+        }
+        return ResponseEntity.ok().body(responseBody);
+    }
+
 }
