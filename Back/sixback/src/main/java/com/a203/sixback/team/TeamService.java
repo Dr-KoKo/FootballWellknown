@@ -44,7 +44,7 @@ public class TeamService {
         int i = 1;
         for(Team team : list){
             result.add(new TeamInfo(
-                    team.getName(), team.getImage(), team.getWin(), team.getDraw(),
+                    team.getId(),team.getName(), team.getImage(), team.getWin(), team.getDraw(),
                     team.getLose(), team.getGoals(), team.getLoseGoals(), i, team.getWin()*3+ team.getDraw()));
             i++;
         }
