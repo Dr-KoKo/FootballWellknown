@@ -12,8 +12,9 @@ const TeamInfo = () => {
     });
   }, []);
   function goTeamDetail(id){
-    window.location.href=`/teamdetail/${id}`;
-  } 
+    window.location.href=`/teamdetail/${id}/match`;
+  }
+
   return (
     
     <div id="teamDiv">
