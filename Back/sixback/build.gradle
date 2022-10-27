@@ -27,7 +27,7 @@ dependencies {
 //	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
 //	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.modelmapper:modelmapper'
