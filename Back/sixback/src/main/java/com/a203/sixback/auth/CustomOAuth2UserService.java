@@ -61,8 +61,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
-
-
+        System.out.println("Email");
+        System.out.println(userInfo.getEmail());
+        System.out.println(userInfo.getName());
         String nickname;
 
         do {

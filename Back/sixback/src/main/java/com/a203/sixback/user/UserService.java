@@ -31,6 +31,7 @@ public class UserService {
 
     public ResGetUserDetailsDTO getUserDetails() {
 
+//        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         User user = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 
         return ResGetUserDetailsDTO.of(200,"성공", user);
