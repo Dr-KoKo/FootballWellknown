@@ -11,14 +11,14 @@ import java.util.stream.Collectors;
 @Getter
 public class ResGetUserPredictsDTO extends BaseResponseBody {
 
-    List<UserPredictDTO> userPredictDTOList;
+    List<UserPredictDTO> userPredictList;
 
     public static ResGetUserPredictsDTO of(Integer statusCode, String message, List<Predict> predictList){
         ResGetUserPredictsDTO body = new ResGetUserPredictsDTO();
 
         body.setStatusCode(statusCode);
         body.setMessage(message);
-        body.userPredictDTOList = predictList.stream().map(UserPredictDTO::new).collect(Collectors.toList());
+        body.userPredictList = predictList.stream().map(UserPredictDTO::new).collect(Collectors.toList());
 
         return body;
     }

@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PlayerEvaluate {
+public class MatchPredict {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", columnDefinition = "BIGINT")
@@ -23,20 +23,12 @@ public class PlayerEvaluate {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne
-    @JoinColumn(name = "player_id")
-    private Player player;
     @Column
-    private int score;
+    private String whereWin;
 
-    public PlayerEvaluate(Matches matches, Player player, int score) {
+    public MatchPredict(User user, Matches matches, String whereWin) {
+        this.user = user;
         this.matches = matches;
-        this.player = player;
-        this.score = score;
+        this.whereWin = whereWin;
     }
-
-    public void setScore(int score){
-        this.score = score;
-    }
-
 }
