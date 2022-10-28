@@ -58,6 +58,7 @@ const TeamPlayer = () => {
       <Grid container>
         {datas.dfs.map((data) => (
           <Grid item xs={4}>
+            <div onClick={() => goPlayerDetail(data.id)}>
             <div id="numberImage">
             <img id="playerProfile" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Aaron_Ramsdale_February_2020.jpg" alt=""></img>
             <div id="number">{data.number}</div>
@@ -66,7 +67,7 @@ const TeamPlayer = () => {
             <div>{data.name} {data.country}</div>
             <div>{data.height}cm {data.weight}kg {2022-(data.birth).substring(0,4)} 세</div>
             <div>{data.joinMatches}경기 {data.goals}골 {data.assists}어시</div>
-            <div></div>
+            </div>
           </Grid>
         ))}
         </Grid>
@@ -74,6 +75,7 @@ const TeamPlayer = () => {
       <Grid container>
         {datas.mfs.map((data) => (
           <Grid item xs={4}>
+            <div onClick={() => goPlayerDetail(data.id)}>
             <div id="numberImage">
             <img id="playerProfile" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Aaron_Ramsdale_February_2020.jpg" alt=""></img>
             <div id="number">{data.number}</div>
@@ -82,7 +84,7 @@ const TeamPlayer = () => {
             <div>{data.name} {data.country}</div>
             <div>{data.height}cm {data.weight}kg {2022-(data.birth).substring(0,4)} 세</div>
             <div>{data.joinMatches}경기 {data.goals}골 {data.assists}어시</div>
-            <div></div>
+            </div>
           </Grid>
         ))}
         </Grid>
@@ -90,6 +92,7 @@ const TeamPlayer = () => {
       <Grid container>
         {datas.fws.map((data) => (
           <Grid item xs={4}>
+            <div onClick={() => goPlayerDetail(data.id)}>
             <div id="numberImage">
             <img id="playerProfile" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Aaron_Ramsdale_February_2020.jpg" alt=""></img>
             <div id="number">{data.number}</div>
@@ -98,7 +101,7 @@ const TeamPlayer = () => {
             <div>{data.name} {data.country}</div>
             <div>{data.height}cm {data.weight}kg {2022-(data.birth).substring(0,4)} 세</div>
             <div>{data.joinMatches}경기 {data.goals}골 {data.assists}어시</div>
-            <div></div>
+            </div>
           </Grid>
         ))}
         </Grid>
