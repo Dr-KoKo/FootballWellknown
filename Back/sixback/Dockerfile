@@ -1,12 +1,11 @@
 FROM gradle:7.5
 
-WORKDIR /var/jenkins_home/properties
-
-COPY ./ ./src/main/resources
-
 WORKDIR /var/jenkins_home/workspace/football-well-known-backend/Back/sixback
 
+COPY ./var/jenkins_home/properties ./src/main/resources
+
 COPY ./ ./
+
 
 RUN gradle clean build --no-daemon --stacktrace
 
