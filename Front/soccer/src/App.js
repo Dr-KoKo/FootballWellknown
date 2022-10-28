@@ -15,6 +15,8 @@ import LineUp from "components/Match/LineUp";
 import MatchPredict from "components/Match/MatchPredict";
 import Padlet from "components/Match/Padlet";
 import PlayerEvaluate from "components/Match/PlayerEvaluate";
+import SocialLogin from "./components/user/SocialLogin";
+import SocialAuth from "./components/user/SocialAuth"
 
 function App() {
   return (
@@ -36,6 +38,9 @@ function App() {
           <Route path="Padlet" element={<Padlet />} />
           <Route path="PlayerEvaluate" element={<PlayerEvaluate />} />
         </Route>
+        <Route path='/' element={<Home />} />
+        <Route path='/user/login' element={<SocialLogin/>} />
+        <Route path='/api/v1/login/oauth2/code/*' element={<SocialAuth />} />
       </Routes>
     </Layout>
   );
