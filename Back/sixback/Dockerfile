@@ -4,7 +4,9 @@ WORKDIR /var/jenkins_home/workspace/football-well-known-frontend/Back/sixback
 
 COPY ./ ./
 
-COPY /var/jenkins_home/properties ./src/main/resources
+WORKDIR /var/jenkins_home/properties
+
+COPY ./ ./src/main/resources
 
 RUN gradle clean build --no-daemon --stacktrace
 
