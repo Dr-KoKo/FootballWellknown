@@ -32,6 +32,26 @@ public class BoardController {
         return ResponseEntity.status(200).body(BoardRes.of(200, "message", boards, boards.size()/10 + 1));
     }
 
+    @GetMapping("/matches/{matchId}")
+    public ResponseEntity matchBoard(@RequestParam(value="page", required = true) Integer page, @PathVariable(value = "matchId") Long matchId) {
+        int pages = 1;
+
+        if(page != null) {
+            pages = page;
+        }
+        return boardService.getMatchBoard(matchId, pages);
+    }
+
+    @GetMapping("/teams/{teamId}")
+    public ResponseEntity teamBoard(@RequestParam(value="page", required = true) Integer page, @PathVariable(value = "teamId") Long teamId) {
+        int pages = 1;
+
+        if (page != null) {
+            pages = page;
+        }
+        return boardService.getTeamBoard(teamId, pages);
+    }
+
     @GetMapping("/{boardId}")
     public ResponseEntity getBoardDetail(@PathVariable(value ="boardId") long boardId){
 
@@ -64,10 +84,7 @@ public class BoardController {
         return boardService.deleteBoard(boardId, userId);
     }
 
-    @GetMapping("/matches/{matchId}")
-    public ResponseEntity matchBoard(@PathVariable(value = "matchId") Long matchId) {
-        return boardService.getMatchBoard(matchId);
-    }
+
 
     @PostMapping("/comment")
     public ResponseEntity postComment(@RequestBody PostCommentDTO postCommentDTO) {
@@ -105,4 +122,5 @@ public class BoardController {
         Long userId = 5L;
         return commentService.deleteComment(userId, deleteCommentDTO.getCommentId());
     }
+
 }

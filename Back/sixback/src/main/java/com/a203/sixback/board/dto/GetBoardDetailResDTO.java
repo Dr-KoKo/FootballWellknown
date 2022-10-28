@@ -15,7 +15,7 @@ public class GetBoardDetailResDTO {
     private String title;
     private String ctgName;
     private String content;
-    private long author;
+    private String author;
     private LocalDateTime createDate;
     private List<GetCommentResDTO> comments;
 

@@ -85,10 +85,10 @@ public class CommentService {
         CommentMongo commentMongo = CommentMongo.builder()
                 .comment(postCommentDTO.getComment())
                 .author(user.getNickname())
+                .author_id(userId)
                 .boardId(board.getId())
                 .createDate(LocalDateTime.now())
                 .build();
-//        System.out.println(commentMongo);
         commentRepoMongo.save(commentMongo);
         return ResponseEntity.ok(BaseResponseBody.of(200, "Post Comment Success"));
     }
@@ -99,8 +99,10 @@ public class CommentService {
 
         for(CommentMongo comment : comments){
             getComments.add(new GetCommentResDTO().builder()
+                    .commentId(comment.getId())
                     .author(comment.getAuthor())
                     .comment(comment.getComment())
+                    .createDate(comment.getCreateDate())
                     .build()
             );
         }

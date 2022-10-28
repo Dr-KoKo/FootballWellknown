@@ -12,5 +12,8 @@ import java.util.List;
 public interface BoardRepo extends JpaRepository<Board, Long> {
     public Page<Board> findAll(Pageable pageable);
 
-    List<Board> findAllByMatchId(Long matchId);
+    List<Board> findAllByMatchId(Pageable pageable, Long matchId);
+
+
+    List<Board> findAllByTeamId(Pageable pageable, Long teamId);
 }

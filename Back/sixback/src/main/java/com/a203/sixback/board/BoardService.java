@@ -35,24 +35,6 @@ public class BoardService {
 
     private final MatchesRepo matchRepo;
 
-    public List<GetBoardResDTO> findAll() {
-        List<Board> boards =  boardRepo.findAll();
-        List<GetBoardResDTO> getBoards = new LinkedList<>();
-
-        for(Board board : boards){
-            getBoards.add(new GetBoardResDTO().builder()
-                    .id(board.getId())
-                    .title(board.getTitle())
-                        // author 이름으로 나중에 바꾸기
-                    .author(board.getUser().getNickname())
-                    .build()
-            );
-                        
-//            System.out.println(board);
-        }
-        return getBoards;
-    }
-
     public ResponseEntity createBoard(PostBoardReqDTO postBoardReqDTO, Long userId) {
         User user = null;
         try {
@@ -97,7 +79,7 @@ public class BoardService {
                 .ctgName(board.getCategory().getCtgName())
                 .content(board.getContent())
 //                .author(board.getUser().getUserName)
-                .author(board.getUser().getId())
+                .author(board.getUser().getNickname())
                 .createDate(board.getCreateDate())
                 .build();
     return getDetail;
@@ -148,7 +130,6 @@ public class BoardService {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No Board"));
         }
         if(board.getUser() != user){
-//        if(board.getUser() != user || user.getRoll().eqauls("ADMIN")){
             return ResponseEntity.status(405).body(BaseResponseBody.of(405,  "No Authorization"));
         }
 
@@ -157,19 +138,34 @@ public class BoardService {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Delete Board Success"));
     }
 
-    public ResponseEntity getMatchBoard(Long matchId) {
 
-        List<Board> boards =  boardRepo.findAllByMatchId(matchId);
+
+    public List<GetBoardResDTO> getBoardList(int page) {
+        PageRequest pageRequest = PageRequest.of(page -1, 10);
+        List<Board> boards =  boardRepo.findAll(pageRequest).stream().collect(Collectors.toList());
+        List<GetBoardResDTO> getBoards = new LinkedList<>();
+        for(Board board : boards){
+            getBoards.add(new GetBoardResDTO().builder()
+                    .id(board.getId())
+                    .title(board.getTitle())
+                    .author(board.getUser().getNickname())
+                    .build()
+            );
+        }
+        return getBoards;
+    }
+
+    public ResponseEntity getMatchBoard(Long matchId, int page) {
+        PageRequest pageRequest = PageRequest.of(page -1, 10);
+        List<Board> boards =  boardRepo.findAllByMatchId(pageRequest, matchId);
         List<GetBoardResDTO> getBoards = new LinkedList<>();
 
         for(Board board : boards){
             getBoards.add(new GetBoardResDTO().builder()
-                            .id(board.getId())
-                            .title(board.getTitle())
-                            // author 이름으로 나중에 바꾸기
-//                  .author(board.getUser().getName())
-                            .author(board.getUser().getNickname())
-                            .build()
+                    .id(board.getId())
+                    .title(board.getTitle())
+                    .author(board.getUser().getNickname())
+                    .build()
             );
 
             System.out.println(board);
@@ -177,23 +173,21 @@ public class BoardService {
         return ResponseEntity.status(200).body(BoardRes.of(200, "Get Match Board Success", getBoards, getBoards.size() / 10 + 1));
     }
 
-    public List<GetBoardResDTO> getBoardList(int page) {
+    public ResponseEntity getTeamBoard(Long teamId, int page) {
         PageRequest pageRequest = PageRequest.of(page -1, 10);
-        List<Board> boards =  boardRepo.findAll(pageRequest).stream().collect(Collectors.toList());
-//        List<Board> boards =  boardRepo.findByPage(pageRequest);
+        List<Board> boards =  boardRepo.findAllByTeamId(pageRequest, teamId);
         List<GetBoardResDTO> getBoards = new LinkedList<>();
+
         for(Board board : boards){
             getBoards.add(new GetBoardResDTO().builder()
                     .id(board.getId())
                     .title(board.getTitle())
-                    // author 이름으로 나중에 바꾸기
                     .author(board.getUser().getNickname())
                     .build()
             );
 
-//            System.out.println(board);
+            System.out.println(board);
         }
-        return getBoards;
-
+        return ResponseEntity.status(200).body(BoardRes.of(200, "Get Team Board Success", getBoards, getBoards.size() / 10 + 1));
     }
 }
