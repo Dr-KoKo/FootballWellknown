@@ -1,4 +1,6 @@
 import React from 'react';
+
+
 const SocialLogin = () => {
   const base_uri = process.env.REACT_APP_SERVER_URL + "/api/v1/oauth2/authorization/"
   const redirect_uri = "?redirect_uri="+ process.env.REACT_APP_CLIENT_URL +"/api/v1/login/oauth2/code/google";

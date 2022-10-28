@@ -1,36 +1,45 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
-import { SOCIAL_LOGIN } from "modules/types";
+import { SET_TOKEN, SOCIAL_LOGIN } from "modules/types";
+import { getUserInfo } from "../../services/userServices";
+import {store} from "../..";
+
 
 const SocialAuth = () => {
+  const navigate = useNavigate();
   const [param, setParam] = useSearchParams();
-  const token = param.get("token");
-  const email = param.get("email");
-  const nickname = param.get("nickName");
-  const snsType = param.get("snsType");
-  const point = param.get("point");
-
+  const accessToken = param.get("token");
+  
   const dispatch = useDispatch();
-  const user = {
-    isLogin: true,
-    email: email,
-    nickname: nickname,
-    auth: "1",
-    token: token,
-    snsType: snsType,
-    point: point,
-  };
+  
   dispatch({
-    type: SOCIAL_LOGIN,
-    payload: user,
+    type: SET_TOKEN,
+    payload: accessToken,
   });
+  
 
-    // const navigate = useNavigate();
-    // setTimeout(() => {
-    //   navigate("/");
-    // }, 1);
+  getUserInfo().then(value =>{
+    const user = {
+      isLogin: true,
+      nickname: value.data.nickname,
+      email: value.data.email,
+      point: value.data.point,
+    };
+    dispatch({
+      type: SOCIAL_LOGIN,
+      payload: user
+    })
+    setTimeout(() => {
+      navigate("/");
+    }, 1);
+  }
+  );
+  
+  
+
+    
 
   return (
     <div>

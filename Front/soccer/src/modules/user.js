@@ -25,17 +25,16 @@ export default function (state = initState, action) {
     case SET_TOKEN:
       return {
         ...state,
-        token: action.payload.accessToken,
+        token: action.payload,
       };
     case SOCIAL_LOGIN:
+      
       return {
+        ...state,
         isLogin: action.payload.isLogin,
         nickname: action.payload.nickname,
         email: action.payload.email,
-        auth: action.payload.auth,
-        snsType: action.payload.snsType,
         point: action.payload.point,
-        roleType: action.payload.roleType,
       };
     case LOGOUT:
       return {
