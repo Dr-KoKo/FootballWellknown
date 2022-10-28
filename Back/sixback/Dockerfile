@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM gradle:7.5
 
 COPY ./ ./
 
