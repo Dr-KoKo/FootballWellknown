@@ -39,7 +39,7 @@ public class ResGetUserBoardsDTO extends BaseResponseBody {
 
         public GetBoardDTO(Board board, User author, Long match){
             this.title = board.getTitle();
-            this.category = board.getCategory().getCtgName().toString();
+            this.category = board.getCategory().getCtgName();
             this.content = board.getContent();
             this.writer = author.getNickname();
             this.createDateTime = board.getCreateDate();
