@@ -2,7 +2,8 @@ import axios from "axios";
 import Loading from "components/Loading";
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router";
+import { Outlet, useParams } from "react-router";
+import { Link } from "react-router-dom";
 import "./TeamDetail.css";
 const TeamDetail = () => {
 
@@ -22,9 +23,10 @@ const TeamDetail = () => {
         setLoading(false);
       });
   }, []);
+  
   return (
     <div id="teamDet">
-      {loading ? <Loading /> : <div id="teamDet">  
+      {loading ? <Loading /> :<div id="teamDet">  
       <div id="teamSummary">
         <div id="image">
           <img id="realImage" src={datas.teamInfo.image} alt=""></img>
@@ -49,62 +51,14 @@ const TeamDetail = () => {
         </table>
       </div>
       <div id="buttons">
-        <button className="btn">Matches</button>
-        <button className="btn">Players</button>
-        <button className="btn">Board</button>
+        <Link to={"match"} className="btn"><button id="btns">Matches</button></Link>
+        <Link to={"player"} className="btn"><button id="btns">Players</button></Link>
+        <Link to={"board"} className="btn"><button id="btns">Board</button></Link>
       </div>
-      <div id="matches">
-        <div>최근 매치</div>
-        {datas.finMatch.map((data) => (
-          <div key={data.matchId} id="finMatch">
-            <div id="matchInfo">
-              <div id="matchDate">{data.date.substring(0, 10)} {data.date.substring(11, 16)}</div>
-              <div id="matchStadium">{data.stadium}</div>
-            </div>            
-            <div id="finMatchData">           
-            <div className="team">
-              <img src={data.homeImage} alt=""></img>
-              <div>{data.home}</div>
-            </div>
-            <div id="scoreVS">
-            <div className="score">{data.homeScore}</div>
-            <div className="VS">VS</div>
-            <div className="score">{data.awayScore}</div>
-            </div>
-            <div className="team">
-              <img src={data.awayImage} alt=""></img>
-              <div>{data.away}</div>
-            </div>
-          </div>
-          </div>
-        ))}
-      </div>
-      <div id="matches">
-        <div>예정 매치</div>
-        {datas.yetMatch.map((data) => (
-          <div key={data.matchId} id="finMatch">
-            <div id="matchInfo">
-              <div id="matchDate">{data.date.substring(0, 10)} {data.date.substring(11, 16)}</div>
-              <div id="matchStadium">{data.stadium}</div>
-            </div>   
-            <div id="finMatchData">
-           
-            <div className="team">
-              <img src={data.homeImage} alt=""></img>
-              <div>{data.home}</div>
-            </div>
-            <div className="VS2">VS</div>
-            <div className="team">
-              <img src={data.awayImage} alt=""></img>
-              <div>{data.away}</div>
-            </div>
-          </div>
-          </div>
-        ))}
-      </div>
+      <Outlet></Outlet>
     </div>
-    }
-    </div>
+}
+</div>
   );
 };
 
