@@ -6,14 +6,8 @@ import com.a203.sixback.board.dto.GetBoardResDTO;
 import com.a203.sixback.board.dto.PostBoardReqDTO;
 import com.a203.sixback.board.dto.UpdateBoardReqDTO;
 import com.a203.sixback.board.res.BoardRes;
-import com.a203.sixback.db.entity.Board;
-import com.a203.sixback.db.entity.Category;
-import com.a203.sixback.db.entity.Matches;
-import com.a203.sixback.db.entity.User;
-import com.a203.sixback.db.repo.BoardRepo;
-import com.a203.sixback.db.repo.CtgRepo;
-import com.a203.sixback.db.repo.MatchesRepo;
-import com.a203.sixback.db.repo.UserRepo;
+import com.a203.sixback.db.entity.*;
+import com.a203.sixback.db.repo.*;
 import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +28,7 @@ public class BoardService {
     private final CtgRepo ctgRepo;
 
     private final MatchesRepo matchRepo;
+    private final TeamRepo teamRepo;
 
     public ResponseEntity createBoard(PostBoardReqDTO postBoardReqDTO, Long userId) {
         User user = null;
@@ -44,7 +39,7 @@ public class BoardService {
         }
 
         Category category = ctgRepo.findByCtgName(postBoardReqDTO.getCtgName());
-        if(postBoardReqDTO.getMatchId() == null) {
+        if(postBoardReqDTO.getMatchId() == null && postBoardReqDTO.getTeamId() == null) {
             Board board = Board.builder()
                     .title(postBoardReqDTO.getTitle())
                     .content(postBoardReqDTO.getContent())
@@ -53,7 +48,7 @@ public class BoardService {
                     .build();
             boardRepo.save(board);
         }
-        else {
+        else if(postBoardReqDTO.getMatchId() != null) {
             Matches match = null;
             try {
                 match = matchRepo.findById(postBoardReqDTO.getMatchId()).get();
@@ -68,6 +63,14 @@ public class BoardService {
                     .build();
             boardRepo.save(board);
         }
+        else {
+            Team team = null;
+            try {
+                team = teamRepo.findById(postBoardReqDTO.getTeamId()).get();
+            } catch (Exception e) {
+
+            }
+        }
         return ResponseEntity.ok(BaseResponseBody.of(200, "Post Board Success"));
     }
 
@@ -78,7 +81,6 @@ public class BoardService {
                 .title(board.getTitle())
                 .ctgName(board.getCategory().getCtgName())
                 .content(board.getContent())
-//                .author(board.getUser().getUserName)
                 .author(board.getUser().getNickname())
                 .createDate(board.getCreateDate())
                 .build();

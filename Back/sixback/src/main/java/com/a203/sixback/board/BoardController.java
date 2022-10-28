@@ -65,6 +65,7 @@ public class BoardController {
     @PostMapping("")
     public ResponseEntity createBoard(@RequestBody PostBoardReqDTO postBoardReqDTO) {
         // 일단 memberId = 1로 테스트
+        System.out.println(postBoardReqDTO.getCtgName());
         Long userId = 5L;
         return boardService.createBoard(postBoardReqDTO, userId);
     }
