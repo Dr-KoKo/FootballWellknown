@@ -2,8 +2,6 @@ FROM gradle:7.5
 
 COPY ./ ./
 
-COPY ../../../../properties ./src/main/resources
-
 RUN gradle clean build --no-daemon --stacktrace
 
 # 도커 컨테이너 외부에 노출할 포트 지정
