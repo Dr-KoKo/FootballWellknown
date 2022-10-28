@@ -88,6 +88,7 @@ public class CommentService {
                 .aurtor(user.getNickname())
                 .boardId(board.getId())
                 .createDate(LocalDateTime.now())
+                .authorId(16L)
                 .build();
 //        System.out.println(commentMongo);
         commentRepoMongo.save(commentMongo);

@@ -12,11 +12,13 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class CommentMongo {
     @Id
     private String id;
     private Long boardId;
     private String comment;
     private String aurtor;
+    private Long authorId;
     private LocalDateTime createDate;
 }
