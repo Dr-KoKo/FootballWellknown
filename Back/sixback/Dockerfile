@@ -2,6 +2,8 @@ FROM gradle:7.5
 
 COPY ./ ./
 
+COPY /var/jenkins_home/properties ./src/main/resources
+
 RUN gradle clean build --no-daemon
 
 # 도커 컨테이너 외부에 노출할 포트 지정
