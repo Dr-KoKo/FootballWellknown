@@ -2,6 +2,7 @@ package com.a203.sixback.match;
 
 import com.a203.sixback.db.entity.*;
 import com.a203.sixback.db.repo.*;
+import com.a203.sixback.match.res.AllTeamBoardRes;
 import com.a203.sixback.match.vo.*;
 import com.a203.sixback.team.vo.MatchVO;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class MatchService {
     private final PlayerRepo playerRepo;
     private final UserRepo userRepo;
     private final MatchPredictRepo matchPredictRepo;
+    private final TeamRepo teamRepo;
     public List<MatchStatusVO> getMatchesByRound(int round) {
         List<Matches> matches = matchesRepo.findAllByRound(round);
         List<MatchStatusVO> result = new ArrayList<>();
@@ -218,6 +220,25 @@ public class MatchService {
                 .stadium(match.getStadium())
                 .build();
         MatchStatusVO result = new MatchStatusVO(matchVO, match.getMatchStatus());
+        return result;
+    }
+
+    public List<TeamBoardVO> getTeams() {
+        List<TeamBoardVO> result = new ArrayList<>();
+        List<Team> teams = teamRepo.findAll();
+        for(Team team : teams){
+            result.add(new TeamBoardVO(team.getId(), team.getName(), team.getImage()));
+        }
+        return result;
+    }
+
+    public List<MatchBoardVO> getMatchBoards(int roundId) {
+        List<MatchBoardVO> result = new ArrayList<>();
+        List<Matches> matches = matchesRepo.findAllByRound(roundId);
+        for(Matches match : matches){
+            String name = "[" +match.getRound()+"] "+match.getHome().getName()+ " VS " + match.getAway().getName();
+            result.add(new MatchBoardVO(match.getId(), name));
+        }
         return result;
     }
 }
