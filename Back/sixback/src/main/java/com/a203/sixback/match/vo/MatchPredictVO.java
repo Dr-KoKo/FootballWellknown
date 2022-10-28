@@ -7,10 +7,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PlayerEvaluateVO {
+public class MatchPredictVO {
     private long id;
     private long matchId;
-    private String userEmail;
-    private long playerId;
-    private int score;
+    private String userNickname;
+    private long userId;
+    private String whereWin;
 }
