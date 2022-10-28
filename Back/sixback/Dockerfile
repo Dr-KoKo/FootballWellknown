@@ -1,5 +1,7 @@
 FROM gradle:7.5
 
+WORKDIR /var/jenkins_home/workspace/football-well-known-frontend/Back/sixback
+
 COPY ./ ./
 
 COPY /var/jenkins_home/properties ./src/main/resources
