@@ -1,0 +1,103 @@
+#teamDet{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#teamSummary{
+    /* background-color: #98c5e9; */
+    width: 60%;
+    justify-content: center;
+    display: flex;
+    
+}
+#image{
+    display: flex;
+    justify-content: center;
+    width: 40%;
+}
+#realImage{
+    width: 60%;
+}
+#table{
+    margin-top: 5%;
+    width: 60%;
+}
+
+#rank{
+    text-align: center;
+    width:15%;
+}
+#result{
+    text-align: center;
+    width:55%;
+}
+#pts{
+    text-align: center;
+    width: 15%;
+}
+#gd{
+    text-align: center;
+    width: 20%;
+}
+#buttons{
+    margin-left: 2%;
+    margin-top: 5%;
+    display: flex;
+    justify-content: space-between;
+    width: 58%;
+}
+.btn{
+    width: 30%;
+}
+#matches{
+    margin-top: 5%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+}
+#finMatch{
+    margin-top: 5%;
+    /* align-items: center; */
+    display: flex;
+    flex-direction: column;
+}
+#matchInfo{
+    display: flex;
+    flex-direction: column;
+}
+#matchDate{
+    text-align: left;
+}
+#matchStadium{
+    text-align: center;
+}
+#finMatchData{
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+}
+.team{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#scoreVS{
+    display: flex;
+    width: 40%;
+}
+.VS{
+    width: 10%;
+}
+.score{
+    font-size: larger;
+    color: blue;
+    width: 45%;
+    text-align: center;
+}
+.VS2{
+    width: 40%;
+    text-align: center;
+}
