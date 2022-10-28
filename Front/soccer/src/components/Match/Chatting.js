@@ -31,7 +31,7 @@ function Chatting() {
     return function cleanup() {
       stompClient.disconnect();
     };
-  }, []);
+  }, [matchId]);
 
   const onMessage = (message) => {
     console.log(message);
