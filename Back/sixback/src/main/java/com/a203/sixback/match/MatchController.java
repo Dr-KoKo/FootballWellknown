@@ -5,12 +5,8 @@ import com.a203.sixback.db.enums.History;
 import com.a203.sixback.db.enums.MatchStatus;
 import com.a203.sixback.db.enums.TeamType;
 import com.a203.sixback.db.repo.*;
-import com.a203.sixback.match.res.AllMatchRes;
-import com.a203.sixback.match.res.AllPlayersRes;
-import com.a203.sixback.match.res.PlayerMatchRes;
-import com.a203.sixback.match.vo.LineUpVO;
-import com.a203.sixback.match.vo.MatchStatusVO;
-import com.a203.sixback.match.vo.PlayerMatchVO;
+import com.a203.sixback.match.res.*;
+import com.a203.sixback.match.vo.*;
 import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -45,6 +41,11 @@ public class MatchController {
         List<MatchStatusVO> result = matchService.getMatchesByMonth(year,month);
         return ResponseEntity.status(200).body(AllMatchRes.of(200,"Success",result));
     }
+    @GetMapping("/match/{id}")
+    public ResponseEntity<BaseResponseBody> getMatchDetail(@PathVariable long id){
+        MatchStatusVO result = matchService.getMatchDetail(id);
+        return ResponseEntity.status(200).body(MatchDetailRes.of(200,"Success",result));
+    }
 
     @GetMapping("/{matchId}/lineUps")
     public ResponseEntity<BaseResponseBody> getLineUps(@PathVariable("matchId") long matchId){
@@ -57,10 +58,21 @@ public class MatchController {
         return ResponseEntity.status(200).body(PlayerMatchRes.of(200,"Success",result));
     }
 
-    @PostMapping("/player")
-    public ResponseEntity<BaseResponseBody> EvaluatePlayer(@RequestBody PlayerEvaluate playerEvaluate){
-        matchService.updatePlayerEvaluation(playerEvaluate);
+    @PostMapping("/predict/player")
+    public ResponseEntity<BaseResponseBody> evaluatePlayer(@RequestBody PlayerEvaluateVO playerEvaluateVO){
+        matchService.updatePlayerEvaluation(playerEvaluateVO);
         return ResponseEntity.status(200).body(null);
     }
 
+    @PostMapping("/predict/match")
+    public ResponseEntity<BaseResponseBody> matchPredict(@RequestBody MatchPredictVO matchPredictVO){
+        matchService.matchPredict(matchPredictVO);
+        return ResponseEntity.status(200).body(null);
+    }
+
+    @GetMapping("/predict/match/all/{matchId}")
+    public ResponseEntity<BaseResponseBody> getAllMatchPredict(@PathVariable long matchId){
+        List<MatchPredictVO> result = matchService.getAllMatchPredict(matchId);
+        return ResponseEntity.status(200).body(AllMatchPredictRes.of(200,"Success",result));
+    }
 }
