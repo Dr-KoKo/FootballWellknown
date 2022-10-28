@@ -8,6 +8,7 @@ import TeamDetail from "pages/Team/TeamDetail";
 import TeamPlayer from "pages/Team/TeamPlayer";
 import TeamBoard from "pages/Team/TeamBoard";
 import TeamMatches from "pages/Team/TeamMatches";
+import PlayerDetail from "pages/Team/PlayerDetail";
 function App() {
   const currentMonth = new Date().getMonth();
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="player" element={<TeamPlayer/>}></Route>
           <Route path="board" element={<TeamBoard/>}></Route>
         </Route>
+        <Route path="/player/:id" element={<PlayerDetail />}></Route>
       </Routes>
     </Layout>
   );
