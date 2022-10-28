@@ -19,6 +19,7 @@ public class PlayerDetVO {
     private String country;
     private Integer number;
     private int joinMatches;
+    private String teamName;
     private String position;
     private String history;
 }

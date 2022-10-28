@@ -172,6 +172,7 @@ public class TeamService {
                 .goals(player.getGoals())
                 .image(player.getImage())
                 .name(player.getName())
+                .teamName(player.getTeam().getName())
                 .build();
         return result;
     }
