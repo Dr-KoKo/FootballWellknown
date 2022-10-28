@@ -4,7 +4,6 @@ import { useParams } from 'react-router';
 import Grid from '@mui/material/Grid';
 
 const MatchPredict = () => {
-  console.log(124364);
   const params = useParams();
   const matchId = params.matchId;
   const [predicts, setPredicts] = useState([]);
@@ -53,8 +52,8 @@ const MatchPredict = () => {
       </Grid>
       <Fragment>
         <ul>
-          {predicts.map((predict) => (
-            <li>
+          {predicts.map((predict, index) => (
+            <li key={index}>
               {predict.userNickname}
               {predict.whereWin === "HOME" && "홈팀 승리"}
               {predict.whereWin === "DRAW" && "무승부"}
