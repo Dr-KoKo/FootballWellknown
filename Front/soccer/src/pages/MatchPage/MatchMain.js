@@ -1,8 +1,11 @@
 import React, { Fragment, useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import { Container } from "@mui/material";
+import { useDispatch } from "react-redux";
 
 const MatchMain = () => {
+  const dispatch = useDispatch();
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
   const [year, setYear] = useState(currentYear);
@@ -22,7 +25,27 @@ const MatchMain = () => {
     setMonth(m);
   };
 
-  const moveToDetail = (matchId) => {
+  const moveToDetail = async (matchId) => {
+    await axios.get(`http://localhost:8080/api/v1/matches/match/${matchId}`)
+    .then((res) => {
+      console.log(res.data.result);
+      const payload = res.data.result.matchVO;
+      let matchStatus = "";
+      if(res.data.result.matchStatus === "FIN"){
+        matchStatus = "경기종료";
+      }
+      else if(res.data.result.matchStatus === "DELAY"){
+        matchStatus = "지연";
+      }
+      else{
+        matchStatus = "경기전";
+      }
+      dispatch({
+        type: "SET_MATCH",
+        payload,
+        matchStatus,
+      })
+    });
     window.location.href = `/match/${matchId}/MatchPredict`;
   }
 
@@ -34,7 +57,7 @@ const MatchMain = () => {
   },[year, month]);
 
   return (
-    <Fragment>
+    <Container>
         <span onClick={()=>handleChange(2022,8)}>2022년 8월 | </span>
         <span onClick={()=>handleChange(2022,9)}>9월 | </span>
         <span onClick={()=>handleChange(2022,10)}>10월 | </span>
@@ -60,7 +83,7 @@ const MatchMain = () => {
                 ))}
             </tbody>
         </table>
-    </Fragment>
+    </Container>
   );
 };
 

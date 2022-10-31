@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
 import { Tabs, Tab, Box, Typography } from '@mui/material';
 import PlayerStatistics from './PlayerStatistics';
+import { useSelector } from 'react-redux';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -32,8 +32,8 @@ function a11yProps(index) {
 }
 
 const PlayerEvaluate = () => {
-  const params = useParams();
-  const matchId = params.matchId;
+
+  const match = useSelector((state)=>state.match);
 
   const [home,setHome] = useState([]);
   const [away,setAway] = useState([]);
@@ -44,7 +44,7 @@ const PlayerEvaluate = () => {
   }
 
   useEffect(()=>{
-    axios.get(`http://localhost:8080/api/v1/matches/statistics/${matchId}`)
+    axios.get(`http://localhost:8080/api/v1/matches/statistics/${match.matchId}`)
     .then(res => {
       let data = res.data.result;
       let h = [];
