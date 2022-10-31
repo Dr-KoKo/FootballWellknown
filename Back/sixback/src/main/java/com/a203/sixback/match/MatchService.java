@@ -162,6 +162,7 @@ public class MatchService {
                     .red(pm.getRed())
                     .match_id(pm.getMatches().getId())
                     .player_id(pm.getPlayer().getId())
+                    .playerName(pm.getPlayer().getName())
                     .team(pm.getTeam())
                     .build();
             playerMatchVOList.add(vo);
@@ -178,7 +179,7 @@ public class MatchService {
             pe.setScore(playerEvaluateVO.getScore());
             playerEvaluateRepo.save(pe);
         }else{
-            playerEvaluateRepo.save(new PlayerEvaluate(matches,player,playerEvaluateVO.getScore()));
+            playerEvaluateRepo.save(new PlayerEvaluate(matches,player,playerEvaluateVO.getScore(),user));
         }
     }
 
