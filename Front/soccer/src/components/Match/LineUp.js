@@ -38,7 +38,12 @@ const LineUp = () => {
             if(player.position === 0){
               hs.push([player.name, player.number]);
             }else{
-              hm[player.position] = [player.name, player.number];
+              let names = player.name.split(" ");
+              let name = ""
+              if (names.length === 1) name = names[0];
+              else if(names.length === 2) name = names[1];
+              else name = names[1] + " " + names[2];
+              hm[player.position] = [name, player.number];
             }
           });
           let temp = [[hm[1][0],hm[1][1]]]; //골키퍼 미리 넣어두기
@@ -55,7 +60,12 @@ const LineUp = () => {
             if(player.position === 0){
               as.push([player.name, player.number]);
             }else{
-              am[player.position] = [player.name, player.number];
+              let names = player.name.split(" ");
+              let name = ""
+              if (names.length === 1) name = names[0];
+              else if(names.length === 2) name = names[1];
+              else name = names[1] + " " + names[2];
+              am[player.position] = [name, player.number];
             }
           });
           am.reverse();
