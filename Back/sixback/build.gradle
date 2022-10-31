@@ -66,6 +66,12 @@ dependencies {
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
+
+	// s3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-aws-context:2.2.6.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-aws-autoconfigure:2.2.6.RELEASE'
+
 }
 
 tasks.named('test') {

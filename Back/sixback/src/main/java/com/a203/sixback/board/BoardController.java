@@ -6,6 +6,7 @@ import com.a203.sixback.board.res.BoardDetailRes;
 import com.a203.sixback.board.res.BoardRes;
 import com.a203.sixback.board.res.CommentRes;
 import com.a203.sixback.util.model.BaseResponseBody;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/boards")
 public class BoardController {
 
-    @Autowired
-    BoardService boardService;
+    final BoardService boardService;
 
-    @Autowired
-    CommentService commentService;
+    final CommentService commentService;
     @GetMapping("")
     public ResponseEntity<? extends BaseResponseBody> getBoardList(@RequestParam(value = "page", required = false) Integer page) {
         int pages = 1;
@@ -28,9 +28,28 @@ public class BoardController {
         if(page != null) {
             pages = page;
         }
-
         List<GetBoardResDTO> boards = boardService.getBoardList(pages);
-        return ResponseEntity.status(200).body(BoardRes.of(200, "message", boards));
+        return ResponseEntity.status(200).body(BoardRes.of(200, "message", boards, boards.size()/10 + 1));
+    }
+
+    @GetMapping("/matches/{matchId}")
+    public ResponseEntity matchBoard(@RequestParam(value="page", required = true) Integer page, @PathVariable(value = "matchId") Long matchId) {
+        int pages = 1;
+
+        if(page != null) {
+            pages = page;
+        }
+        return boardService.getMatchBoard(matchId, pages);
+    }
+
+    @GetMapping("/teams/{teamId}")
+    public ResponseEntity teamBoard(@RequestParam(value="page", required = true) Integer page, @PathVariable(value = "teamId") Long teamId) {
+        int pages = 1;
+
+        if (page != null) {
+            pages = page;
+        }
+        return boardService.getTeamBoard(teamId, pages);
     }
 
     @GetMapping("/{boardId}")
@@ -46,13 +65,14 @@ public class BoardController {
     @PostMapping("")
     public ResponseEntity createBoard(@RequestBody PostBoardReqDTO postBoardReqDTO) {
         // 일단 memberId = 1로 테스트
-        Long userId = 1L;
+        System.out.println(postBoardReqDTO.getCtgName());
+        Long userId = 5L;
         return boardService.createBoard(postBoardReqDTO, userId);
     }
 
     @PostMapping("/update")
     public ResponseEntity updateBoard(@RequestBody UpdateBoardReqDTO updateBoardReqDTO) {
-        Long userId = 1L;
+        Long userId = 5L;
 //        return boardService.updateBoard(updateBoardReqDTO, userId);
 
         return boardService.updateBoard(updateBoardReqDTO, userId);
@@ -60,19 +80,16 @@ public class BoardController {
 
     @PostMapping("/delete/{boardId}")
     public ResponseEntity deleteBoard(@PathVariable(value ="boardId") Long boardId) {
-        Long userId = 1L;
+        Long userId = 5L;
 //        return boardService.deleteBoard(boardId, userId);
         return boardService.deleteBoard(boardId, userId);
     }
 
-    @GetMapping("/matches/{matchId}")
-    public ResponseEntity matchBoard(@PathVariable(value = "matchId") Long matchId) {
-        return boardService.getMatchBoard(matchId);
-    }
+
 
     @PostMapping("/comment")
     public ResponseEntity postComment(@RequestBody PostCommentDTO postCommentDTO) {
-        Long userId = 1L;
+        Long userId = 5L;
         return commentService.postComment(userId, postCommentDTO);
     }
 
@@ -85,7 +102,7 @@ public class BoardController {
 
     @PostMapping("/commentMongo")
     public ResponseEntity postCommentMongo(@RequestBody PostCommentDTO postCommentDTO) {
-        Long userId = 1L;
+        Long userId = 5L;
         return commentService.postCommentMongo(userId, postCommentDTO);
     }
 
@@ -97,13 +114,14 @@ public class BoardController {
 
     @PostMapping("/comment/update")
     public ResponseEntity updateComment(@RequestBody UpdateCommentDTO updateCommentDTO) {
-        Long userId = 1L;
+        Long userId = 5L;
         return commentService.updateComment(userId, updateCommentDTO);
     }
 
     @PostMapping("/comment/delete")
     public ResponseEntity deleteComment(@RequestBody DeleteCommentDTO deleteCommentDTO) {
-        Long userId = 1L;
+        Long userId = 5L;
         return commentService.deleteComment(userId, deleteCommentDTO.getCommentId());
     }
+
 }

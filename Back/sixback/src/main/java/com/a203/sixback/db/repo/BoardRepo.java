@@ -15,12 +15,14 @@ import java.util.List;
 public interface BoardRepo extends JpaRepository<Board, Long> {
     public Page<Board> findAll(Pageable pageable);
 
-    List<Board> findAllByMatchId(Long matchId);
+    List<Board> findAllByMatchId(Pageable pageable, Long matchId);
+    List<Board> findAllByTeamId(Pageable pageable, Long teamId);
 
 //    @Query(value = "select b from Board b left join fetch c.wedulStudentList")
 //    List<Board> findAllByUser(User user);
 
     @Query("SELECT b FROM Board b join fetch b.match m WHERE b.user = :author")
+
     List<Board> findAllByUser(@Param("author") User user);
 
 }

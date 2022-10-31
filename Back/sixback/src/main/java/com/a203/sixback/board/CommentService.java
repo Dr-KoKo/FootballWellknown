@@ -28,7 +28,6 @@ public class CommentService {
     private final BoardRepo boardRepo;
     private final CommentRepoMySQL commentRepo;
 
-    @Autowired
     private final CommentRepoMongoDB commentRepoMongo;
 
     public ResponseEntity postComment(Long userId, PostCommentDTO postCommentDTO) {
@@ -85,12 +84,12 @@ public class CommentService {
 
         CommentMongo commentMongo = CommentMongo.builder()
                 .comment(postCommentDTO.getComment())
-                .aurtor(user.getNickname())
+                .author(user.getNickname())
+                .author_id(userId)
                 .boardId(board.getId())
                 .createDate(LocalDateTime.now())
                 .authorId(16L)
                 .build();
-//        System.out.println(commentMongo);
         commentRepoMongo.save(commentMongo);
         return ResponseEntity.ok(BaseResponseBody.of(200, "Post Comment Success"));
     }
@@ -101,13 +100,14 @@ public class CommentService {
 
         for(CommentMongo comment : comments){
             getComments.add(new GetCommentResDTO().builder()
-                    .author(comment.getAurtor())
+                    .commentId(comment.getId())
+                    .author(comment.getAuthor())
                     .comment(comment.getComment())
+                    .createDate(comment.getCreateDate())
                     .build()
             );
         }
         return getComments;
-
     }
 
     public ResponseEntity updateComment(Long userId, UpdateCommentDTO updateCommentDTO) {
@@ -124,7 +124,7 @@ public class CommentService {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No Comment"));
         }
 
-        if(!comment.getAurtor().equals(user.getNickname())){
+        if(!comment.getAuthor().equals(user.getNickname())){
 //        if(board.getUser() != user || user.getRoll().eqauls("ADMIN")){
             return ResponseEntity.status(405).body(BaseResponseBody.of(405,  "No Authorization"));
         }
@@ -148,7 +148,7 @@ public class CommentService {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No Comment"));
         }
 
-        if(!comment.getAurtor().equals(user.getNickname())){
+        if(!comment.getAuthor().equals(user.getNickname())){
 //        if(board.getUser() != user || user.getRoll().eqauls("ADMIN")){
             return ResponseEntity.status(405).body(BaseResponseBody.of(405,  "No Authorization"));
         }
