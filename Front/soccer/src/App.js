@@ -40,7 +40,7 @@ function App() {
         </Route>
         <Route path='/' element={<Home />} />
         <Route path='/user/login' element={<SocialLogin/>} />
-        <Route path='/api/v1/login/oauth2/code/*' element={<SocialAuth />} />
+        <Route path='/oauth/redirect' element={<SocialAuth />} />
       </Routes>
     </Layout>
   );

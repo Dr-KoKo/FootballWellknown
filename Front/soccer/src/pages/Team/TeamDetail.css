@@ -24,9 +24,12 @@
     margin-top: 5%;
     width: 60%;
 }
-
+.th2{
+    text-decoration: 2px underline #44ec6c;
+}
 #rank{
     text-align: center;
+
     width:15%;
 }
 #result{
@@ -46,11 +49,19 @@
     margin-top: 5%;
     display: flex;
     justify-content: space-between;
+    background-color: rgb(215, 215, 215);
+    border-radius: 2px;
     width: 58%;
 }
 .btn{
-    width: 30%;
+    text-decoration: none;    
+    width: 33.4%;
 }
 #btns{
+    color: black;    
+    text-align: center;
     width: 100%;
+}
+#btns:hover{
+    background-color: wheat;
 }
