@@ -1,12 +1,43 @@
 .navbar{
     display: flex;
-    border-bottom: 2px solid #44EC6C;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 10%;
+    position: relative;
+}
+.navbar::before{
+    content: '';
+    position: absolute;
+    background-color: black;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    opacity: 0.4;
+    width: 100%;
 }
 #logo{
-    margin-left: 2%;
+    margin-left: 10%;
     margin-top: 2%;
-    width: 20%;
+    margin-bottom: 2%;
+    width: 70%;
+}
+#background::before{
+    background-position: center;
+    content: "";
+    position: fixed;
+    width: 100%;
+    background-image: url("../components/assets/축구배경.png");
+    color: white;
+    background-size :cover;
+    background-attachment: fixed;
+    z-index: -2;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.5;
 }
 #ul{
     width: 70%;
@@ -21,7 +52,7 @@
 }
 #li>a{
     text-decoration: none;
-    color: black;
+    color: white;
 }
 .navbar_li:hover{
     
