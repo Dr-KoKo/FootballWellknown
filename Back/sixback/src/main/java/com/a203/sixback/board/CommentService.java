@@ -85,7 +85,6 @@ public class CommentService {
         CommentMongo commentMongo = CommentMongo.builder()
                 .comment(postCommentDTO.getComment())
                 .author(user.getNickname())
-                .author_id(userId)
                 .boardId(board.getId())
                 .createDate(LocalDateTime.now())
                 .authorId(16L)
