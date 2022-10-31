@@ -10,13 +10,14 @@ import java.util.List;
 @Getter
 @Setter
 public class BoardRes extends BaseResponseBody {
-    List<GetBoardResDTO> boardResult;
-
-    public static BoardRes of(Integer statusCode, String message, List<GetBoardResDTO> boardResult) {
+    List<GetBoardResDTO> boardList;
+    int lastPage;
+    public static BoardRes of(Integer statusCode, String message, List<GetBoardResDTO> boardList, int lastPage) {
         BoardRes res = new BoardRes();
         res.setStatusCode(statusCode);
         res.setMessage(message);
-        res.setBoardResult(boardResult);
+        res.setBoardList(boardList);
+        res.setLastPage(lastPage);
         return res;
     }
 }
