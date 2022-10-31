@@ -2,8 +2,8 @@ package com.a203.sixback.match;
 
 import com.a203.sixback.db.entity.*;
 import com.a203.sixback.db.repo.*;
-import com.a203.sixback.match.res.AllTeamBoardRes;
 import com.a203.sixback.match.vo.*;
+import com.a203.sixback.match.res.AllTeamBoardRes;
 import com.a203.sixback.team.vo.MatchVO;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -206,23 +206,6 @@ public class MatchService {
         return result;
     }
 
-    public MatchStatusVO getMatchDetail(long id) {
-        Matches match = matchesRepo.findById(id).get();
-        MatchVO matchVO = MatchVO.builder()
-                .matchId(match.getId())
-                .home(match.getHome().getName())
-                .homeImage(match.getHome().getImage())
-                .away(match.getAway().getName())
-                .awayImage(match.getAway().getImage())
-                .homeScore(match.getHomeScore())
-                .date(match.getMatchDate().toString())
-                .awayScore(match.getAwayScore())
-                .stadium(match.getStadium())
-                .build();
-        MatchStatusVO result = new MatchStatusVO(matchVO, match.getMatchStatus());
-        return result;
-    }
-
     public List<TeamBoardVO> getTeams() {
         List<TeamBoardVO> result = new ArrayList<>();
         List<Team> teams = teamRepo.findAll();
@@ -239,6 +222,22 @@ public class MatchService {
             String name = "[" +match.getRound()+"] "+match.getHome().getName()+ " VS " + match.getAway().getName();
             result.add(new MatchBoardVO(match.getId(), name));
         }
+        return result;
+    }
+    public MatchStatusVO getMatchDetail(long id) {
+        Matches match = matchesRepo.findById(id).get();
+        MatchVO matchVO = MatchVO.builder()
+                .matchId(match.getId())
+                .home(match.getHome().getName())
+                .homeImage(match.getHome().getImage())
+                .away(match.getAway().getName())
+                .awayImage(match.getAway().getImage())
+                .homeScore(match.getHomeScore())
+                .date(match.getMatchDate().toString())
+                .awayScore(match.getAwayScore())
+                .stadium(match.getStadium())
+                .build();
+        MatchStatusVO result = new MatchStatusVO(matchVO, match.getMatchStatus());
         return result;
     }
 }
