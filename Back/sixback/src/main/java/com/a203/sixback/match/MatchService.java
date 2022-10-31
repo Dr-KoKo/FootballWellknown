@@ -1,17 +1,9 @@
 package com.a203.sixback.match;
 
-import com.a203.sixback.db.entity.MatchDet;
-import com.a203.sixback.db.entity.Matches;
-import com.a203.sixback.db.entity.PlayerEvaluate;
-import com.a203.sixback.db.entity.PlayerMatch;
-import com.a203.sixback.db.repo.MatchDetRepo;
-import com.a203.sixback.db.repo.MatchesRepo;
-import com.a203.sixback.db.repo.PlayerEvaluateRepo;
-import com.a203.sixback.db.repo.PlayerMatchRepo;
-import com.a203.sixback.match.vo.LineUp;
-import com.a203.sixback.match.vo.LineUpVO;
-import com.a203.sixback.match.vo.MatchStatusVO;
-import com.a203.sixback.match.vo.PlayerMatchVO;
+import com.a203.sixback.db.entity.*;
+import com.a203.sixback.db.repo.*;
+import com.a203.sixback.match.vo.*;
+import com.a203.sixback.match.res.AllTeamBoardRes;
 import com.a203.sixback.team.vo.MatchVO;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -31,6 +23,10 @@ public class MatchService {
     private final MatchDetRepo matchDetRepo;
     private final PlayerMatchRepo playerMatchRepo;
     private final PlayerEvaluateRepo playerEvaluateRepo;
+    private final PlayerRepo playerRepo;
+    private final UserRepo userRepo;
+    private final MatchPredictRepo matchPredictRepo;
+    private final TeamRepo teamRepo;
     public List<MatchStatusVO> getMatchesByRound(int round) {
         List<Matches> matches = matchesRepo.findAllByRound(round);
         List<MatchStatusVO> result = new ArrayList<>();
@@ -173,10 +169,75 @@ public class MatchService {
         return playerMatchVOList;
     }
 
-    public void updatePlayerEvaluation(PlayerEvaluate playerEvaluate) {
-        PlayerEvaluate temp = playerEvaluateRepo.findById(playerEvaluate.getId());
-        playerEvaluateRepo.save(playerEvaluate);
+    public void updatePlayerEvaluation(PlayerEvaluateVO playerEvaluateVO) {
+        Matches matches = matchesRepo.findById(playerEvaluateVO.getMatchId()).get();
+        Player player = playerRepo.findById(playerEvaluateVO.getPlayerId()).get();
+        User user = userRepo.findByEmail(playerEvaluateVO.getUserEmail());
+        PlayerEvaluate pe = playerEvaluateRepo.findByMatches_IdAndUser_IdAndPlayer_Id(matches.getId(), user.getId(), player.getId());
+        if(pe != null){ //기존거 바꾸기
+            pe.setScore(playerEvaluateVO.getScore());
+            playerEvaluateRepo.save(pe);
+        }else{
+            playerEvaluateRepo.save(new PlayerEvaluate(matches,player,playerEvaluateVO.getScore()));
+        }
     }
 
 
+    public void matchPredict(MatchPredictVO matchPredictVO) {
+        Matches matches = matchesRepo.findById(matchPredictVO.getMatchId()).get();
+        User user = userRepo.findById(matchPredictVO.getUserId()).get();
+
+        MatchPredict newMatchPredict = new MatchPredict(user, matches, matchPredictVO.getWhereWin());
+        matchPredictRepo.save(newMatchPredict);
+    }
+
+    public List<MatchPredictVO> getAllMatchPredict(long matchId) {
+        List<MatchPredict> matchPredictList = matchPredictRepo.findAllByMatches_Id(matchId);
+        List<MatchPredictVO> result = new ArrayList<>();
+        for(MatchPredict mp : matchPredictList){
+            String nickname = userRepo.findById(mp.getUser().getId()).get().getNickname();
+            MatchPredictVO vo = MatchPredictVO.builder()
+                    .matchId(matchId)
+                    .userNickname(nickname)
+                    .whereWin(mp.getWhereWin())
+                    .build();
+            result.add(vo);
+        }
+        return result;
+    }
+
+    public List<TeamBoardVO> getTeams() {
+        List<TeamBoardVO> result = new ArrayList<>();
+        List<Team> teams = teamRepo.findAll();
+        for(Team team : teams){
+            result.add(new TeamBoardVO(team.getId(), team.getName(), team.getImage()));
+        }
+        return result;
+    }
+
+    public List<MatchBoardVO> getMatchBoards(int roundId) {
+        List<MatchBoardVO> result = new ArrayList<>();
+        List<Matches> matches = matchesRepo.findAllByRound(roundId);
+        for(Matches match : matches){
+            String name = "[" +match.getRound()+"] "+match.getHome().getName()+ " VS " + match.getAway().getName();
+            result.add(new MatchBoardVO(match.getId(), name));
+        }
+        return result;
+    }
+    public MatchStatusVO getMatchDetail(long id) {
+        Matches match = matchesRepo.findById(id).get();
+        MatchVO matchVO = MatchVO.builder()
+                .matchId(match.getId())
+                .home(match.getHome().getName())
+                .homeImage(match.getHome().getImage())
+                .away(match.getAway().getName())
+                .awayImage(match.getAway().getImage())
+                .homeScore(match.getHomeScore())
+                .date(match.getMatchDate().toString())
+                .awayScore(match.getAwayScore())
+                .stadium(match.getStadium())
+                .build();
+        MatchStatusVO result = new MatchStatusVO(matchVO, match.getMatchStatus());
+        return result;
+    }
 }

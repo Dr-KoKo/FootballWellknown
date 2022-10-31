@@ -2,6 +2,8 @@ package com.a203.sixback.auth;
 
 import com.a203.sixback.db.enums.ProviderType;
 import com.a203.sixback.db.entity.User;
+import com.a203.sixback.db.enums.RoleType;
+import com.a203.sixback.db.enums.Status;
 import com.a203.sixback.db.repo.UserRepo;
 import com.a203.sixback.exception.OAuthProviderMissMatchException;
 import lombok.RequiredArgsConstructor;
@@ -69,8 +71,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         User user = User.builder()
                 .nickname(nickname)
+                .point(0)
                 .email(userInfo.getEmail())
                 .providerType(providerType)
+                .roleType(RoleType.USER)
+                .status(Status.ACTIVATED)
                 .build();
 
         return userRepo.saveAndFlush(user);

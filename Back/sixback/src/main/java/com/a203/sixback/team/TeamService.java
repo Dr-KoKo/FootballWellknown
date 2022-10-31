@@ -55,13 +55,34 @@ public class TeamService {
         TeamPlayers result = new TeamPlayers();
         List<Player> list = playerRepo.findAllByTeam_Id(teamId);
         List<PlayerVO> players = list.stream().map(player -> modelMapper.map(player, PlayerVO.class)).collect(Collectors.toList());
+        List<PlayerVO> fws = new ArrayList<>();
+        List<PlayerVO> mfs = new ArrayList<>();
+        List<PlayerVO> dfs = new ArrayList<>();
+        List<PlayerVO> gks = new ArrayList<>();
+         for(PlayerVO vo : players){
+             if(vo.getPosition().equals("Defenders")){
+                 dfs.add(vo);
+             }
+             else if(vo.getPosition().equals("Goalkeepers")){
+                 gks.add(vo);
+             }
+             else if(vo.getPosition().equals("Midfielders")){
+                 mfs.add(vo);
+             }
+             else if(vo.getPosition().equals("Forwards")){
+                 fws.add(vo);
+             }
+         }
         System.out.println(players);
         Coach coach = coachRepo.findOneByTeam_Id(teamId);
         result.setCoachAge(coach.getAge());
         result.setCoachImage(coach.getImage());
         result.setCoachName(coach.getName());
         result.setCountry(coach.getCountry());
-        result.setPlayers(players);
+        result.setMfs(mfs);
+        result.setFws(fws);
+        result.setDfs(dfs);
+        result.setGks(gks);
         return result;
     }
 
@@ -151,6 +172,7 @@ public class TeamService {
                 .goals(player.getGoals())
                 .image(player.getImage())
                 .name(player.getName())
+                .teamName(player.getTeam().getName())
                 .build();
         return result;
     }

@@ -10,4 +10,7 @@ import java.util.List;
 public interface CommentRepoMongoDB extends MongoRepository<CommentMongo, String> {
 
     List<CommentMongo> findAllByBoardId(Long boardId);
+
+    List<CommentMongo> findAllByAuthorId(Long author_id);
+
 }
