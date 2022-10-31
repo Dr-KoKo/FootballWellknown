@@ -27,7 +27,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        System.out.println("LOADUSER");
         OAuth2User user = super.loadUser(userRequest);
 
         try {
@@ -54,6 +53,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 );
             }
         } else {
+            System.out.println("여기서 새롭게 계정 정보를 생성합니다.");
             savedUser = createUser(userInfo, providerType);
         }
 
@@ -61,8 +61,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
-
-
+        System.out.println("유저를 생성하고 DB에 저장합니다.");
         String nickname;
 
         do {
