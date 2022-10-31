@@ -3,6 +3,7 @@
     justify-content: center;
     width: 80%;
     margin-left: 10%;
+    
 }
 
 #teamTable{
@@ -21,7 +22,8 @@
     display: flex;
     width: 100%;
     justify-content:space-between;
-    background-color: aqua;
+    background-color: #44EC6C;
+    border-radius: 4px;
 }
 .rank{
     text-align: center;
@@ -35,16 +37,35 @@
     text-align: center;
 }
 #teamTableBody{
+    position: relative;
     width: 100%;
     display: flex;
     flex-direction: column;
+}
+#teamTableBody::after{
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    opacity: 0.2;
+    background-color: white;
+
 }
 #teamTableBodyTr{
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-bottom: 1px solid #b8b8b8;
     margin-bottom: 5%;
+}
+#teamTableBodyTr:hover{
+    font-size: large;
+    border-radius: 5px;
+    border : 2px solid #44EC6C;
 }
 #teamTableTeam{
     display: flex;

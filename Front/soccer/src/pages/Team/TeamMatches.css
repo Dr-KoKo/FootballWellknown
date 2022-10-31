@@ -11,6 +11,9 @@
     margin-top: 5%;
     /* align-items: center; */
     display: flex;
+    background-image: url("../../components/assets/축구경기장배경.jpg");
+    background-repeat: no-repeat;
+    background-size: auto;
     flex-direction: column;
 }
 #matchInfo{
