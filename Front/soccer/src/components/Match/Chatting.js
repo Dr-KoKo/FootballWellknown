@@ -1,95 +1,80 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import * as StompJs from "stompjs";
-import * as SockJS from "sockjs-client";
-
-let sockJS;
-let stompClient;
+import * as Stomp from "stompjs";
+import { useSelector } from "react-redux";
 
 function Chatting() {
   const [chatMessages, setChatMessages] = useState([]);
-  const [sender, setSender] = useState("");
   const [data, setData] = useState("");
+  const user = useSelector((state) => state.user);
   const params = useParams();
   const matchId = params.matchId;
 
+  const stompClient = Stomp.over(
+    new WebSocket("ws://localhost:8080/api/v1/ws")
+  );
+
   useEffect(() => {
-    sockJS = new SockJS("http://localhost:8080/api/v1/ws");
-    stompClient = StompJs.over(sockJS);
-    stompClient.debug = (err) => {};
+    console.log(user);
+    stompClient.debug = null;
     stompClient.connect(
       {},
-      () => {
+      function (frame) {
         stompClient.subscribe("/sub/channel/" + matchId, (message) =>
-          onMessage(JSON.parse(message.body))
+          onMessage(message.body)
         );
       },
-      (err) => {
+      function (err) {
         console.log(err);
       }
     );
-    return function cleanup() {
-      stompClient.disconnect();
-    };
-  }, [matchId]);
+
+    return;
+  }, []);
 
   const onMessage = (message) => {
-    console.log(message);
-    setChatMessages((_chatMessages) => [..._chatMessages, message]);
+    setChatMessages((_chatMessages) => [..._chatMessages, JSON.parse(message)]);
   };
 
   const sendMessage = (e) => {
     e.preventDefault();
-
-    if (!stompClient.connected) {
-      console.log("websocket is not connected");
-      return;
-    }
-
     stompClient.send(
       "/pub/chat",
       {},
-      JSON.stringify({ type: "", sender, channelId: matchId, data })
+      JSON.stringify({
+        type: "message",
+        sender: user.nickname === "" ? "noname" : user.nickname,
+        channelId: matchId,
+        data,
+      })
     );
   };
 
   return (
     <div>
       <div>
-        <div>
-          <form>
-            <div>
-              <label>Sender: </label>
-              <input
-                type="text"
-                id="name"
-                onChange={(e) => setSender(e.target.value)}
-              />
-            </div>
-            <div>
-              <label>Data: </label>
-              <input
-                type="text"
-                id="data"
-                onChange={(e) => setData(e.target.value)}
-              />
-            </div>
-            <button onClick={sendMessage}>Send</button>
-          </form>
-        </div>
+        {chatMessages && chatMessages.length > 0 && (
+          <ul>
+            {chatMessages.map((_chatMessage, index) => (
+              <li key={index}>
+                {_chatMessage.sender}: {_chatMessage.data}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       <div>
-        <div>
-          {chatMessages && chatMessages.length > 0 && (
-            <ul>
-              {chatMessages.map((_chatMessage, index) => (
-                <li key={index}>
-                  {_chatMessage.sender}: {_chatMessage.data}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <form>
+          <div>
+            <label>Data: </label>
+            <input
+              type="text"
+              id="data"
+              onChange={(e) => setData(e.target.value)}
+            />
+          </div>
+          <button onClick={sendMessage}>Send</button>
+        </form>
       </div>
     </div>
   );
