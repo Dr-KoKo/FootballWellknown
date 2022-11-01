@@ -1,44 +1,15 @@
-import axios from 'axios';
 import React, { Fragment, useEffect, useState } from 'react';
-import { Outlet, useParams } from 'react-router';
-import { Grid, Box } from '@mui/material';
+import { Outlet,  } from 'react-router';
+import { Grid, Box, Container } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { store } from 'index';
+
 
 const MatchDetail = () => {
-  const params = useParams();
-  const matchId = params.matchId;
-
-  const [match, setMatch] = useState({
-    matchId: 0,
-    date: "",
-    home: "",
-    homeImage: "",
-    awayImage: "",
-    homeScore: 0,
-    away: "",
-    awayScore: 0,
-    stadium: ""
-  });
-  const [matchStatus, setMatchStatus] = useState("");
-
-  useEffect(() => {
-    axios.get(`http://localhost:8080/api/v1/matches/match/${matchId}`)
-    .then((res) => {
-        setMatch(res.data.result.matchVO);
-        if(res.data.result.matchStatus === "FIN"){
-          setMatchStatus("경기종료");
-        }
-        else if(res.data.result.matchStatus === "DELAY"){
-          setMatchStatus("지연");
-        }
-        else{
-          setMatchStatus("경기전");
-        }
-    });
-  },[]);
-
+  const match = store.getState().match;
+  const matchStatus = match.matchStatus;
   return (
-    <Fragment>
+    <Container>
       <Box>
         <Grid container spacing={2}>
           <Grid item xs={1}/>
@@ -74,7 +45,7 @@ const MatchDetail = () => {
       <Fragment>
         <Outlet />
       </Fragment>
-    </Fragment>
+    </Container>
   );
 };
 
