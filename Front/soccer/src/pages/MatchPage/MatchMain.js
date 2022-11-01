@@ -13,14 +13,28 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 const day = ['(일)','(월)','(화)','(수)','(목)','(금)','(토)']
+import { Box, Container, Tab, Typography } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { TabContext, TabList } from "@mui/lab";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
+const day = ['(일)','(월)','(화)','(수)','(목)','(금)','(토)']
 
 const MatchMain = () => {
+  const dispatch = useDispatch();
   const dispatch = useDispatch();
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
   const [value, setValue] = useState(currentYear.toString()+currentMonth.toString());
   const [matches, setMatches] = useState(
     [{
+      
       matchVO:{
         matchId: 0,
         date: "",
