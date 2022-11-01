@@ -11,9 +11,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { display } from "@mui/system";
+import "../MatchPage/MatchMain.css";
 
 const day = ['(일)','(월)','(화)','(수)','(목)','(금)','(토)']
-
 const MatchMain = () => {
   const dispatch = useDispatch();
   const currentYear = new Date().getFullYear();
@@ -81,8 +82,8 @@ const MatchMain = () => {
             onChange={handleChange} 
             aria-label="lab API tabs example"
             textColor="black"
-            sx={{width:'100%', display:'flex', justifyContent:'space-evenly'}}
-            centered
+            // sx={{width:'100%', display:'flex', justifyContent:'space-around'}}
+            // centered
           >
             <Tab label="2022년 8월" value="202208" />
             <Tab label="9월" value="202209" />
