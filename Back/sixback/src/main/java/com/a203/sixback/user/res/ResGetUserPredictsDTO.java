@@ -32,10 +32,10 @@ public class ResGetUserPredictsDTO extends BaseResponseBody {
         private MatchResult myPredict;
 
         private UserPredictDTO(Predict predict){
-            this.home = predict.getMatch().getHome().getName();
-            this.homeImg = predict.getMatch().getHome().getImage();
-            this.away = predict.getMatch().getAway().getName();
-            this.awayImg = predict.getMatch().getAway().getImage();
+            this.home = predict.getMatches().getHome().getName();
+            this.homeImg = predict.getMatches().getHome().getImage();
+            this.away = predict.getMatches().getAway().getName();
+            this.awayImg = predict.getMatches().getAway().getImage();
             this.myPredict = predict.getMatchResult();
         }
     }
