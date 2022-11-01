@@ -16,6 +16,7 @@ import { Input, InputLabel, Button } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
 import { useParams } from "react-router";
+import { useSelector } from "react-redux";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -181,8 +182,8 @@ EnhancedTableHead.propTypes = {
 };
 
 const PlayerStatistics = (props) => {
-  const params = useParams();
-  const matchId = params.matchId;
+
+  const match = useSelector((state)=>state.match);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState('');
@@ -211,7 +212,7 @@ const PlayerStatistics = (props) => {
     }
     else{
       axios.post(`http://localhost:8080/api/v1/matches/predict/player`,{
-        matchId: matchId,
+        matchId: match.matchId,
         userEmail: 'test@test.com',
         playerId: selected,
         score: Number(score),
