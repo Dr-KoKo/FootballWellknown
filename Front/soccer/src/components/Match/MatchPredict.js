@@ -4,9 +4,6 @@ import Grid from '@mui/material/Grid';
 import Image from 'mui-image';
 import { useSelector } from 'react-redux';
 import { Box, Button, ButtonBase } from '@mui/material';
-import Image from 'mui-image';
-import { useSelector } from 'react-redux';
-import { Box, Button, ButtonBase } from '@mui/material';
 
 const MatchPredict = () => {
   const match = useSelector((state)=>state.match);
@@ -35,29 +32,9 @@ const MatchPredict = () => {
       alert('예측 완료!');
     }
   };
-  const [predictMatch, setPredictMatch] = useState("");
-  const userId = 1;
-
-  const clickTeam = (team) => {
-    setPredictMatch(team);
-  }
-
-  const submit = () => {
-    if (predictMatch === ""){
-      alert("팀을 선택하세요");
-    }else{
-      axios.post(`http://localhost:8080/api/v1/matches/predict/match`,{
-        matchId: match.matchId,
-        userNickname: "test",
-        userId: 1,
-        whereWin: predictMatch,
-      });
-      alert('예측 완료!');
-    }
-  };
 
   useEffect(()=>{
-    axios.get(`http://localhost:8080/api/v1/matches/predict/match/all/${match.match.matchId}`)
+    axios.get(`http://localhost:8080/api/v1/matches/predict/match/all/${match.matchId}`)
     .then(res => {
       let data = res.data.result;
       setPredicts(res.data.result);
@@ -73,10 +50,6 @@ const MatchPredict = () => {
       setDraw(drawCnt);
       setAwayWin(awayCnt);
     });
-    axios.get(`http://localhost:8080/api/v1/matches/predict/match/my/${userId}/${match.matchId}`)
-    .then(res => {
-      setPredictMatch(res.data.result[0].whereWin);
-    })
     axios.get(`http://localhost:8080/api/v1/matches/predict/match/my/${userId}/${match.matchId}`)
     .then(res => {
       setPredictMatch(res.data.result[0].whereWin);
