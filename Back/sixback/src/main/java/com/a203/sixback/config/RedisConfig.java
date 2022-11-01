@@ -53,4 +53,7 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+//    @Bean
+//    public RedisTemplate<String, Ranking>
+
 }

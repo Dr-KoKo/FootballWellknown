@@ -10,4 +10,7 @@ import java.util.List;
 @Repository
 public interface PredictRepo extends JpaRepository<Predict, Long> {
     List<Predict> findAllByUser(User user);
+
+    List<Predict> findAllByMatches_Id(Long matchId);
+
 }
