@@ -13,6 +13,13 @@ const PlayerDetail = () => {
         position : "",
         history:""
     });
+    function position(str){
+        if(str==='Goalkeepers') str='GK';
+        if(str==='Midfielders') str='MF';
+        if(str==='Defenders') str='DF';
+        if(str==='Forwards') str='FW';
+        return <div id={str}>{str}</div>;
+    }
     const [histories, setHistories] =useState([]);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -31,32 +38,25 @@ const PlayerDetail = () => {
     return (
         <div id='main'>
         <div id='frame'>
+            <div id='position'><div id='p'>{position(datas.position)}</div><span id='name'>{datas.name}</span></div>
             <div id='profile'>
                 <img id='image' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0rrd_u4sPTBOkZgR5VOmOOTf3KNi5P0vy0g&usqp=CAU" alt=''></img>
                 <div id='player'>
-                    <div id='pNum'>{datas.number}</div>
-                    <div id='pName'><div>{datas.name}
-                        </div> <div>({2022-(datas.birth).substring(0,4)})세</div></div>
-                    <div id='pptn'>
-                        <div>
-                        {datas.position}
-                        </div>
-                        <div>
-                        {datas.teamName}
-                            </div> </div>
-                    <div id='ph'>{datas.height}cm {datas.weight}kg</div>
-                    <div id='pb'>{datas.birth} {datas.country}</div>
-                    <div id='pb'>{datas.joinMatches}경기 {datas.goals}골 {datas.assists}어시스트</div>
-                </div>               
-            </div>
-            <div>연혁</div>
-            <Grid container spacing={2}>
+                    <div className='red' id='first'>National : <span id='black'>{datas.country}</span></div>
+                    <div className='red'>Number : <span id='black'>{datas.number}</span></div>
+                    <div className='red'>Age : <span id='black'>{2022-datas.birth.substring(0,4)}</span></div>
+                    <div className='red'>Height : <span id='black'>{datas.height} cm</span></div>
+                    <div className='red'>Weight : <span id='black'>{datas.weight} kg</span></div>
+                    <div className='red'>Played : <span id='black'>{datas.joinMatches}</span></div>
+                    <div className='red'>Goals : <span id='black'>{datas.goals}</span></div>
+                    <div className='red'>Assists : <span id='black'>{datas.assists}</span></div>
+                    <div className='red'>Historys : <span id='black' ><Grid  className='history' container spacing={2}>
                 {histories.map((history) => (
                     <Grid id='hs' item xs={6}>{history}</Grid>
-                ))}
-            </Grid>
+                ))}</Grid></span>
+           </div>
         </div>
-        </div>
+        </div></div></div>
     );
 };
 
