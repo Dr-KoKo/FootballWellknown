@@ -19,8 +19,6 @@ import PlayerEvaluate from "components/Match/PlayerEvaluate";
 import SocialLogin from "./pages/login/SocialLogin";
 import SocialAuth from "./components/user/SocialAuth"
 
-import SocialLogin from "./components/user/SocialLogin";
-import SocialAuth from "./components/user/SocialAuth";
 
 
 function App() {
