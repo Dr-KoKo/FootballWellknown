@@ -4,6 +4,9 @@ import Loading from "components/Loading";
 import React, { useState, useEffect } from "react";
 import { Outlet, useParams } from "react-router";
 import { Link } from "react-router-dom";
+import Match from "../../components/assets/축구경기장배경.jpg";
+import Player from "../../components/assets/player.jpg";
+import Text from "../../components/assets/text.jpg";
 import "./TeamDetail.css";
 const TeamDetail = () => {
 
@@ -51,9 +54,9 @@ const TeamDetail = () => {
         </table>
       </div>
       <div id="buttons">
-        <Link to={"match"} className="btn"><div id="btns">Matches</div></Link>
-        <Link to={"player"} className="btn"><div id="btns">Players</div></Link>
-        <Link to={"board"} className="btn"><div id="btns">Board</div></Link>
+        <Link to={"match"} className="btn"><div id="matchFrame"><img className="btns" id="matchImg" src={Match} alt=''></img><div id="matchText">Match</div></div></Link>
+        <Link to={"player"} className="btn"><div id="matchFrame"><img className="btns" id="matchImg" src={Player} alt=''></img><div id="matchText">Player</div></div></Link>
+        <Link to={"board"} className="btn"><div id="matchFrame"><img className="btns" id="matchImg" src={Text} alt=''></img><div id="matchText">Board</div></div></Link>
       </div>
       <Outlet></Outlet>
     </div>

@@ -2,55 +2,101 @@
     width: 60%;
 }
 #matches{
-    margin-top: 5%;
+    margin-bottom: 5%;
     width: 100%;
     display: flex;
     flex-direction: column;
+    
 }
 #finMatch{
-    margin-top: 5%;
+    margin-bottom: 5%;
     /* align-items: center; */
     display: flex;
-    background-image: url("../../components/assets/축구경기장배경.jpg");
-    background-repeat: no-repeat;
-    background-size: auto;
-    flex-direction: column;
+    border-radius: 5px;
+    padding-bottom: 5%;
+    padding-left: 2%;
+    padding-right: 2%;
+    position: relative;
 }
-#matchInfo{
+#finMatch::after{
+    background-color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    content: "";
+    z-index: -1;
+    opacity: 0.8;
+}
+
+#matchLeft{
+    width: 40%;
     display: flex;
     flex-direction: column;
 }
-#matchDate{
-    text-align: left;
-}
-#matchStadium{
+#date{
+    height: 50%;
     text-align: center;
+    margin-bottom: 15%;
 }
-#finMatchData{
+#time{
+    font-size: 15vh;
+}
+#year{
+    font-size: x-large;
+}
+#place{
+    text-align: center;
+    font-size: larger;
+}
+#matchRight{
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#team{
+    margin-top: 10%;
     width: 100%;
+    display: flex;
+    font-size: larger;
     justify-content: space-between;
     align-items: center;
-    display: flex;
 }
 .team{
+    width: 50%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
+    text-align: center;
 }
-#scoreVS{
+#logos{
+    width: 80%;
+}
+#score{
+    margin-top: 10%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+#vs{
+    font-size: larger;
+}
+.sc{
+    font-size: xx-large;
+}
+#matchfr{
+    margin-top: 5%;
     display: flex;
     width: 40%;
+    justify-content: space-between;
+    font-size: x-large;
+    margin-bottom: 5%;
 }
-.VS{
-    width: 10%;
-}
-.score{
-    font-size: larger;
-    color: blue;
-    width: 45%;
-    text-align: center;
-}
-.VS2{
-    width: 40%;
-    text-align: center;
+#m:hover{
+    border-bottom: 3px solid #44EC6C;
 }
