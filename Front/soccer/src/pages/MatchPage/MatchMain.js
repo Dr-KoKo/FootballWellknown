@@ -75,14 +75,13 @@ const MatchMain = () => {
   return (
     <Container>
       <TabContext value={value}>
-        {/* <Box sx={{ width:'100%', borderBottom: 1, borderColor: 'divider' }}> */}
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <TabList 
             onChange={handleChange} 
             aria-label="lab API tabs example"
             textColor="black"
             sx={{width:'100%', display:'flex', justifyContent:'space-evenly'}}
-            
+            centered
           >
             <Tab label="2022년 8월" value="202208" />
             <Tab label="9월" value="202209" />
