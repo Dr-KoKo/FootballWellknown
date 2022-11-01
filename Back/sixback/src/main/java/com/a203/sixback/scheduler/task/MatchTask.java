@@ -1,7 +1,8 @@
 package com.a203.sixback.scheduler.task;
 
+import com.a203.sixback.db.redis.MatchCacheRepository;
 import com.a203.sixback.match.MatchService;
-import com.a203.sixback.redis.RedisService;
+//import com.a203.sixback.redis.RedisService;
 import com.a203.sixback.scheduler.vo.GoalScorer;
 import com.a203.sixback.scheduler.MainScheduler;
 import com.a203.sixback.socket.Message;
@@ -18,14 +19,17 @@ public class MatchTask implements Runnable{
     private long matchId;
     private MessageService messageService;
     private MatchService matchService;
-    private RedisService redisService;
+//    private RedisService redisService;
+    private MatchCacheRepository matchCacheRepository;
 
+    private final static String prefix = "Match:";
 
-    public MatchTask(long matchId, MessageService messageService, MatchService matchService, RedisService redisService) {
+    public MatchTask(long matchId, MessageService messageService, MatchService matchService, MatchCacheRepository matchCacheRepository) {
         this.matchId = matchId;
         this.messageService = messageService;
         this.matchService = matchService;
-        this.redisService = redisService;
+//        this.redisService = redisService;
+        this.matchCacheRepository = matchCacheRepository;
     }
 
     @Override
@@ -59,13 +63,14 @@ public class MatchTask implements Runnable{
                     goalscorer.add(gs);
                 }
 
-                String redis = redisService.getStringValue(String.valueOf(matchId));
+                String redis = matchCacheRepository.getMatch(String.valueOf(matchId));
 
                 int goals = 0;
 
 
                 if(redis == null) {
-                    redisService.setStringValue(matchId, 0);
+
+                    matchCacheRepository.setMatch(String.valueOf(matchId), "0");
                 }
                 else {
                     goals = Integer.parseInt(redis);
@@ -76,13 +81,14 @@ public class MatchTask implements Runnable{
 
                 if(goals != goalscorer.size()) {
                     log.info("득점하였습니다.");
-                    redisService.setStringValue(matchId, goals + 1);
+
+                    matchCacheRepository.setMatch(String.valueOf(matchId), String.valueOf(goals + 1));
                     messageService.message(new Message("goal", "admin", String.valueOf(matchId), goalscorer.get(goals).getScore()));
                 }
 
                 if("Finished".equals(matchStatus)) {
                     log.info("경기가 끝났습니다.");
-                    redisService.getAndDelete(matchId);
+                    matchCacheRepository.getAndDeleteMatch(String.valueOf(matchId));
                     messageService.message(new Message("notice", "admin", String.valueOf(matchId), "경기가 종료되었습니다."));
                     MainScheduler.getInstance().stop(matchId);
                 }
