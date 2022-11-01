@@ -7,6 +7,7 @@ import { Box, Button, ButtonBase } from '@mui/material';
 
 const MatchPredict = () => {
   const match = useSelector((state)=>state.match);
+  const matchStatus = match.matchStatus === "경기종료" ? true : false;
   const [predicts, setPredicts] = useState([]);
   const [homeWin, setHomeWin] = useState(0);
   const [draw, setDraw] = useState(0);
@@ -64,6 +65,7 @@ const MatchPredict = () => {
       <Grid container>
         <Grid item xs={4} >
           <ButtonBase
+            disabled={matchStatus}
             onClick={()=>{clickTeam("HOME")}}
             sx={{
               width:'100%',
@@ -82,6 +84,7 @@ const MatchPredict = () => {
         </Grid>
         <Grid item xs={4} display={'flex'}>
           <ButtonBase
+            disabled={matchStatus}
             onClick={()=>{clickTeam("DRAW")}}
             sx={{
               width:'100%',
@@ -95,6 +98,7 @@ const MatchPredict = () => {
         </Grid>
         <Grid item xs={4} display={'flex'}>
           <ButtonBase 
+            disabled={matchStatus}
             onClick={()=>{clickTeam("AWAY")}}
             sx={{
               width:'100%',
