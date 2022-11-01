@@ -37,6 +37,9 @@ dependencies {
 	implementation 'org.modelmapper:modelmapper'
 	compileOnly 'org.projectlombok:lombok'
 
+
+	implementation 'org.springframework.security:spring-security-messaging'
+
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 	runtimeOnly 'mysql:mysql-connector-java'
 

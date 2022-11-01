@@ -11,6 +11,7 @@ import com.a203.sixback.db.repo.*;
 import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,8 @@ public class BoardService {
 
     public ResponseEntity createBoard(PostBoardReqDTO postBoardReqDTO, Long userId) {
         User user = null;
+        Team team = null;
+        Matches match = null;
         try {
             user = userRepo.findById(userId).get();
         } catch (Exception e) {
@@ -39,38 +42,24 @@ public class BoardService {
         }
 
         Category category = ctgRepo.findByCtgName(postBoardReqDTO.getCtgName());
-        if(postBoardReqDTO.getMatchId() == null && postBoardReqDTO.getTeamId() == null) {
-            Board board = Board.builder()
-                    .title(postBoardReqDTO.getTitle())
-                    .content(postBoardReqDTO.getContent())
-                    .category(category)
-                    .user(user)
-                    .build();
-            boardRepo.save(board);
-        }
-        else if(postBoardReqDTO.getMatchId() != null) {
-            Matches match = null;
-            try {
-                match = matchRepo.findById(postBoardReqDTO.getMatchId()).get();
-            } catch (Exception e) {
-                return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No Match"));
-            }
-            Board board = Board.builder()
-                    .title(postBoardReqDTO.getTitle())
-                    .content(postBoardReqDTO.getContent())
-                    .category(category)
-                    .user(user)
-                    .build();
-            boardRepo.save(board);
-        }
-        else {
-            Team team = null;
-            try {
-                team = teamRepo.findById(postBoardReqDTO.getTeamId()).get();
-            } catch (Exception e) {
 
-            }
+        if(postBoardReqDTO.getTeamId() != null){
+            team = teamRepo.getReferenceById(postBoardReqDTO.getTeamId());
         }
+        if(postBoardReqDTO.getMatchId() != null) {
+            match = matchRepo.getReferenceById(postBoardReqDTO.getMatchId());
+        }
+
+        Board board = Board.builder()
+                .title(postBoardReqDTO.getTitle())
+                .content(postBoardReqDTO.getContent())
+                .category(category)
+                .match(match)
+                .team(team)
+                .user(user)
+                .build();
+        boardRepo.save(board);
+
         return ResponseEntity.ok(BaseResponseBody.of(200, "Post Board Success"));
     }
 
@@ -143,7 +132,7 @@ public class BoardService {
 
 
     public List<GetBoardResDTO> getBoardList(int page) {
-        PageRequest pageRequest = PageRequest.of(page -1, 10);
+        PageRequest pageRequest = PageRequest.of(page -1, 10, Sort.by("id").descending());
         List<Board> boards =  boardRepo.findAll(pageRequest).stream().collect(Collectors.toList());
         List<GetBoardResDTO> getBoards = new LinkedList<>();
         for(Board board : boards){
@@ -158,7 +147,7 @@ public class BoardService {
     }
 
     public ResponseEntity getMatchBoard(Long matchId, int page) {
-        PageRequest pageRequest = PageRequest.of(page -1, 10);
+        PageRequest pageRequest = PageRequest.of(page -1, 10, Sort.by("id").descending());
         List<Board> boards =  boardRepo.findAllByMatchId(pageRequest, matchId);
         List<GetBoardResDTO> getBoards = new LinkedList<>();
 
@@ -176,7 +165,7 @@ public class BoardService {
     }
 
     public ResponseEntity getTeamBoard(Long teamId, int page) {
-        PageRequest pageRequest = PageRequest.of(page -1, 10);
+        PageRequest pageRequest = PageRequest.of(page -1, 10, Sort.by("id").descending());
         List<Board> boards =  boardRepo.findAllByTeamId(pageRequest, teamId);
         List<GetBoardResDTO> getBoards = new LinkedList<>();
 
