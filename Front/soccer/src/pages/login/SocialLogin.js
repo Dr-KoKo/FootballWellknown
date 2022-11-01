@@ -1,4 +1,7 @@
+
+import HorizonLine from 'components/HorizonLine';
 import React from 'react';
+import './SocialLogin.css'
 
 
 const SocialLogin = () => {
@@ -8,14 +11,21 @@ const SocialLogin = () => {
   const kakao_uri = base_uri + "kakao" + redirect_uri;
 
   return (
-    <div>  
-        <h2>소셜 로그인 테스트 페이지에 오신 걸 환영합니다.</h2>
+    <div id='socialLogin'>
+      <div id="socialLoginHead">
+        <h1>회원가입하기</h1>
+        <p>소셜 아이디를 이용해서 회원가입 및 로그인을 할 수 있습니다.</p>
+        <HorizonLine/>
+      </div>
+        
+      <div className="social-login-form"> 
         <a href={google_uri}>
           <img src='../assets/login_button/google_button.png' className="social-login-button" alt="구글 로그인 버튼" />
         </a>
         <a href={kakao_uri}>
           <img src='../assets/login_button/kakao_button.png' className="social-login-button" alt="카카오 로그인 버튼" />
         </a>
+      </div>
     </div>
   );
 };
