@@ -25,7 +25,7 @@ public class FileUploadService {
     @Value("${cloud.aws.s3.bucket.url}")
     private String defaultUrl;
 
-    @Value("${cloud.aws.s3.bucket}")
+    @Value("${cloud.aws.s3.bucket.value}")
     public String bucket;
 
     private final AmazonS3Client amazonS3Client;

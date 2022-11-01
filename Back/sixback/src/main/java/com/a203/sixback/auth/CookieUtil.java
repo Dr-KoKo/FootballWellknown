@@ -46,6 +46,16 @@ public class CookieUtil {
         }
     }
 
+    public static void deleteRefreshTokenCookie(HttpServletResponse response){
+        Cookie myCookie = new Cookie("refresh_token", null);
+        // 쿠키의 expiration 타임을 0으로 해서 없앰
+        myCookie.setMaxAge(0);
+
+        // 모든 경로에서 삭제됐음을 알림
+        myCookie.setPath("/");
+        response.addCookie(myCookie);
+    }
+
     public static String serialize(Object object) {
         return Base64.getUrlEncoder()
                 .encodeToString(SerializationUtils.serialize(object));
