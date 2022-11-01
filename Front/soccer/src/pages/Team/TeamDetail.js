@@ -34,10 +34,10 @@ const TeamDetail = () => {
         <table id="table">
           <thead>
             <tr>
-              <th id="rank">Rank</th>
-              <th id="result">전적</th>
-              <th id="pts">승점</th>
-              <th id="gd">득실차</th>
+              <th className="th2" id="rank">Rank</th>
+              <th className="th2" id="result">전적</th>
+              <th className="th2" id="pts">승점</th>
+              <th className="th2" id="gd">득실차</th>
             </tr>
           </thead>
           <tbody>
@@ -51,9 +51,9 @@ const TeamDetail = () => {
         </table>
       </div>
       <div id="buttons">
-        <Link to={"match"} className="btn"><button id="btns">Matches</button></Link>
-        <Link to={"player"} className="btn"><button id="btns">Players</button></Link>
-        <Link to={"board"} className="btn"><button id="btns">Board</button></Link>
+        <Link to={"match"} className="btn"><div id="btns">Matches</div></Link>
+        <Link to={"player"} className="btn"><div id="btns">Players</div></Link>
+        <Link to={"board"} className="btn"><div id="btns">Board</div></Link>
       </div>
       <Outlet></Outlet>
     </div>
