@@ -3,10 +3,7 @@ package com.a203.sixback.team;
 import com.a203.sixback.db.repo.CoachRepo;
 import com.a203.sixback.db.repo.PlayerRepo;
 import com.a203.sixback.db.repo.TeamRepo;
-import com.a203.sixback.team.res.PlayerDetRes;
-import com.a203.sixback.team.res.TeamDetRes;
-import com.a203.sixback.team.res.TeamPlayersRes;
-import com.a203.sixback.team.res.TeamRankRes;
+import com.a203.sixback.team.res.*;
 import com.a203.sixback.team.vo.*;
 import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/teams")
@@ -54,4 +52,11 @@ public class TeamController {
         PlayerDetVO result = teamService.getPlayerDetails(playerId);
         return ResponseEntity.status(200).body(PlayerDetRes.of(200,"Success",result));
     }
+    @GetMapping("players/ranks")
+    public ResponseEntity<BaseResponseBody> getPlayerRanks(){
+        PlayerRankVO result = teamService.getPlayerRanks();
+        return ResponseEntity.status(200).body(PlayerRankRes.of(200,"Success",result));
+
+    }
+
 }

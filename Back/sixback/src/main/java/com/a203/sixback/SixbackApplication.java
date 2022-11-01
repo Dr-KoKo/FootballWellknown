@@ -19,11 +19,11 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 @EnableMongoRepositories(basePackages = "com.a203.sixback.db.mongo")
 public class SixbackApplication {
 	public static final String APPLICATION_LOCATIONS = "spring.config.location="
-			+ "classpath:application.yml, classpath:application-key.properties";
+
+			+ "classpath:application.yml";
 	public static void main(String[] args) {
 		new SpringApplicationBuilder(SixbackApplication.class)
 				.properties(APPLICATION_LOCATIONS)
 				.run(args);
 	}
-
 }
