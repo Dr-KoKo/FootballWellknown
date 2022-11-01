@@ -1,8 +1,9 @@
 package com.a203.sixback.scheduler;
 
+import com.a203.sixback.db.redis.MatchCacheRepository;
 import com.a203.sixback.match.MatchService;
 import com.a203.sixback.match.vo.MatchStatusVO;
-import com.a203.sixback.redis.RedisService;
+//import com.a203.sixback.redis.RedisService;
 import com.a203.sixback.scheduler.task.InitTask;
 import com.a203.sixback.socket.Message;
 import com.a203.sixback.socket.MessageService;
@@ -28,8 +29,10 @@ public class SchedulerController {
     @Autowired(required = false)
     private MessageService messageService;
 
-    @Autowired(required = false)
-    private RedisService redisService;
+//    @Autowired(required = false)
+//    private RedisService redisService;
+
+    private MatchCacheRepository matchCacheRepository;
 
     @Value("${API-KEY}")
     private String apiKey;
@@ -55,7 +58,7 @@ public class SchedulerController {
 
         long matchId = 1059375L;
 
-        Runnable task = new InitTask(matchId, messageService, matchService, redisService);
+        Runnable task = new InitTask(matchId, messageService, matchService, matchCacheRepository);
 
         sb.append("10 11 17 * * *");
 

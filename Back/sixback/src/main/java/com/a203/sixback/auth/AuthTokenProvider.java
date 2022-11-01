@@ -1,6 +1,7 @@
 package com.a203.sixback.auth;
 
 import com.a203.sixback.db.entity.User;
+import com.a203.sixback.db.redis.UserCacheRepository;
 import com.a203.sixback.db.repo.UserRepo;
 import com.a203.sixback.exception.TokenValidFailedException;
 import io.jsonwebtoken.Claims;
@@ -23,12 +24,14 @@ import java.util.stream.Collectors;
 public class AuthTokenProvider {
 
     private final UserRepo userRepo;
+    private final UserCacheRepository userCacheRepository;
     private final Key key;
     private static final String AUTHORITIES_KEY = "role";
 
-    public AuthTokenProvider(String secret, UserRepo userRepo) {
+    public AuthTokenProvider(String secret, UserRepo userRepo, UserCacheRepository userCacheRepository) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.userRepo = userRepo;
+        this.userCacheRepository = userCacheRepository;
     }
 
     public AuthToken createAuthToken(String id, Date expiry) {
@@ -58,7 +61,9 @@ public class AuthTokenProvider {
 
             System.out.println(claims.getSubject());
 
-            User user = userRepo.findByEmail(claims.getSubject());
+            User user = userCacheRepository.getUser(claims.getSubject()).orElseGet(
+                    ()->userRepo.findByEmail(claims.getSubject())
+            );
 //
             UserPrincipal principal = UserPrincipal.create(user);
 

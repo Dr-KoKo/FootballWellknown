@@ -1,6 +1,7 @@
 package com.a203.sixback.config;
 
 import com.a203.sixback.auth.AuthTokenProvider;
+import com.a203.sixback.db.redis.UserCacheRepository;
 import com.a203.sixback.db.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,8 +17,11 @@ public class JwtConfig {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private UserCacheRepository userCacheRepository;
+
     @Bean
     public AuthTokenProvider jwtProvider() {
-        return new AuthTokenProvider(secret, userRepo);
+        return new AuthTokenProvider(secret, userRepo, userCacheRepository);
     }
 }
