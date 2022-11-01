@@ -11,7 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { display } from "@mui/system";
+import { display, width } from "@mui/system";
 import "../MatchPage/MatchMain.css";
 
 const day = ['(일)','(월)','(화)','(수)','(목)','(금)','(토)']
@@ -131,10 +131,10 @@ const MatchMain = () => {
                         {data.matchVO.date.split('T')[1]}
                       </TableCell>
                       {/* 경기 */}
-                      <TableCell align="center">
-                        <span style={{marginRight: 10}}>{data.matchVO.home}</span>
+                      <TableCell sx={{display:'flex', alignItems:'center', justifyContent:'center'}}>
+                        <span style={{marginRight: 10, width:'30%', textAlign:'center'}}>{data.matchVO.home}</span>
                         <img src={data.matchVO.homeImage} alt="home" width={'5%'}/>
-                        <span style={{marginLeft: 10, marginRight: 10}}>
+                        <span style={{marginLeft: 10, marginRight: 10, width:'15%', textAlign:'center'}}>
                           {data.matchStatus === "FIN"
                           ?
                           data.matchVO.homeScore + " vs " + data.matchVO.awayScore
@@ -143,7 +143,7 @@ const MatchMain = () => {
                           }
                         </span>
                         <img src={data.matchVO.awayImage} alt="away" width={'5%'}/> 
-                        <span style={{marginLeft: 10}}>
+                        <span style={{marginLeft: 10, width:'30%', textAlign:'center'}}>
                           {data.matchVO.away}
                         </span> 
                       </TableCell>
