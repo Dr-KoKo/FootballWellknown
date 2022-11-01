@@ -4,6 +4,7 @@ import com.a203.sixback.db.enums.ProviderType;
 import com.a203.sixback.db.entity.User;
 import com.a203.sixback.db.enums.RoleType;
 import com.a203.sixback.db.enums.Status;
+import com.a203.sixback.db.redis.UserCacheRepository;
 import com.a203.sixback.db.repo.UserRepo;
 import com.a203.sixback.exception.OAuthProviderMissMatchException;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepo userRepo;
+    private final UserCacheRepository userCacheRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -43,7 +45,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        User savedUser = userRepo.findByEmail(userInfo.getEmail());
+        User savedUser = userCacheRepository.getUser(userInfo.getEmail()).orElseGet(
+                ()->userRepo.findByEmail(userInfo.getEmail())
+        );
 
         if (savedUser != null) {
             if (providerType != savedUser.getProviderType()) {
