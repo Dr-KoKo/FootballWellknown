@@ -15,6 +15,11 @@ import LineUp from "components/Match/LineUp";
 import MatchPredict from "components/Match/MatchPredict";
 import Padlet from "components/Match/Padlet";
 import PlayerEvaluate from "components/Match/PlayerEvaluate";
+import UserInfo from "pages/MyPage/UserInfo";
+import UserDetail from "pages/MyPage/UserDetail";
+import UserPredict from "pages/MyPage/UserPredict";
+import UserPoint from "pages/MyPage/UserPoint";
+
 
 import SocialLogin from "./pages/login/SocialLogin";
 import SocialAuth from "./components/user/SocialAuth"
@@ -30,6 +35,12 @@ function App() {
           <Route path="player" element={<TeamPlayer />}></Route>
           <Route path="board" element={<TeamBoard />}></Route>
         </Route>
+        <Route path="/userinfo" element={<UserInfo />}>
+          <Route path="detail" element={<UserDetail />}></Route>
+          <Route path="predict" element={<UserPredict />}></Route>
+          <Route path="point" element={<UserPoint />}></Route>
+        </Route>
+        <Route path="/usertest" element={<UserDetail />}></Route>
         <Route path="/player/:id" element={<PlayerDetail />}></Route>
         <Route path="/match" element={<MatchMain />} />
         <Route path="/match/:matchId" element={<MatchDetail />}>
