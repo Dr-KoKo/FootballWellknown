@@ -1,6 +1,7 @@
 package com.a203.sixback.match;
 
 import com.a203.sixback.db.entity.*;
+import com.a203.sixback.db.enums.History;
 import com.a203.sixback.db.enums.MatchResult;
 import com.a203.sixback.db.enums.TeamType;
 import com.a203.sixback.db.repo.*;
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class MatchService {
     private final MatchesRepo matchesRepo;
     private final MatchDetRepo matchDetRepo;
+    private final MatchHistoryRepo matchHistoryRepo;
     private final PlayerMatchRepo playerMatchRepo;
     private final PlayerEvaluateRepo playerEvaluateRepo;
     private final PlayerRepo playerRepo;
@@ -393,5 +395,171 @@ public class MatchService {
         teamRepo.save(homeTeam);
         teamRepo.save(awayTeam);
         matchesRepo.save(savedMatches);
+
+        int shot[][] = new int[1][2];
+        int shotOn[][] = new int[1][2];
+        int foul[][] = new int[1][2];
+        int corner[][] = new int[1][2];
+        int offside[][] = new int[1][2];
+        String poss[][] = new String[1][2];
+        int yellow[][] = new int[1][2];
+        int red[][] = new int[1][2];
+        int save[][] = new int[1][2];
+        int pass[][] = new int[1][2];
+        int suc[][] = new int[1][2];
+        int penalty[][] = new int[1][2];
+        String formation[][] = new String[1][2];
+        formation[0][0] = jsonObject.get("match_hometeam_system").toString();
+        formation[0][1] = jsonObject.get("match_awayteam_system").toString();
+        JSONArray dets = (JSONArray)jsonObject.get("statistics");
+        for(int j=0;j<dets.size();j++){
+            JSONObject det = (JSONObject) dets.get(j);
+            String type = det.get("type").toString();
+
+            if(type.equals("Penalty")){
+                if(!det.get("home").toString().equals("")){
+                    penalty[0][0] = Integer.parseInt(det.get("home").toString());
+                    penalty[0][1] = Integer.parseInt(det.get("away").toString());
+                }
+
+            }
+            else if(type.equals("Shots Total")){
+                shot[0][0] = Integer.parseInt(det.get("home").toString());
+                shot[0][1] = Integer.parseInt(det.get("away").toString());
+            }
+            else if(type.equals("Shots On Goal")){
+                shotOn[0][0] = Integer.parseInt(det.get("home").toString());
+                shotOn[0][1] = Integer.parseInt(det.get("away").toString());
+            }
+            else if(type.equals("Fouls")){
+                foul[0][0] = Integer.parseInt(det.get("home").toString());
+                foul[0][1] = Integer.parseInt(det.get("away").toString());
+            }
+            else if(type.equals("Corners")){
+                corner[0][0] = Integer.parseInt(det.get("home").toString());
+                corner[0][1] = Integer.parseInt(det.get("away").toString());
+            }
+            else if(type.equals("Offsides")){
+                offside[0][0] = Integer.parseInt(det.get("home").toString());
+                offside[0][1] = Integer.parseInt(det.get("away").toString());
+            }
+            else if(type.equals("Ball Possession")){
+                poss[0][0] = det.get("home").toString();
+                poss[0][1] = det.get("away").toString();
+            }
+            else if(type.equals("Saves")){
+                save[0][0] = Integer.parseInt(det.get("home").toString());
+                save[0][1] = Integer.parseInt(det.get("away").toString());
+            }
+            else if(type.equals("Passes Total")){
+                pass[0][0] = Integer.parseInt(det.get("home").toString());
+                pass[0][1] = Integer.parseInt(det.get("away").toString());
+            }
+            else if(type.equals("Yellow Cards")){
+                yellow[0][0] = Integer.parseInt(det.get("home").toString());
+                yellow[0][1] = Integer.parseInt(det.get("away").toString());
+            }
+            else if(type.equals("Red Cards")){
+                red[0][0] = Integer.parseInt(det.get("home").toString());
+                red[0][1] = Integer.parseInt(det.get("away").toString());
+            }
+
+        }
+        for(int t=0;t<=1;t++){
+            String type = t==0? "HOME" : "AWAY";
+            matchDetRepo.save(MatchDet.builder()
+                    .foul(foul[0][t])
+                    .pass(pass[0][t])
+                    .corner(corner[0][t])
+                    .matches(savedMatches)
+                    .offside(offside[0][t])
+                    .penalty(penalty[0][t])
+                    .passOn(suc[0][t])
+                    .possession(poss[0][t])
+                    .formation(formation[0][t])
+                    .red(red[0][t])
+                    .yellow(yellow[0][t])
+                    .shot(shot[0][t])
+                    .shotOn(shotOn[0][t])
+                    .save(save[0][t])
+                    .teamType(TeamType.valueOf(type))
+                    .build());
+        }
+    }
+
+    public void saveGoals(JSONObject jsonObject, long matchId){
+        Matches savedMatches = matchesRepo.findById(matchId).get();
+        String time =jsonObject.get("time").toString();
+        String man = "";
+        String man2 = "";
+        String type;
+        String info = jsonObject.get("info").toString();
+        if (jsonObject.get("home_scorer").toString().equals("")) {
+            man = jsonObject.get("away_scorer").toString();
+            man2 = jsonObject.get("away_assist").toString();
+            type = "AWAY";
+        } else {
+            man = jsonObject.get("home_scorer").toString();
+            man2 = jsonObject.get("home_assist").toString();
+            type = "HOME";
+        }
+        matchHistoryRepo.save(MatchHistory.builder()
+                        .matches(savedMatches)
+                        .history(History.GOAL)
+                        .mainName(man)
+                        .subName(man2)
+                        .time(time)
+                        .info(info)
+                        .teamType(TeamType.valueOf(type))
+                        .build());
+    }
+    public void saveCards(JSONObject card, long matchId){
+        Matches savedMatches = matchesRepo.findById(matchId).get();
+        String time = card.get("time").toString();
+        String man = "";
+        String type;
+        String color = card.get("card").toString().equals("yellow card") ? "YELLOW" : "RED";
+        String info = card.get("info").toString();
+        if (card.get("home_fault").toString().equals("")) {
+            man = card.get("away_fault").toString();
+            type = "AWAY";
+        } else {
+            man = card.get("home_fault").toString();
+            type = "HOME";
+        }
+        matchHistoryRepo.save(MatchHistory.builder()
+                .matches(savedMatches)
+                .history(History.valueOf(color))
+                .info(info)
+                .time(time)
+                .teamType(TeamType.valueOf(type))
+                .mainName(man)
+                .build());
+    }
+    public void saveHomeSub(JSONObject sub, long matchId){
+        String time = sub.get("time").toString();
+        Matches savedMatches = matchesRepo.findById(matchId).get();
+        String subMans[] =  sub.get("substitution").toString().split("\\|");
+        matchHistoryRepo.save(MatchHistory.builder()
+                .matches(savedMatches)
+                .mainName(subMans[0])
+                .subName(subMans[1])
+                .time(time)
+                .teamType(TeamType.HOME)
+                .history(History.SUB)
+                .build());
+    }
+    public void saveAwaySub(JSONObject sub, long matchId){
+        String time = sub.get("time").toString();
+        Matches savedMatches = matchesRepo.findById(matchId).get();
+        String subMans[] =  sub.get("substitution").toString().split("\\|");
+        matchHistoryRepo.save(MatchHistory.builder()
+                .matches(savedMatches)
+                .mainName(subMans[0])
+                .subName(subMans[1])
+                .time(time)
+                .teamType(TeamType.AWAY)
+                .history(History.SUB)
+                .build());
     }
 }
