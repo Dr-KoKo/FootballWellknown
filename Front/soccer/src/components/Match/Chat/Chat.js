@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 import * as Stomp from "@stomp/stompjs";
 import { useSelector } from "react-redux";
-import { TextareaAutosize, Button, Box } from "@mui/material";
 import Messages from "./Messages";
 import Input from "./Input";
 
@@ -14,6 +13,7 @@ function Chatting() {
   const user = useSelector((state) => state.user);
   const params = useParams();
   const matchId = params.matchId;
+  const name = user.nickname === "" ? "noname" : user.nickname;
 
   useEffect(() => {
     connect();
@@ -22,7 +22,7 @@ function Chatting() {
 
   const connect = () => {
     client.current = new Stomp.Client({
-      brokerURL: "ws://localhost:8080/api/v1/ws",
+      brokerURL: "ws://k7a203.p.ssafy.io:8080/api/v1/ws",
       reconnectDelay: 1000,
       heartbeatIncoming: 1000,
       heartbeatOutgoing: 1000,
@@ -31,7 +31,7 @@ function Chatting() {
         // console.log(err);
       },
       webSocketFactory: () => {
-        return new WebSocket("ws://localhost:8080/api/v1/ws");
+        return new WebSocket("ws://k7a203.p.ssafy.io:8080/api/v1/ws");
       },
       onConnect: () => {
         setTimeout(() => subscribe(), 1000);
@@ -74,7 +74,7 @@ function Chatting() {
       destination: "/pub/chat",
       body: JSON.stringify({
         type: "message",
-        sender: user.nickname === "" ? "noname" : user.nickname,
+        sender: name,
         channelId: matchId,
         data: message,
       }),
@@ -85,7 +85,7 @@ function Chatting() {
 
   return (
     <div className="container">
-      <Messages messages={messages} name={user.nickname} />
+      <Messages messages={messages} name={name} />
       <Input
         message={message}
         setMessage={setMessage}
