@@ -1,2 +1,3 @@
 
-Back/sixback/src/main/resources/application.yaml
+Back/sixback/src/main/resources/application.yml
+Back/sixback/src/main/resources/keystore.p12

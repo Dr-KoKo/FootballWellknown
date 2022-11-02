@@ -50,4 +50,7 @@ public class MatchDet {
     @JoinColumn(name = "matches_id")
     private Matches matches;
 
+    public void setPassOn(int passOn){
+        this.passOn = passOn;
+    }
 }
