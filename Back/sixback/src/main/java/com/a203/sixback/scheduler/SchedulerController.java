@@ -7,6 +7,7 @@ import com.a203.sixback.match.MatchService;
 import com.a203.sixback.match.vo.MatchStatusVO;
 //import com.a203.sixback.redis.RedisService;
 import com.a203.sixback.scheduler.task.InitTask;
+import com.a203.sixback.scheduler.task.LineUpTask;
 import com.a203.sixback.socket.Message;
 import com.a203.sixback.socket.MessageService;
 import com.a203.sixback.team.vo.MatchVO;
@@ -47,12 +48,13 @@ public class SchedulerController {
     private String apiKey;
 
     @Async
- //   @Scheduled(cron = "0 0 0 * * *")
-    @Scheduled(cron = "0 43 13 * * *")
+    @Scheduled(cron = "0 0 23 * * *")
+//    @Scheduled(cron = "0 43 13 * * *")
     public void mainSchedule() throws Exception {
         log.info("SchedulerController Cron 실행");
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().plusDays(1);
+
         int year = now.getYear();
         int month = now.getMonthValue();
         int day = now.getDayOfMonth();
@@ -65,7 +67,7 @@ public class SchedulerController {
 
         log.info("{}의 경기 수: {}", now.toString(), list.size());
 
-        // matchId = DB의 Id와 일치해야함
+/*
         long matchId = 1059375L;
 
         Runnable task = new InitTask(matchId, messageService, matchService, matchCacheRepository, pointLogRepo, predictRepo);
@@ -73,25 +75,24 @@ public class SchedulerController {
         sb.append("10 43 13 * * *");
 
         MainScheduler.getInstance().start(task, sb.toString(), matchId);
-/*
-        for(MatchStatusVO matchStatusVo : list) {
+        */
+        for (MatchStatusVO matchStatusVo : list) {
             MatchVO matchVO = matchStatusVo.getMatchVO();
             long matchId = matchVO.getMatchId();
             String date = matchVO.getDate();
 
             log.info("MatchId : {}, MatchDate : {}", matchId, date);
 
+            int minute = Integer.parseInt(date.substring(14, 16));
+            int hour = Integer.parseInt(date.substring(11, 13));
+
             sb.setLength(0);
 
-            int minute = Integer.parseInt(date.substring(14, 16));
-            int hour = Integer.parseIng(date.substring(11, 13));
-
-
             sb.append(0).append(" ").append(minute).append(" ")
-            .append(hour).append(" ").append(*).append(" ")
-            .append(*).append(" ").append("*");
+                    .append(hour).append(" ").append("*").append(" ")
+                    .append("*").append(" ").append("*");
 
-            Runnable task = new InitTask(matchId, matchService, redisService);
+            Runnable task = new InitTask(matchId, messageService, matchService, matchCacheRepository, pointLogRepo, predictRepo);
 
             log.info("Cron Trigger : {}", sb.toString());
 
@@ -101,11 +102,16 @@ public class SchedulerController {
 
             hour = minute >= 30 ? hour : hour == 0 ? 23 : hour - 1;
 
-            sb.append(0).append(" ").append(minute).append(" ")
-            .append(hour).append(" ").append(*).append(" ")
-            .append(*).append(" ").append("*");
+            sb.setLength(0);
 
-            Runnable task = new LineUpTask(matchId, matchService, redisService);
-        }*/
+            sb.append(0).append(" ").append(minute).append(" ")
+                    .append(hour).append(" ").append("*").append(" ")
+                    .append("*").append(" ").append("*");
+
+
+            task = new LineUpTask(matchId, matchService);
+
+            MainScheduler.getInstance().start(task, sb.toString(), matchId * 2L);
+        }
     }
 }
