@@ -15,8 +15,9 @@ import LineUp from "components/Match/LineUp";
 import MatchPredict from "components/Match/MatchPredict";
 import Padlet from "components/Match/Padlet";
 import PlayerEvaluate from "components/Match/PlayerEvaluate";
-import SocialLogin from "./components/user/SocialLogin";
-import SocialAuth from "./components/user/SocialAuth";
+
+import SocialLogin from "./pages/login/SocialLogin";
+import SocialAuth from "./components/user/SocialAuth"
 
 function App() {
   return (

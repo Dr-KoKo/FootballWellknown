@@ -1,60 +1,69 @@
-import axios from 'axios';
 import React, { Fragment, useEffect, useState } from 'react';
-import { Outlet, useParams } from 'react-router';
-import { Grid, Box } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Outlet,  } from 'react-router';
+import { Grid, Box, Container, Typography } from '@mui/material';
+import { NavLink } from 'react-router-dom';
+import { store } from 'index';
+import styled from 'styled-components';
+
+const StyledNavLink = styled(NavLink)`
+  color:black;
+  font-size: x-large;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  margin: 10px;
+  &:hover,
+  &:focus{
+      color: blue;
+  }
+  &:active{
+      color: red;
+  }
+`;
 
 const MatchDetail = () => {
-  const params = useParams();
-  const matchId = params.matchId;
-
-  const [match, setMatch] = useState({
-    matchId: 0,
-    date: "",
-    home: "",
-    homeImage: "",
-    awayImage: "",
-    homeScore: 0,
-    away: "",
-    awayScore: 0,
-    stadium: ""
-  });
-  const [matchStatus, setMatchStatus] = useState("");
-
-  useEffect(() => {
-    axios.get(`http://localhost:8080/api/v1/matches/match/${matchId}`)
-    .then((res) => {
-        setMatch(res.data.result.matchVO);
-        if(res.data.result.matchStatus === "FIN"){
-          setMatchStatus("경기종료");
-        }
-        else if(res.data.result.matchStatus === "DELAY"){
-          setMatchStatus("지연");
-        }
-        else{
-          setMatchStatus("경기전");
-        }
-    });
-  },[]);
-
+  const match = store.getState().match;
+  const matchStatus = match.matchStatus;
   return (
-    <Fragment>
-      <Box>
+    <Container>
+      <Box sx={{
+        backgroundColor:'white',
+        borderRadius: '10px',
+        opacity: 0.8,
+        textAlign: 'center'
+        }}
+      >
         <Grid container spacing={2}>
           <Grid item xs={1}/>
           <Grid item xs={3}>
             <img src={match.homeImage} alt="no"/>
           </Grid>
-          <Grid item xs={1}>
-            {matchStatus === "경기종료" && <p>{match.homeScore}</p>}
+          <Grid item xs={1} display={'flex'} alignItems={'center'} p={2}>
+            <Typography variant='h2'>
+             {matchStatus === "경기종료" && match.homeScore}
+            </Typography>
           </Grid>
-          <Grid item xs={2}>
-            <p>{matchStatus}</p>
-            <p>{match.date}</p>
+          <Grid item xs={2} p={2}>
+            <Box 
+              sx={{
+                backgroundColor:'#294588', 
+                color:'white', 
+                borderRadius:'10px',
+                margin: '10px'
+              }}
+            >
+              {matchStatus}
+            </Box>
+            <Box>
+              {match.date.split('T')[0].split('-')[1]}.
+              {match.date.split('T')[0].split('-')[2]}
+            </Box>
+            <p>{match.date.split('T')[1]}</p>
             <p>{match.stadium}</p>
           </Grid>
-          <Grid item xs={1}>
-            {matchStatus === "경기종료" && <p>{match.awayScore}</p>}
+          <Grid item xs={1} display={'flex'} alignItems={'center'} p={2}>
+            <Typography  variant='h2'>
+              {matchStatus === "경기종료" && match.awayScore}
+            </Typography>
           </Grid>
           <Grid item xs={3}>
             <img src={match.awayImage} alt="no"/>
@@ -63,18 +72,30 @@ const MatchDetail = () => {
         </Grid>
       </Box>
       <br/>
-      <Fragment>
-        <Link to="MatchPredict">승부예측 | </Link>
-        <Link to="LineUp">라인업 | </Link>
-        <Link to="PlayerEvaluate">선수평가 | </Link>
-        <Link to="Padlet">패들릿 | </Link>
-        <Link to="Chatting">채팅 | </Link>
-      </Fragment>
+      <Grid container spacing={2}>
+        <Grid item xs={1}/>
+        <Grid item xs={2}>
+          <StyledNavLink to="MatchPredict">승부예측</StyledNavLink>
+        </Grid>
+        <Grid item xs={2}>
+          <StyledNavLink to="LineUp">라인업</StyledNavLink>
+        </Grid>
+        <Grid item xs={2}>
+          <StyledNavLink to="PlayerEvaluate">선수평가</StyledNavLink>
+        </Grid>
+        <Grid item xs={2}>
+          <StyledNavLink to="Padlet">패들릿</StyledNavLink>
+        </Grid>
+        <Grid item xs={2}>
+          <StyledNavLink to="Chatting">채팅</StyledNavLink>
+        </Grid>
+        <Grid item xs={1}/>
+      </Grid>
       <br/>
       <Fragment>
         <Outlet />
       </Fragment>
-    </Fragment>
+    </Container>
   );
 };
 

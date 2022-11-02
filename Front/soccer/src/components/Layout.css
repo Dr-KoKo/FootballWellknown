@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10%;
+    margin-bottom: 5%;
     position: relative;
 }
 .navbar::before{
@@ -59,6 +59,22 @@
 }
 .navbar_li>div:hover{
 
+    border-bottom: 2px solid    ;
+    color: black;
+}
+
+#logoutBtn{
+    width: 100%;
+    margin-right: 5%;
+    font-size: 1rem;
+    font-weight: lighter;
+    size: small;
+    background-color: transparent;
+    border: none;
+    color: white;
+}
+#logoutBtn:hover{
     border-bottom: 2px solid #44EC6C;
     color: black;
 }
+

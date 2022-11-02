@@ -9,8 +9,8 @@ const TeamPlayer = () => {
   const [datas, setDatas] = useState({
     gks: [], fws: [], dfs: [], mfs: []
   });
-  function goPlayerDetail(id) {
-    window.location.href = `/player/${id}`;
+  function goPlayerDetail(player) {
+    window.location.href = `/player/${player}`;
   }
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -26,7 +26,7 @@ const TeamPlayer = () => {
     {loading ? <Loading /> : 
     <div>
       <div id="coach">
-        <div>감독</div>
+        <div id="posFr"><div className="position" id="coachBlock">COACH</div></div>
         <div id="coachProfile">
           <img id="coachImg" src={datas.coachImage} alt=""></img>
           <div id="coachEx">
@@ -37,10 +37,10 @@ const TeamPlayer = () => {
           </div>
         </div>
       </div>
-      <div className="theme">골키퍼</div>
+      <div id="posFr"><div className="position" id="gkBlock">GoalKeepers</div></div>
       <Grid container>
         {datas.gks.map((data) => (
-          <Grid item xs={4}>
+          <Grid  id='mb-1' item xs={4}>
             <div onClick={() => goPlayerDetail(data.id)}>
             <div id="numberImage">
             <img id="playerProfile" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Aaron_Ramsdale_February_2020.jpg" alt=""></img>
@@ -54,10 +54,10 @@ const TeamPlayer = () => {
           </Grid>
         ))}
         </Grid>
-        <div className="theme">수비수</div>
+        <div id="posFr"><div className="position" id="dfBlock">DeFenders</div></div>
       <Grid container>
         {datas.dfs.map((data) => (
-          <Grid item xs={4}>
+          <Grid id='mb-1' item xs={4}>
             <div onClick={() => goPlayerDetail(data.id)}>
             <div id="numberImage">
             <img id="playerProfile" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Aaron_Ramsdale_February_2020.jpg" alt=""></img>
@@ -71,10 +71,10 @@ const TeamPlayer = () => {
           </Grid>
         ))}
         </Grid>
-        <div className="theme">미드필더</div>
+        <div id="posFr"><div className="position" id="mfBlock">MidFielders</div></div>
       <Grid container>
         {datas.mfs.map((data) => (
-          <Grid item xs={4}>
+          <Grid id='mb-1' item xs={4}>
             <div onClick={() => goPlayerDetail(data.id)}>
             <div id="numberImage">
             <img id="playerProfile" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Aaron_Ramsdale_February_2020.jpg" alt=""></img>
@@ -88,10 +88,10 @@ const TeamPlayer = () => {
           </Grid>
         ))}
         </Grid>
-        <div className="theme">공격수</div>
+        <div id="posFr"><div className="position" id="fwBlock">Forwards</div></div>
       <Grid container>
         {datas.fws.map((data) => (
-          <Grid item xs={4}>
+          <Grid id='mb-1' item xs={4}>
             <div onClick={() => goPlayerDetail(data.id)}>
             <div id="numberImage">
             <img id="playerProfile" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Aaron_Ramsdale_February_2020.jpg" alt=""></img>
