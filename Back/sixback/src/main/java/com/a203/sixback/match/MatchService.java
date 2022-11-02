@@ -2,11 +2,13 @@ package com.a203.sixback.match;
 
 import com.a203.sixback.db.entity.*;
 import com.a203.sixback.db.enums.MatchResult;
+import com.a203.sixback.db.enums.TeamType;
 import com.a203.sixback.db.repo.*;
 import com.a203.sixback.match.vo.*;
 import com.a203.sixback.team.vo.MatchVO;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -251,5 +254,144 @@ public class MatchService {
                 .build();
         MatchStatusVO result = new MatchStatusVO(matchVO, match.getMatchStatus());
         return result;
+    }
+
+    // 라인업 나올시에 저장하는 거
+    public void saveLineUps(Long matchId) throws Exception{
+        JSONObject jsonObject = new JSONObject();
+
+        String str = "https://apiv3.apifootball.com/?action=get_events&match_id="+matchId+"APIkey=" + apiKey;
+        URL url = new URL(str);
+        InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
+        jsonObject = (JSONObject) JSONValue.parseWithException(isr);
+        JSONObject lineups = (JSONObject) jsonObject.get("lineup");
+        JSONObject homeLineups = (JSONObject) lineups.get("home");
+        JSONObject awayLineups = (JSONObject) lineups.get("away");
+        JSONArray homeStarts = (JSONArray) homeLineups.get("starting_lineups");
+        JSONArray homeSubsPlayer = (JSONArray) homeLineups.get("substitutes");
+        JSONArray awayStarts = (JSONArray) awayLineups.get("starting_lineups");
+        JSONArray awaySubsPlayer = (JSONArray) awayLineups.get("substitutes");
+        String homeFormation = jsonObject.get("match_hometeam_system").toString();
+        String awayFormation = jsonObject.get("match_awayteam_system").toString();
+
+
+        Matches savedMatches = matchesRepo.findById(matchId).get();
+        // 라인업 포메이션 저장
+        matchDetRepo.save(MatchDet.builder()
+                .matches(savedMatches)
+                .teamType(TeamType.HOME)
+                .formation(homeFormation)
+                .build());
+        matchDetRepo.save(MatchDet.builder()
+                .matches(savedMatches)
+                .teamType(TeamType.AWAY)
+                .formation(awayFormation)
+                .build());
+
+        for(int t=0;t<homeStarts.size();t++){
+            JSONObject start = (JSONObject) homeStarts.get(t);
+            Optional<Player> player = playerRepo.findById(Long.parseLong(start.get("player_key").toString()));
+            playerMatchRepo.save(PlayerMatch.builder()
+                    .position(Integer.parseInt(start.get("lineup_position").toString()))
+                    .player(player.isPresent()?player.get():null)
+                    .team("HOME")
+                    .matches(savedMatches)
+                    .build());
+        }
+        // 홈 서브 멤버
+        for(int t=0;t<homeSubsPlayer.size();t++){
+            JSONObject start = (JSONObject) homeSubsPlayer.get(t);
+            Optional<Player> player = playerRepo.findById(Long.parseLong(start.get("player_key").toString()));
+            playerMatchRepo.save(PlayerMatch.builder()
+                    .position(Integer.parseInt(start.get("lineup_position").toString()))
+                    .player(player.isPresent()?player.get():null)
+                    .matches(savedMatches)
+                    .team("HOME")
+                    .build());
+        }
+        // 어웨이 스타트 멤버
+        for(int t=0;t<awayStarts.size();t++){
+            JSONObject start = (JSONObject) awayStarts.get(t);
+            Optional<Player> player = playerRepo.findById(Long.parseLong(start.get("player_key").toString()));
+            playerMatchRepo.save(PlayerMatch.builder()
+                    .position(Integer.parseInt(start.get("lineup_position").toString()))
+                    .player(player.isPresent()?player.get():null)
+                    .team("AWAY")
+                    .matches(savedMatches)
+                    .build());
+        }
+        // 어웨이 서브 멤버
+        for(int t=0;t<awaySubsPlayer.size();t++){
+            JSONObject start = (JSONObject) awaySubsPlayer.get(t);
+            Optional<Player> player = playerRepo.findById(Long.parseLong(start.get("player_key").toString()));
+            playerMatchRepo.save(PlayerMatch.builder()
+                    .position(Integer.parseInt(start.get("lineup_position").toString()))
+                    .player(player.isPresent()?player.get():null)
+                    .matches(savedMatches)
+                    .team("AWAY")
+                    .build());
+        }
+    }
+
+    // 경기끝나고 발생하는 이벤트 저장
+    public void savePlayerMatch(long matchId) throws Exception{
+        // 경기 결과에 따른 선수 세부 스탯 저장
+        JSONObject jsonObject = new JSONObject();
+        String str = "https://apiv3.apifootball.com/?action=get_statistics&match_id="+matchId+"&APIkey=" + apiKey;
+        URL url = new URL(str);
+        InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
+        jsonObject = (JSONObject) JSONValue.parseWithException(isr);
+        JSONObject j2 = (JSONObject)jsonObject.get(Long.toString(matchId));
+        JSONArray playersStats = (JSONArray) j2.get("player_statistics");
+        for(int i=0;i<playersStats.size();i++){
+            JSONObject playerStat = (JSONObject)playersStats.get(i);
+            Optional<Player> player = playerRepo.findById(Long.parseLong(playerStat.get("player_key").toString()));
+
+            if(!player.isPresent()){
+                continue;
+            }
+            if(!playerStat.get("player_minutes_played").toString().equals("0")){
+                Player savedPlayer = player.get();
+                savedPlayer.addPlayerStat(Integer.parseInt(playerStat.get("player_goals").toString()),Integer.parseInt(playerStat.get("player_assists").toString()));
+                playerRepo.save(savedPlayer);
+            }
+            PlayerMatch playerMatch = playerMatchRepo.findByMatches_IdAndPlayer_Id(matchId, player.get().getId());
+            playerMatch.setGoal(Integer.parseInt(playerStat.get("player_goals").toString()));
+            playerMatch.setAssist(Integer.parseInt(playerStat.get("player_assists").toString()));
+            playerMatch.setClear(Integer.parseInt(playerStat.get("player_clearances").toString()));
+            playerMatch.setCrossed(Integer.parseInt(playerStat.get("player_total_crosses").toString()));
+            playerMatch.setCrossedOn(Integer.parseInt(playerStat.get("player_acc_crosses").toString()));
+            playerMatch.setDribble(Integer.parseInt(playerStat.get("player_dribble_attempts").toString()));
+            playerMatch.setDribbleOn(Integer.parseInt(playerStat.get("player_dribble_succ").toString()));
+            playerMatch.setExpertRate(Integer.parseInt(playerStat.get("player_rating").toString()));
+            playerMatch.setFoul(Integer.parseInt(playerStat.get("player_fouls_commited").toString()));
+            playerMatch.setPass(Integer.parseInt(playerStat.get("player_passes").toString()));
+            playerMatch.setPassOn(Integer.parseInt(playerStat.get("player_passes_acc").toString()));
+            playerMatch.setYellow(Integer.parseInt(playerStat.get("player_yellowcards").toString()));
+            playerMatch.setRed(Integer.parseInt(playerStat.get("player_redcards").toString()));
+            playerMatch.setShot(Integer.parseInt(playerStat.get("player_shots_total").toString()));
+            playerMatch.setShotOn(Integer.parseInt(playerStat.get("player_shots_on_goal").toString()));
+            playerMatch.setTackle(Integer.parseInt(playerStat.get("player_tackles").toString()));
+            playerMatch.setTeam(playerStat.get("team_name").toString().toUpperCase());
+            playerMatchRepo.save(playerMatch);
+        }
+    }
+    public void saveTeamMatch(long matchId) throws Exception{
+        JSONObject jsonObject = new JSONObject();
+        Matches savedMatches = matchesRepo.findById(matchId).get();
+        String str = "https://apiv3.apifootball.com/?action=get_events&match_id="+matchId+"&APIkey=" + apiKey;
+        URL url = new URL(str);
+        InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
+        jsonObject = (JSONObject) JSONValue.parseWithException(isr);
+        int homeScore = Integer.parseInt(jsonObject.get("match_hometeam_score").toString());
+        int awayScore = Integer.parseInt(jsonObject.get("match_awayteam_score").toString());
+        savedMatches.setScore(homeScore, awayScore);
+        Team homeTeam = savedMatches.getHome();
+        Team awayTeam = savedMatches.getAway();
+        homeTeam.addTeamInfo(homeScore, awayScore);
+        awayTeam.addTeamInfo(awayScore, homeScore);
+        teamRepo.save(homeTeam);
+        teamRepo.save(awayTeam);
+        matchesRepo.save(savedMatches);
     }
 }
