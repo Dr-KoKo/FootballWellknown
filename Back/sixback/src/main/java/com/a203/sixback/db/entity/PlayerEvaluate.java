@@ -29,10 +29,11 @@ public class PlayerEvaluate {
     @Column
     private int score;
 
-    public PlayerEvaluate(Matches matches, Player player, int score) {
+    public PlayerEvaluate(Matches matches, Player player, int score, User user) {
         this.matches = matches;
         this.player = player;
         this.score = score;
+        this.user = user;
     }
 
     public void setScore(int score){

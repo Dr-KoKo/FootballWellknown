@@ -1,7 +1,13 @@
 package com.a203.sixback.scheduler.task;
 
+import com.a203.sixback.db.entity.Matches;
+import com.a203.sixback.db.entity.PointLog;
+import com.a203.sixback.db.entity.Predict;
+import com.a203.sixback.db.enums.MatchResult;
+import com.a203.sixback.db.redis.MatchCacheRepository;
+import com.a203.sixback.db.repo.PointLogRepo;
+import com.a203.sixback.db.repo.PredictRepo;
 import com.a203.sixback.match.MatchService;
-import com.a203.sixback.redis.RedisService;
 import com.a203.sixback.scheduler.vo.GoalScorer;
 import com.a203.sixback.scheduler.MainScheduler;
 import com.a203.sixback.socket.Message;
@@ -9,23 +15,29 @@ import com.a203.sixback.socket.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
-public class MatchTask implements Runnable{
+public class MatchTask implements Runnable {
     private long matchId;
     private MessageService messageService;
     private MatchService matchService;
-    private RedisService redisService;
+    private MatchCacheRepository matchCacheRepository;
+    private PointLogRepo pointLogRepo;
+    private PredictRepo predictRepo;
 
-
-    public MatchTask(long matchId, MessageService messageService, MatchService matchService, RedisService redisService) {
+    public MatchTask(long matchId, MessageService messageService, MatchService matchService, MatchCacheRepository matchCacheRepository, PointLogRepo pointLogRepo, PredictRepo predictRepo) {
         this.matchId = matchId;
         this.messageService = messageService;
         this.matchService = matchService;
-        this.redisService = redisService;
+        this.matchCacheRepository = matchCacheRepository;
+        this.pointLogRepo = pointLogRepo;
+        this.predictRepo = predictRepo;
     }
 
     @Override
@@ -35,11 +47,13 @@ public class MatchTask implements Runnable{
         try {
             JSONArray jsonArray = matchService.getMatchEvent(matchId);
 
-            for(Object object : jsonArray) {
+            for (Object object : jsonArray) {
                 JSONObject jsonObject = (JSONObject) object;
                 String matchStatus = jsonObject.get("match_status").toString();
+
+
                 List<GoalScorer> goalscorer = new ArrayList<>();
-                for(Object obj : (JSONArray) jsonObject.get("goalscorer")) {
+                for (Object obj : (JSONArray) jsonObject.get("goalscorer")) {
                     JSONObject goalScoerer = (JSONObject) obj;
 
                     GoalScorer gs = new GoalScorer();
@@ -59,42 +73,70 @@ public class MatchTask implements Runnable{
                     goalscorer.add(gs);
                 }
 
-                String redis = redisService.getStringValue(String.valueOf(matchId));
+                String redis = matchCacheRepository.getMatch(matchId);
 
                 int goals = 0;
 
 
-                if(redis == null) {
-                    redisService.setStringValue(matchId, 0);
-                }
-                else {
+                if (redis == null) {
+
+                    matchCacheRepository.setMatch(matchId, 0);
+                } else {
                     goals = Integer.parseInt(redis);
                 }
 
-                log.info("{}",goals);
-                log.info("{}",goalscorer.size());
+                log.info("{}", goals);
+                log.info("{}", goalscorer.size());
 
-                if(goals != goalscorer.size()) {
+                if (goals != goalscorer.size()) {
                     log.info("득점하였습니다.");
-                    redisService.setStringValue(matchId, goals + 1);
+
+                    matchCacheRepository.setMatch(matchId, goals + 1);
                     messageService.message(new Message("goal", "admin", String.valueOf(matchId), goalscorer.get(goals).getScore()));
                 }
 
-                status(matchStatus);
+                if ("Finished".equals(matchStatus)) {
+                    log.info("경기가 끝났습니다.");
+                    matchCacheRepository.getAndDeleteMatch(matchId);
+                    messageService.message(new Message("notice", "admin", String.valueOf(matchId), "경기가 종료되었습니다."));
+                    MainScheduler.getInstance().stop(matchId);
+
+                    Integer homeTeamScore = Integer.parseInt(jsonObject.get("match_hometeam_score").toString());
+                    Integer awayTeamScore = Integer.parseInt(jsonObject.get("match_awayteam_score").toString());
+
+                    MatchResult result = homeTeamScore > awayTeamScore ?
+                            MatchResult.HOME_WIN : homeTeamScore == awayTeamScore ?
+                            MatchResult.DRAW : MatchResult.AWAY_WIN;
+
+                    log.info("배점을 시작합니다.");
+                    givePoint(matchId, result);
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+    @Transactional
+    private void givePoint(Long matchId, MatchResult result) {
+        List<Predict> correctPredictList = predictRepo.findAllByMatches_Id(matchId).stream().filter(x->result.toString().equals(x.getMatchResult().toString())).collect(Collectors.toList());;
 
-    public void status(String matchStatus) {
-        if("".equals(matchStatus)) {
+        LocalDateTime now = LocalDateTime.now();
 
-        } else if("Finished".equals(matchStatus)) {
-            log.info("경기가 끝났습니다.");
-            redisService.getAndDelete(matchId);
-            messageService.message(new Message("notice", "admin", String.valueOf(matchId), "경기가 종료되었습니다."));
-            MainScheduler.getInstance().stop(matchId);
+        List<PointLog> pointLogList = new ArrayList<>(correctPredictList.size());
+
+        for (Predict predict : correctPredictList) {
+            PointLog log = PointLog.builder()
+                    .user(predict.getUser())
+                    .mp(predict)
+                    .point(1)
+                    .distribute_time(now)
+                    .build();
+            pointLogList.add(log);
         }
+
+        log.info("총 {}개의 데이터 저장 시작합니다.", pointLogList.size());
+
+        pointLogRepo.saveAll(pointLogList);
     }
+
 }

@@ -10,4 +10,5 @@ public class PostBoardReqDTO {
     private String ctgName;
     private String content;
     private Long matchId;
+    private Integer teamId;
 }

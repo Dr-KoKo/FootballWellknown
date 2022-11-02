@@ -1,9 +1,9 @@
 package com.a203.sixback.match;
 
 import com.a203.sixback.db.entity.*;
+import com.a203.sixback.db.enums.MatchResult;
 import com.a203.sixback.db.repo.*;
 import com.a203.sixback.match.vo.*;
-import com.a203.sixback.match.res.AllTeamBoardRes;
 import com.a203.sixback.team.vo.MatchVO;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -25,7 +25,7 @@ public class MatchService {
     private final PlayerEvaluateRepo playerEvaluateRepo;
     private final PlayerRepo playerRepo;
     private final UserRepo userRepo;
-    private final MatchPredictRepo matchPredictRepo;
+    private final PredictRepo predictRepo;
     private final TeamRepo teamRepo;
     public List<MatchStatusVO> getMatchesByRound(int round) {
         List<Matches> matches = matchesRepo.findAllByRound(round);
@@ -162,6 +162,7 @@ public class MatchService {
                     .red(pm.getRed())
                     .match_id(pm.getMatches().getId())
                     .player_id(pm.getPlayer().getId())
+                    .playerName(pm.getPlayer().getName())
                     .team(pm.getTeam())
                     .build();
             playerMatchVOList.add(vo);
@@ -178,7 +179,7 @@ public class MatchService {
             pe.setScore(playerEvaluateVO.getScore());
             playerEvaluateRepo.save(pe);
         }else{
-            playerEvaluateRepo.save(new PlayerEvaluate(matches,player,playerEvaluateVO.getScore()));
+            playerEvaluateRepo.save(new PlayerEvaluate(matches,player,playerEvaluateVO.getScore(),user));
         }
     }
 
@@ -187,19 +188,30 @@ public class MatchService {
         Matches matches = matchesRepo.findById(matchPredictVO.getMatchId()).get();
         User user = userRepo.findById(matchPredictVO.getUserId()).get();
 
-        MatchPredict newMatchPredict = new MatchPredict(user, matches, matchPredictVO.getWhereWin());
-        matchPredictRepo.save(newMatchPredict);
+        String predict = matchPredictVO.getWhereWin();
+        MatchResult _predict = "HOME".equals(predict)?
+                MatchResult.HOME_WIN:"DRAW".equals(predict)?
+                MatchResult.DRAW:MatchResult.AWAY_WIN;
+
+        Predict newMatchPredict = new Predict(user, matches, _predict);
+        predictRepo.save(newMatchPredict);
     }
 
     public List<MatchPredictVO> getAllMatchPredict(long matchId) {
-        List<MatchPredict> matchPredictList = matchPredictRepo.findAllByMatches_Id(matchId);
+        List<Predict> matchPredictList = predictRepo.findAllByMatches_Id(matchId);
         List<MatchPredictVO> result = new ArrayList<>();
-        for(MatchPredict mp : matchPredictList){
+        for(Predict mp : matchPredictList){
             String nickname = userRepo.findById(mp.getUser().getId()).get().getNickname();
+
+            String predict = mp.getMatchResult().toString();
+            String _predict = "HOME_WIN".equals(predict)?
+                    "HOME":"DRAW".equals(predict)?
+                    "DRAW":"AWAY";
+
             MatchPredictVO vo = MatchPredictVO.builder()
                     .matchId(matchId)
                     .userNickname(nickname)
-                    .whereWin(mp.getWhereWin())
+                    .whereWin(_predict)
                     .build();
             result.add(vo);
         }

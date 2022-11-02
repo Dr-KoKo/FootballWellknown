@@ -1,8 +1,11 @@
 package com.a203.sixback.scheduler;
 
+import com.a203.sixback.db.redis.MatchCacheRepository;
+import com.a203.sixback.db.repo.PointLogRepo;
+import com.a203.sixback.db.repo.PredictRepo;
 import com.a203.sixback.match.MatchService;
 import com.a203.sixback.match.vo.MatchStatusVO;
-import com.a203.sixback.redis.RedisService;
+//import com.a203.sixback.redis.RedisService;
 import com.a203.sixback.scheduler.task.InitTask;
 import com.a203.sixback.socket.Message;
 import com.a203.sixback.socket.MessageService;
@@ -28,15 +31,24 @@ public class SchedulerController {
     @Autowired(required = false)
     private MessageService messageService;
 
+//    @Autowired(required = false)
+//    private RedisService redisService;
+
     @Autowired(required = false)
-    private RedisService redisService;
+    private MatchCacheRepository matchCacheRepository;
+
+    @Autowired(required = false)
+    private PointLogRepo pointLogRepo;
+
+    @Autowired(required = false)
+    private PredictRepo predictRepo;
 
     @Value("${API-KEY}")
     private String apiKey;
 
     @Async
  //   @Scheduled(cron = "0 0 0 * * *")
-    @Scheduled(cron = "0 11 17 * * *")
+    @Scheduled(cron = "0 48 17 * * *")
     public void mainSchedule() throws Exception {
         log.info("SchedulerController Cron 실행");
 
@@ -53,9 +65,10 @@ public class SchedulerController {
 
         log.info("{}의 경기 수: {}", now.toString(), list.size());
 
+        // matchId = DB의 Id와 일치해야함
         long matchId = 1059375L;
 
-        Runnable task = new InitTask(matchId, messageService, matchService, redisService);
+        Runnable task = new InitTask(matchId, messageService, matchService, matchCacheRepository, pointLogRepo, predictRepo);
 
         sb.append("10 11 17 * * *");
 
