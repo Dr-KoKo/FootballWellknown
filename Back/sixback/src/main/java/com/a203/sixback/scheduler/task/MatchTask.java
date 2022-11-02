@@ -116,7 +116,6 @@ public class MatchTask implements Runnable {
             throw new RuntimeException(e);
         }
     }
-
     @Transactional
     private void givePoint(Long matchId, MatchResult result) {
         List<Predict> correctPredictList = predictRepo.findAllByMatches_Id(matchId).stream().filter(x->result.toString().equals(x.getMatchResult().toString())).collect(Collectors.toList());;
