@@ -54,7 +54,7 @@ public class MatchController {
     }
     @GetMapping("/statistics/{matchId}")
     public ResponseEntity<BaseResponseBody> getPlayerMatches(@PathVariable long matchId){
-        List<PlayerMatchVO> result = matchService.getAllPlayerMatch(matchId);
+        StatisticsVO result = matchService.getAllPlayerMatch(matchId);
         return ResponseEntity.status(200).body(PlayerMatchRes.of(200,"Success",result));
     }
 
