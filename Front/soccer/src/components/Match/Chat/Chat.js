@@ -22,7 +22,7 @@ function Chatting() {
 
   const connect = () => {
     client.current = new Stomp.Client({
-      brokerURL: "ws://k7a203.p.ssafy.io:8080/api/v1/ws",
+      brokerURL: "ws://localhost:8080/api/v1/ws",
       reconnectDelay: 1000,
       heartbeatIncoming: 1000,
       heartbeatOutgoing: 1000,
@@ -31,7 +31,7 @@ function Chatting() {
         // console.log(err);
       },
       webSocketFactory: () => {
-        return new WebSocket("ws://k7a203.p.ssafy.io:8080/api/v1/ws");
+        return new WebSocket("ws://localhost:8080/api/v1/ws");
       },
       onConnect: () => {
         setTimeout(() => subscribe(), 1000);
