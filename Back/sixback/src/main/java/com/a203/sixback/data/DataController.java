@@ -186,6 +186,7 @@
 //            int red[][] = new int[1][2];
 //            int save[][] = new int[1][2];
 //            int pass[][] = new int[1][2];
+//            int passOn[][] = new int[1][2];
 //            int suc[][] = new int[1][2];
 //            int penalty[][] = new int[1][2];
 //            String formation[][] = new String[1][2];
@@ -218,6 +219,10 @@
 //                else if(type.equals("Corners")){
 //                    corner[0][0] = Integer.parseInt(det.get("home").toString());
 //                    corner[0][1] = Integer.parseInt(det.get("away").toString());
+//                }
+//                else if(type.equals("Passes Accurate")){
+//                    passOn[0][0] = Integer.parseInt(det.get("home").toString());
+//                    passOn[0][1] = Integer.parseInt(det.get("away").toString());
 //                }
 //                else if(type.equals("Offsides")){
 //                    offside[0][0] = Integer.parseInt(det.get("home").toString());

@@ -144,7 +144,8 @@ public class MatchService {
         return jsonArray;
     }
 
-    public List<PlayerMatchVO> getAllPlayerMatch(long match_id) {
+    public StatisticsVO getAllPlayerMatch(long match_id) {
+        StatisticsVO result = new StatisticsVO();
         List<PlayerMatch> playerMatchList = playerMatchRepo.findAllByMatches_Id(match_id);
         List<PlayerMatchVO> playerMatchVOList = new ArrayList<>();
         for(PlayerMatch pm : playerMatchList){
@@ -172,7 +173,51 @@ public class MatchService {
                     .build();
             playerMatchVOList.add(vo);
         }
-        return playerMatchVOList;
+        List<MatchDet> list = matchDetRepo.findAllByMatches_Id(match_id);
+        Matches matches = matchesRepo.findById(match_id).get();
+        for(MatchDet matchDet : list){
+
+            if(matchDet.getTeamType().equals(TeamType.HOME)){
+                result.setHomeDet(MatchDetVO.builder()
+                        .name(matches.getHome().getName())
+                        .image(matches.getHome().getImage())
+                        .shot(matchDet.getShot())
+                        .shotOn(matchDet.getShotOn())
+                        .corner(matchDet.getCorner())
+                        .formation(matchDet.getFormation())
+                        .offside(matchDet.getOffside())
+                        .penalty(matchDet.getPenalty())
+                        .pass(matchDet.getPass())
+                        .possession(matchDet.getPossession())
+                        .save(matchDet.getSave())
+                        .foul(matchDet.getFoul())
+                        .red(matchDet.getRed())
+                        .passOn(matchDet.getPassOn())
+                        .yellow(matchDet.getYellow())
+                        .build());
+            } else if (matchDet.getTeamType().equals(TeamType.AWAY)) {
+                result.setAwayDet(MatchDetVO.builder()
+                        .name(matches.getAway().getName())
+                        .image(matches.getAway().getImage())
+                        .shot(matchDet.getShot())
+                        .shotOn(matchDet.getShotOn())
+                        .corner(matchDet.getCorner())
+                        .formation(matchDet.getFormation())
+                        .offside(matchDet.getOffside())
+                        .penalty(matchDet.getPenalty())
+                        .pass(matchDet.getPass())
+                        .possession(matchDet.getPossession())
+                        .save(matchDet.getSave())
+                        .foul(matchDet.getFoul())
+                        .red(matchDet.getRed())
+                        .passOn(matchDet.getPassOn())
+                        .yellow(matchDet.getYellow())
+                        .build());
+                
+            }
+        }
+        result.setPlayers(playerMatchVOList);
+        return result;
     }
 
     public void updatePlayerEvaluation(PlayerEvaluateVO playerEvaluateVO) {
