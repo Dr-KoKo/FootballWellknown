@@ -44,7 +44,7 @@ public class UserService {
         User user = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 
         List<ResGetUserBoardsDTO.GetBoardDTO> userBoardList = boardRepo.findAllByUser(user).stream()
-                .map(board->new ResGetUserBoardsDTO.GetBoardDTO(board,user,board.getMatch().getId())).collect(Collectors.toList());
+                .map(board->new ResGetUserBoardsDTO.GetBoardDTO(board,user,board.getMatch(), board.getTeam(), board.getCategory().getCtgName())).collect(Collectors.toList());
 
         return ResGetUserBoardsDTO.of(200, "성공", userBoardList);
     }
