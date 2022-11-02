@@ -48,7 +48,7 @@ public class SchedulerController {
 
     @Async
  //   @Scheduled(cron = "0 0 0 * * *")
-    @Scheduled(cron = "0 48 17 * * *")
+    @Scheduled(cron = "0 43 13 * * *")
     public void mainSchedule() throws Exception {
         log.info("SchedulerController Cron 실행");
 
@@ -70,7 +70,7 @@ public class SchedulerController {
 
         Runnable task = new InitTask(matchId, messageService, matchService, matchCacheRepository, pointLogRepo, predictRepo);
 
-        sb.append("10 11 17 * * *");
+        sb.append("10 43 13 * * *");
 
         MainScheduler.getInstance().start(task, sb.toString(), matchId);
 /*
@@ -83,15 +83,29 @@ public class SchedulerController {
 
             sb.setLength(0);
 
-            sb.append(0).append(" ").append(date.substring(14, 16)).append(" ")
-            .append(date.substring(11, 13)).append(" ").append(date.substring(8, 10)).append(" ")
-            .append(date.substring(5, 7)).append(" ").append("*");
+            int minute = Integer.parseInt(date.substring(14, 16));
+            int hour = Integer.parseIng(date.substring(11, 13));
 
-            Runnable task = new InitTask(matchId, messageService, matchService, redisService);
+
+            sb.append(0).append(" ").append(minute).append(" ")
+            .append(hour).append(" ").append(*).append(" ")
+            .append(*).append(" ").append("*");
+
+            Runnable task = new InitTask(matchId, matchService, redisService);
 
             log.info("Cron Trigger : {}", sb.toString());
 
             MainScheduler.getInstance().start(task, sb.toString(), matchId);
+
+            minute = minute >= 30 ? minute - 30 : minute + 30;
+
+            hour = minute >= 30 ? hour : hour == 0 ? 23 : hour - 1;
+
+            sb.append(0).append(" ").append(minute).append(" ")
+            .append(hour).append(" ").append(*).append(" ")
+            .append(*).append(" ").append("*");
+
+            Runnable task = new LineUpTask(matchId, matchService, redisService);
         }*/
     }
 }

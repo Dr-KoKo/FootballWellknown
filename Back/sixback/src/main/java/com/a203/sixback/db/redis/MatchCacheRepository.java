@@ -16,8 +16,8 @@ public class MatchCacheRepository {
 
     private final static Duration MATCH_CACHE_TTL = Duration.ofDays(2);
 
-    public void setMatch(long key, long value){
-        String _key = getKey(String.valueOf(key));
+    public void setMatch(String key, long value){
+        String _key = getKey(key);
         String _value = String.valueOf(value);
 
         log.info("Set Match to Redis {}:{}", _key, value);
@@ -25,8 +25,8 @@ public class MatchCacheRepository {
         matchRedisTemplate.opsForValue().set(_key, _value, MATCH_CACHE_TTL);
     }
 
-    public String getMatch(long key){
-        String _key = getKey(String.valueOf(key));
+    public String getMatch(String key){
+        String _key = getKey(key);
         String value = matchRedisTemplate.opsForValue().get(_key);
 
         log.info("Get data from Redis {}:{}", _key, value);
@@ -34,8 +34,8 @@ public class MatchCacheRepository {
         return value;
     }
 
-    public String getAndDeleteMatch(long key){
-        String _key = getKey(String.valueOf(key));
+    public String getAndDeleteMatch(String key){
+        String _key = getKey(key);
         String value = matchRedisTemplate.opsForValue().getAndDelete(_key);
 
         log.info("Get data from Redis {}:{}", _key, value);

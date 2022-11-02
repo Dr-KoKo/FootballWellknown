@@ -384,7 +384,7 @@ public class MatchService {
         String str = "https://apiv3.apifootball.com/?action=get_events&match_id="+matchId+"&APIkey=" + apiKey;
         URL url = new URL(str);
         InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
-        jsonObject = (JSONObject) JSONValue.parseWithException(isr);
+        jsonObject = (JSONObject) ((JSONArray)JSONValue.parseWithException(isr)).get(0);
         int homeScore = Integer.parseInt(jsonObject.get("match_hometeam_score").toString());
         int awayScore = Integer.parseInt(jsonObject.get("match_awayteam_score").toString());
         savedMatches.setScore(homeScore, awayScore);
