@@ -3,6 +3,7 @@ import axios from "axios";
 import Loading from "components/Loading";
 import { Grid } from "@mui/material";
 import { useParams } from "react-router";
+import PlayerImg from "../../components/assets/playerf.jpg";
 import "./TeamPlayer.css"
 const TeamPlayer = () => {
   const { id } = useParams();
@@ -43,7 +44,7 @@ const TeamPlayer = () => {
           <Grid  id='mb-1' item xs={4}>
             <div onClick={() => goPlayerDetail(data.id)}>
             <div id="numberImage">
-            <img id="playerProfile" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Aaron_Ramsdale_February_2020.jpg" alt=""></img>
+            <img id="playerProfile" src={(data.image===null)? {PlayerImg}:data.image} alt=""></img>
             <div id="number">{data.number}</div>
             </div>
             
@@ -60,7 +61,7 @@ const TeamPlayer = () => {
           <Grid id='mb-1' item xs={4}>
             <div onClick={() => goPlayerDetail(data.id)}>
             <div id="numberImage">
-            <img id="playerProfile" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Aaron_Ramsdale_February_2020.jpg" alt=""></img>
+            <img id="playerProfile" src={(data.image==="")? PlayerImg:data.image} alt=""></img>
             <div id="number">{data.number}</div>
             </div>
             
@@ -77,7 +78,7 @@ const TeamPlayer = () => {
           <Grid id='mb-1' item xs={4}>
             <div onClick={() => goPlayerDetail(data.id)}>
             <div id="numberImage">
-            <img id="playerProfile" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Aaron_Ramsdale_February_2020.jpg" alt=""></img>
+            <img id="playerProfile" src={(data.image===null)? {PlayerImg}:data.image} alt=""></img>
             <div id="number">{data.number}</div>
             </div>
             
@@ -94,7 +95,7 @@ const TeamPlayer = () => {
           <Grid id='mb-1' item xs={4}>
             <div onClick={() => goPlayerDetail(data.id)}>
             <div id="numberImage">
-            <img id="playerProfile" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Aaron_Ramsdale_February_2020.jpg" alt=""></img>
+            <img id="playerProfile" src={(data.image===null)? {PlayerImg}:data.image} alt=""></img>
             <div id="number">{data.number}</div>
             </div>
             

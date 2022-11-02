@@ -8,6 +8,9 @@ const TeamMatches = () => {
     const {id} = useParams();
     const [loading, setLoading] = useState(true);
     const [recent, setRecent] = useState(true);
+    function goMatchDetail(matchId) {
+      window.location.href = `/match/${matchId}/MatchPredict`;
+    }
     const [datas, setDatas] = useState({
         teamInfo: "",
         finMatch: [{ date: "" }],
@@ -32,7 +35,7 @@ const TeamMatches = () => {
         
         
         {datas.finMatch.map((data) => (
-          <div key={data.matchId} id="finMatch">
+          <div key={data.matchId} id="finMatch" onClick={()=>goMatchDetail(data.matchId)}>
             <div id='matchLeft'>
               <img src={Epl} alt=''></img>
               <div id='date'>
@@ -66,7 +69,7 @@ const TeamMatches = () => {
      :
       <div id="matches">
         {datas.yetMatch.map((data) => (
-          <div key={data.matchId} id="finMatch">
+          <div key={data.matchId} id="finMatch" onClick={()=>goMatchDetail(data.matchId)}>
           <div id='matchLeft'>
             <img src={Epl} alt=''></img>
             <div id='date'>
