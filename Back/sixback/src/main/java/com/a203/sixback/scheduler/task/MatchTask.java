@@ -80,15 +80,21 @@ public class MatchTask implements Runnable{
                     messageService.message(new Message("goal", "admin", String.valueOf(matchId), goalscorer.get(goals).getScore()));
                 }
 
-                if("Finished".equals(matchStatus)) {
-                    log.info("경기가 끝났습니다.");
-                    redisService.getAndDelete(matchId);
-                    messageService.message(new Message("notice", "admin", String.valueOf(matchId), "경기가 종료되었습니다."));
-                    MainScheduler.getInstance().stop(matchId);
-                }
+                status(matchStatus);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void status(String matchStatus) {
+        if("".equals(matchStatus)) {
+
+        } else if("Finished".equals(matchStatus)) {
+            log.info("경기가 끝났습니다.");
+            redisService.getAndDelete(matchId);
+            messageService.message(new Message("notice", "admin", String.valueOf(matchId), "경기가 종료되었습니다."));
+            MainScheduler.getInstance().stop(matchId);
         }
     }
 }
