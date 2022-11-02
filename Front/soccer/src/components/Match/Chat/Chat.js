@@ -22,7 +22,7 @@ function Chatting() {
 
   const connect = () => {
     client.current = new Stomp.Client({
-      brokerURL: "ws://localhost:8080/api/v1/ws",
+      brokerURL: process.env.REACT_APP_WEBSOCKET_URL,
       reconnectDelay: 1000,
       heartbeatIncoming: 1000,
       heartbeatOutgoing: 1000,
@@ -31,7 +31,7 @@ function Chatting() {
         // console.log(err);
       },
       webSocketFactory: () => {
-        return new WebSocket("ws://localhost:8080/api/v1/ws");
+        return new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
       },
       onConnect: () => {
         setTimeout(() => subscribe(), 1000);
