@@ -13,7 +13,12 @@
 #home-matchPlan{
     display: flex;
     flex-direction: column;
-    width: 80%;
+    width: 100%;
+    align-items: center;
+}
+.home-round{
+    display: flex;
+    flex-direction: row;
 }
 
 #home-rank{
@@ -33,6 +38,10 @@
 }
 #curr-home-categoryButton{
     font-weight: bold;
+}
+
+.home-horizon{
+    width: 80%;
 }
 
 
