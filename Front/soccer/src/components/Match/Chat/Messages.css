@@ -1,0 +1,17 @@
+.messages {
+  padding: 0;
+  height: 60vh;
+  width: 100%;
+  overflow: auto;
+  background-color: #e2e2e2;
+}
+
+@media (max-width: 600px) {
+  .messages {
+    padding: 0;
+    height: 65vh;
+    width: 100%;
+    overflow: auto;
+    background-color: #e2e2e2;
+  }
+}
