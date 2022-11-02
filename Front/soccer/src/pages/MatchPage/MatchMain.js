@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
-import { Box, Container, Tab, Typography } from "@mui/material";
+import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { TabContext, TabList } from "@mui/lab";
 import Table from '@mui/material/Table';
@@ -78,10 +78,11 @@ const MatchMain = () => {
     <Container>
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <TabList 
+          <Tabs
             onChange={handleChange} 
             aria-label="lab API tabs example"
             textColor="black"
+            scrollButtons={true}
             // sx={{width:'100%', display:'flex', justifyContent:'space-around'}}
             // centered
           >
@@ -95,7 +96,7 @@ const MatchMain = () => {
             <Tab label="3월" value="202303" />
             <Tab label="4월" value="202304" />
             <Tab label="5월" value="202305" />
-          </TabList>
+          </Tabs>
         </Box>
       </TabContext>
 
