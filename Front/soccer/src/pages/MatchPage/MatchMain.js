@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
-import { Box, Container, Tab, Typography } from "@mui/material";
+import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { TabContext, TabList } from "@mui/lab";
 import Table from '@mui/material/Table';
@@ -11,9 +11,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { display, width } from "@mui/system";
+import "../MatchPage/MatchMain.css";
 
 const day = ['(일)','(월)','(화)','(수)','(목)','(금)','(토)']
-
 const MatchMain = () => {
   const dispatch = useDispatch();
   const currentYear = new Date().getFullYear();
@@ -77,12 +78,13 @@ const MatchMain = () => {
     <Container>
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <TabList 
+          <Tabs
             onChange={handleChange} 
             aria-label="lab API tabs example"
             textColor="black"
-            sx={{width:'100%', display:'flex', justifyContent:'space-evenly'}}
-            centered
+            scrollButtons={true}
+            // sx={{width:'100%', display:'flex', justifyContent:'space-around'}}
+            // centered
           >
             <Tab label="2022년 8월" value="202208" />
             <Tab label="9월" value="202209" />
@@ -94,7 +96,7 @@ const MatchMain = () => {
             <Tab label="3월" value="202303" />
             <Tab label="4월" value="202304" />
             <Tab label="5월" value="202305" />
-          </TabList>
+          </Tabs>
         </Box>
       </TabContext>
 
@@ -130,10 +132,10 @@ const MatchMain = () => {
                         {data.matchVO.date.split('T')[1]}
                       </TableCell>
                       {/* 경기 */}
-                      <TableCell align="center">
-                        <span style={{marginRight: 10}}>{data.matchVO.home}</span>
+                      <TableCell sx={{display:'flex', alignItems:'center', justifyContent:'center'}}>
+                        <span style={{marginRight: 10, width:'30%', textAlign:'center'}}>{data.matchVO.home}</span>
                         <img src={data.matchVO.homeImage} alt="home" width={'5%'}/>
-                        <span style={{marginLeft: 10, marginRight: 10}}>
+                        <span style={{marginLeft: 10, marginRight: 10, width:'15%', textAlign:'center'}}>
                           {data.matchStatus === "FIN"
                           ?
                           data.matchVO.homeScore + " vs " + data.matchVO.awayScore
@@ -142,7 +144,7 @@ const MatchMain = () => {
                           }
                         </span>
                         <img src={data.matchVO.awayImage} alt="away" width={'5%'}/> 
-                        <span style={{marginLeft: 10}}>
+                        <span style={{marginLeft: 10, width:'30%', textAlign:'center'}}>
                           {data.matchVO.away}
                         </span> 
                       </TableCell>
