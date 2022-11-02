@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Tabs, Tab, Box, Typography } from '@mui/material';
 import PlayerStatistics from './PlayerStatistics';
 import { useSelector } from 'react-redux';
-
+import '../Match/PlayerEvaluate.css';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -49,12 +49,12 @@ const PlayerEvaluate = () => {
       let data = res.data.result;
       let h = [];
       let a = [];
-      data.map(player => {
-        if(player.team === "HOME" && player.pass > 0){
-          h.push(player);
+      data.map(players => {
+        if(players.team === "HOME" && players.pass > 0){
+          h.push(players);
         }
-        else if(player.team === "AWAY" && player.pass > 0){
-          a.push(player);
+        else if(players.team === "AWAY" && players.pass > 0){
+          a.push(players);
         }
       });
       setHome(h);
@@ -62,6 +62,8 @@ const PlayerEvaluate = () => {
     })
   },[]);
   return (
+    <div>
+    <div id='highFr'>hi</div>
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={team} onChange={handleChange} aria-label="basic tabs example">
@@ -76,6 +78,7 @@ const PlayerEvaluate = () => {
         <PlayerStatistics team={away} />
       </TabPanel>
     </Box>
+    </div>
   );
 };
 
