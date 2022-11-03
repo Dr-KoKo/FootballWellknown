@@ -10,7 +10,7 @@ function Chatting() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [connected, setConnected] = useState(false);
-  const [predict, setPredict] = useState([]);
+  const [predict, setPredict] = useState("");
   const client = useRef({});
   const user = useSelector((state) => state.user);
   const match = useSelector((state) => state.match);
@@ -33,7 +33,7 @@ function Chatting() {
 
   const connect = () => {
     client.current = new Stomp.Client({
-      brokerURL: process.env.REACT_APP_LOCAL_WEBSOCKET_URL,
+      brokerURL: "ws://localhost:8080/api/v1/ws",
       reconnectDelay: 1000,
       heartbeatIncoming: 1000,
       heartbeatOutgoing: 1000,
@@ -42,7 +42,7 @@ function Chatting() {
         // console.log(err);
       },
       webSocketFactory: () => {
-        return new WebSocket(process.env.REACT_APP_LOCAL_WEBSOCKET_URL);
+        return new WebSocket("ws://localhost:8080/api/v1/ws");
       },
       onConnect: () => {
         setTimeout(() => subscribe(), 1000);
@@ -56,15 +56,11 @@ function Chatting() {
     client.current.subscribe("/sub/channel/" + match.matchId, (message) =>
       onMessage(message.body)
     );
-    client.current.publish({
-      destination: "/pub/getUser",
-      body: match.matchId,
-    });
+
     setConnected(true);
   };
 
   const onMessage = (message) => {
-    console.log(message);
     let json = JSON.parse(message);
     if (json.type === "INFO") {
     } else {
@@ -88,15 +84,17 @@ function Chatting() {
       return;
     }
 
+    let json = JSON.stringify({
+      type: "MESSAGE",
+      sender: name,
+      channelId: match.matchId,
+      predict,
+      data: message,
+    });
+
     client.current.publish({
       destination: "/pub/chat",
-      body: JSON.stringify({
-        type: "MESSAGE",
-        sender: name,
-        channelId: match.matchId,
-        predict,
-        data: message,
-      }),
+      body: json,
     });
 
     setMessage("");
