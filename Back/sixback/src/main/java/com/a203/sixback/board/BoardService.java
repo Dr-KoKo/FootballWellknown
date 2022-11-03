@@ -196,6 +196,7 @@ public class BoardService {
             getBoards.add(new GetBoardDetailResDTO().builder()
                     .id(board.getId())
                     .title(board.getTitle())
+                    .content(board.getContent())
                     .author(board.getUser().getNickname())
                     .team(board.getTeam().getId())
                     .build()
