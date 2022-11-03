@@ -36,5 +36,8 @@ public class Predict {
         this.matches = matches;
         this.matchResult = matchResult;
     }
+    public void setMatchResult(MatchResult matchResult){
+        this.matchResult = matchResult;
+    }
 
 }
