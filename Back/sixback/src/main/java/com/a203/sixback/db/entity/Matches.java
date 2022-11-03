@@ -45,4 +45,9 @@ public class Matches {
     @ManyToOne
     @JoinColumn(name = "away")
     private Team away;
+
+    public void setScore(int homeScore, int awayScore){
+        this.homeScore = homeScore;
+        this.awayScore = awayScore;
+    }
 }

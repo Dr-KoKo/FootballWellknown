@@ -10,7 +10,7 @@ import lombok.*;
 public class PlayerEvaluateVO {
     private long id;
     private long matchId;
-    private long userId;
+    private String userEmail;
     private long playerId;
     private int score;
 }
