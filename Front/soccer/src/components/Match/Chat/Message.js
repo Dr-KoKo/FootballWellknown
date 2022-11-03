@@ -32,7 +32,7 @@ const Message = ({ message: { type, data, sender, predict }, match }) => {
   return isSentByUser ? (
     <div className="messageContainer justifyStart">
       <div className="imgBox">
-        <Avatar src={avatarSrc} />
+        <Avatar src={avatarSrc} sx={{ backgroundColor: "dark" }} />
       </div>
       <div className="messageBox backgroundLight">
         <p className="messageText colorDark">{ReactEmoji.emojify(data)}</p>
