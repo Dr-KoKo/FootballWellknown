@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Loading from "components/Loading";
 import "./TeamInfo.css";
-const TeamInfo = () => {
+const TeamInfo = (props) => {
   const [datas, setDatas] = useState([{ name: "1234" }]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -54,7 +54,7 @@ const TeamInfo = () => {
             </tr>
           </thead>
           <tbody id="teamTableBody">
-            {datas.map((data) => (
+            {datas.slice(0,props.count).map((data) => (
               <tr
                 id="teamTableBodyTr"
                 key={data.name}
@@ -81,5 +81,6 @@ const TeamInfo = () => {
     </div>
   );
 };
+TeamInfo.defaultProps = {count: 20};
 
 export default TeamInfo;

@@ -1,0 +1,50 @@
+#homeContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#home-userRank{
+    width: 80%;
+    background-color: darkgoldenrod;
+}
+
+#home-matchPlan{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+.home-round{
+    display: flex;
+    flex-direction: row;
+}
+
+#home-rank{
+    width: 80%;
+    
+}
+
+.home-categoryButton{
+    font-size: 1.5rem;
+    background-color: transparent;
+    border: 0;
+}
+
+.home-categoryButton:hover{
+    font-weight: bold;
+    font-size: 1.7rem;
+}
+#curr-home-categoryButton{
+    font-weight: bold;
+}
+
+.home-playerRank{
+    display: flex;
+    flex-direction: row;
+}
+
+
+
+
