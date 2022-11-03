@@ -125,7 +125,7 @@ public class MatchTask implements Runnable {
     private void sendMessage(String data) {
         BaseMessage message = BaseMessage.builder().type(MessageType.NOTICE).sender(sender).channelId(String.valueOf(matchId)).data(data).build();
 
-        messageService.sendMessage(message);
+  //      messageService.sendMessage(message);
     }
 
     private void checkStatus(JSONObject jsonObject) throws Exception {
