@@ -3,12 +3,13 @@ package com.a203.sixback.scheduler.task;
 import com.a203.sixback.db.entity.PointLog;
 import com.a203.sixback.db.entity.Predict;
 import com.a203.sixback.db.enums.MatchResult;
+import com.a203.sixback.db.enums.MessageType;
 import com.a203.sixback.db.redis.MatchCacheRepository;
 import com.a203.sixback.db.repo.PointLogRepo;
 import com.a203.sixback.db.repo.PredictRepo;
 import com.a203.sixback.match.MatchService;
 import com.a203.sixback.scheduler.MainScheduler;
-import com.a203.sixback.socket.Message;
+import com.a203.sixback.socket.BaseMessage;
 import com.a203.sixback.socket.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
@@ -29,6 +30,8 @@ public class MatchTask implements Runnable {
     private PointLogRepo pointLogRepo;
     private PredictRepo predictRepo;
 
+    private final String sender = "System";
+
     public MatchTask(long matchId, MessageService messageService, MatchService matchService, MatchCacheRepository matchCacheRepository, PointLogRepo pointLogRepo, PredictRepo predictRepo) {
         this.matchId = matchId;
         this.messageService = messageService;
@@ -48,14 +51,16 @@ public class MatchTask implements Runnable {
             for (Object object : jsonArray) {
                 JSONObject jsonObject = (JSONObject) object;
 
+/*
 
-                checkEvent((JSONArray) jsonObject.get("goalscorer"), "goal");
-                checkEvent((JSONArray) jsonObject.get("cards"), "cards");
+                checkEvent((JSONArray) jsonObject.get("goalscorer"), "Goal_");
+                checkEvent((JSONArray) jsonObject.get("cards"), "Card_");
 
                 JSONObject substitutions = (JSONObject) jsonObject.get("substitutions");
 
-                checkEvent((JSONArray) substitutions.get("home"), "substitutions_home");
-                checkEvent((JSONArray) substitutions.get("away"), "substitutions_away");
+                checkEvent((JSONArray) substitutions.get("home"), "SubstitutionsHome_");
+                checkEvent((JSONArray) substitutions.get("away"), "SubstitutionsAway_");
+*/
 
                 checkStatus(jsonObject);
             }
@@ -83,8 +88,7 @@ public class MatchTask implements Runnable {
         int size = jsonArray.size();
         int value = getRedis(key);
 
-        if (value == size)
-            return;
+        if (value == size) return;
 
         JSONObject jsonObject = (JSONObject) jsonArray.get(value);
         matchCacheRepository.setMatch(key, value + 1);
@@ -115,7 +119,13 @@ public class MatchTask implements Runnable {
             }
         }
 
-        messageService.message(new Message(prefix, sender, channelId, data));
+        sendMessage(data);
+    }
+
+    private void sendMessage(String data) {
+        BaseMessage message = BaseMessage.builder().type(MessageType.NOTICE).sender(sender).channelId(String.valueOf(matchId)).data(data).build();
+
+  //      messageService.sendMessage(message);
     }
 
     private void checkStatus(JSONObject jsonObject) throws Exception {
@@ -127,15 +137,16 @@ public class MatchTask implements Runnable {
 
         if ("Finished".equals(matchStatus)) {
             log.info("경기가 끝났습니다.");
-            matchCacheRepository.getAndDeleteMatch("goal" + matchId);
-            matchCacheRepository.getAndDeleteMatch("card" + matchId);
-            matchCacheRepository.getAndDeleteMatch("substitutions_home" + matchId);
-            matchCacheRepository.getAndDeleteMatch("substitutions_away" + matchId);
-            messageService.message(new Message("notice", "admin", String.valueOf(matchId), "경기가 종료되었습니다."));
+            matchCacheRepository.getAndDeleteMatch("Goal_" + matchId);
+            matchCacheRepository.getAndDeleteMatch("Card_" + matchId);
+            matchCacheRepository.getAndDeleteMatch("SubstitutionsHome_" + matchId);
+            matchCacheRepository.getAndDeleteMatch("SubstitutionsAway_" + matchId);
+            sendMessage("경기가 종료되었습니다.");
             MainScheduler.getInstance().stop(matchId);
 
             Integer homeTeamScore = Integer.parseInt(jsonObject.get("match_hometeam_score").toString());
             Integer awayTeamScore = Integer.parseInt(jsonObject.get("match_awayteam_score").toString());
+/*
 
             try {
                 matchService.savePlayerMatch(matchId);
@@ -144,13 +155,12 @@ public class MatchTask implements Runnable {
                 e.printStackTrace();
                 throw new Exception();
             }
+*/
 
-            MatchResult result = homeTeamScore > awayTeamScore ?
-                    MatchResult.HOME : homeTeamScore == awayTeamScore ?
-                    MatchResult.DRAW : MatchResult.AWAY;
+            MatchResult result = homeTeamScore > awayTeamScore ? MatchResult.HOME : homeTeamScore == awayTeamScore ? MatchResult.DRAW : MatchResult.AWAY;
 
             log.info("배점을 시작합니다.");
-            givePoint(matchId, result);
+            //           givePoint(matchId, result);
         }
     }
 
@@ -164,12 +174,7 @@ public class MatchTask implements Runnable {
         List<PointLog> pointLogList = new ArrayList<>(correctPredictList.size());
 
         for (Predict predict : correctPredictList) {
-            PointLog log = PointLog.builder()
-                    .user(predict.getUser())
-                    .mp(predict)
-                    .point(1)
-                    .distribute_time(now)
-                    .build();
+            PointLog log = PointLog.builder().user(predict.getUser()).mp(predict).point(1).distribute_time(now).build();
             pointLogList.add(log);
         }
 
