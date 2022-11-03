@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Loading from "components/Loading";
-import { Grid } from "@mui/material";
+import { Grid, Card, CardMedia, CardContent, Typography, Avatar, Box } from "@mui/material";
+import { deepOrange } from '@mui/material/colors';
 import { useParams } from "react-router";
 import PlayerImg from "../../components/assets/playerf.jpg";
 import "./TeamPlayer.css"
@@ -41,68 +42,120 @@ const TeamPlayer = () => {
       <div id="posFr"><div className="position" id="gkBlock">GoalKeepers</div></div>
       <Grid container>
         {datas.gks.map((data) => (
-          <Grid  id='mb-1' item xs={4}>
-            <div onClick={() => goPlayerDetail(data.id)}>
-            <div id="numberImage">
-            <img id="playerProfile" src={(data.image===null)? {PlayerImg}:data.image} alt=""></img>
-            <div id="number">{data.number}</div>
-            </div>
-            
-            <div>{data.name} {data.country}</div>
-            <div>{data.height}cm {data.weight}kg {2022-(data.birth).substring(0,4)} 세</div>
-            <div>{data.joinMatches}경기 {data.goals}골 {data.assists}어시</div>
-            </div>
+          <Grid  id='mb-1' item xs={4} p={1}>
+            <Card sx={{ maxWidth: 345 }} onClick={() => goPlayerDetail(data.id)}>
+              <CardMedia
+                component="img"
+                width={'100%'}
+                image={(data.image===null)? {PlayerImg}:data.image}
+                alt=""
+              />
+              <CardContent>
+                <Box display={'flex'} flexDirection='column'>
+                  <Typography  variant="h6" component="div">
+                    {data.name} 
+                    <Avatar sx={{ bgcolor: deepOrange[500] }}>
+                      {data.number}
+                    </Avatar>
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  <div>{data.country}</div>
+                  <div>{data.height}cm {data.weight}kg {2022-(data.birth).substring(0,4)} 세</div>
+                  <div>{data.joinMatches}경기 {data.goals}골 {data.assists}어시</div>
+                </Typography>
+              </CardContent>
+            </Card>
           </Grid>
         ))}
         </Grid>
         <div id="posFr"><div className="position" id="dfBlock">DeFenders</div></div>
       <Grid container>
         {datas.dfs.map((data) => (
-          <Grid id='mb-1' item xs={4}>
-            <div onClick={() => goPlayerDetail(data.id)}>
-            <div id="numberImage">
-            <img id="playerProfile" src={(data.image==="")? PlayerImg:data.image} alt=""></img>
-            <div id="number">{data.number}</div>
-            </div>
-            
-            <div>{data.name} {data.country}</div>
-            <div>{data.height}cm {data.weight}kg {2022-(data.birth).substring(0,4)} 세</div>
-            <div>{data.joinMatches}경기 {data.goals}골 {data.assists}어시</div>
-            </div>
+          <Grid id='mb-1' item xs={4} p={1}>
+            <Card sx={{ maxWidth: 345 }} onClick={() => goPlayerDetail(data.id)}>
+              <CardMedia
+                component="img"
+                width={'100%'}
+                image={(data.image===null)? {PlayerImg}:data.image}
+                alt=""
+              />
+              <CardContent>
+                <Box display={'flex'} flexDirection='column'>
+                  <Typography  variant="h6" component="div">
+                    {data.name} 
+                    <Avatar sx={{ bgcolor: deepOrange[500] }}>
+                      {data.number}
+                    </Avatar>
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  <div>{data.country}</div>
+                  <div>{data.height}cm {data.weight}kg {2022-(data.birth).substring(0,4)} 세</div>
+                  <div>{data.joinMatches}경기 {data.goals}골 {data.assists}어시</div>
+                </Typography>
+              </CardContent>
+            </Card>
           </Grid>
         ))}
         </Grid>
         <div id="posFr"><div className="position" id="mfBlock">MidFielders</div></div>
       <Grid container>
         {datas.mfs.map((data) => (
-          <Grid id='mb-1' item xs={4}>
-            <div onClick={() => goPlayerDetail(data.id)}>
-            <div id="numberImage">
-            <img id="playerProfile" src={(data.image===null)? {PlayerImg}:data.image} alt=""></img>
-            <div id="number">{data.number}</div>
-            </div>
-            
-            <div>{data.name} {data.country}</div>
-            <div>{data.height}cm {data.weight}kg {2022-(data.birth).substring(0,4)} 세</div>
-            <div>{data.joinMatches}경기 {data.goals}골 {data.assists}어시</div>
-            </div>
+          <Grid id='mb-1' item xs={4} p={1}>
+            <Card sx={{ maxWidth: 345 }} onClick={() => goPlayerDetail(data.id)}>
+              <CardMedia
+                component="img"
+                width={'100%'}
+                image={(data.image===null)? {PlayerImg}:data.image}
+                alt=""
+              />
+              <CardContent>
+                <Box display={'flex'} flexDirection='column'>
+                  <Typography  variant="h6" component="div">
+                    {data.name} 
+                    <Avatar sx={{ bgcolor: deepOrange[500] }}>
+                      {data.number}
+                    </Avatar>
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  <div>{data.country}</div>
+                  <div>{data.height}cm {data.weight}kg {2022-(data.birth).substring(0,4)} 세</div>
+                  <div>{data.joinMatches}경기 {data.goals}골 {data.assists}어시</div>
+                </Typography>
+              </CardContent>
+            </Card>
           </Grid>
         ))}
         </Grid>
         <div id="posFr"><div className="position" id="fwBlock">Forwards</div></div>
       <Grid container>
         {datas.fws.map((data) => (
-          <Grid id='mb-1' item xs={4}>
-            <div onClick={() => goPlayerDetail(data.id)}>
-            <div id="numberImage">
-            <img id="playerProfile" src={(data.image===null)? {PlayerImg}:data.image} alt=""></img>
-            <div id="number">{data.number}</div>
-            </div>
-            
-            <div>{data.name} {data.country}</div>
-            <div>{data.height}cm {data.weight}kg {2022-(data.birth).substring(0,4)} 세</div>
-            <div>{data.joinMatches}경기 {data.goals}골 {data.assists}어시</div>
-            </div>
+          <Grid id='mb-1' item xs={4} p={1}>
+            <Card sx={{ maxWidth: 345 }} onClick={() => goPlayerDetail(data.id)}>
+              <CardMedia
+                component="img"
+                width={'100%'}
+                image={(data.image===null)? {PlayerImg}:data.image}
+                alt=""
+              />
+              <CardContent>
+                <Box display={'flex'} flexDirection='column'>
+                  <Typography  variant="h6" component="div">
+                    {data.name} 
+                    <Avatar sx={{ bgcolor: deepOrange[500] }}>
+                      {data.number}
+                    </Avatar>
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  <div>{data.country}</div>
+                  <div>{data.height}cm {data.weight}kg {2022-(data.birth).substring(0,4)} 세</div>
+                  <div>{data.joinMatches}경기 {data.goals}골 {data.assists}어시</div>
+                </Typography>
+              </CardContent>
+            </Card>
           </Grid>
         ))}
         </Grid>

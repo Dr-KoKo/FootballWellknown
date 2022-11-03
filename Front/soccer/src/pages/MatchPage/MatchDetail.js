@@ -73,12 +73,14 @@ const MatchDetail = () => {
       </Box>
       <br/>
       <Grid container spacing={2}>
-        <Grid item xs={1}/>
         <Grid item xs={2}>
           <StyledNavLink to="MatchPredict">승부예측</StyledNavLink>
         </Grid>
         <Grid item xs={2}>
           <StyledNavLink to="LineUp">라인업</StyledNavLink>
+        </Grid>
+        <Grid item xs={2}>
+          <StyledNavLink to="History">중계</StyledNavLink>
         </Grid>
         <Grid item xs={2}>
           <StyledNavLink to="PlayerEvaluate">선수평가</StyledNavLink>
@@ -89,7 +91,6 @@ const MatchDetail = () => {
         <Grid item xs={2}>
           <StyledNavLink to="Chatting">채팅</StyledNavLink>
         </Grid>
-        <Grid item xs={1}/>
       </Grid>
       <br/>
       <Fragment>

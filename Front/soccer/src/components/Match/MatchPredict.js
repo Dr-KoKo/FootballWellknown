@@ -3,7 +3,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Image from 'mui-image';
 import { useSelector } from 'react-redux';
-import { Box, Button, ButtonBase, Typography } from '@mui/material';
+import { Box, ButtonBase, Typography } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -11,6 +11,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import drawImage from 'components/assets/draw.png'
 import RecentMatch from './RecentMatch';
+import './MatchPredict.css';
 
 const MatchPredict = () => {
   const match = useSelector((state)=>state.match);
@@ -62,7 +63,7 @@ const MatchPredict = () => {
     });
     axios.get(`http://localhost:8080/api/v1/matches/predict/match/my/${user.email}/${match.matchId}`)
     .then(res => {
-      setPredictMatch(res.data.result[0].whereWin);
+      setPredictMatch(res.data.result.whereWin);
     });
     axios.get(`http://localhost:8080/api/v1/teams/name/${match.home}`)
     .then((res)=>{
@@ -129,28 +130,13 @@ const MatchPredict = () => {
             </Box>
           </ButtonBase>
         </Grid>
-        <Grid>
-          <Button variant='contained' onClick={()=>{submit()}}>예측하기</Button>
-        </Grid>
       </Grid>
+      <Box display={'flex'} justifyContent={'center'}>
+        <button className='w-btn w-btn-indigo' onClick={()=>{submit()}}>예측하기</button>
+      </Box>
       <Grid container>
         <Grid item xs={8}>
           <RecentMatch homeId={homeId} awayId={awayId}/>
-          {/* <Grid container>
-            <Grid item xs={3}></Grid>
-            <Grid item xs={2}>
-              <Typography variant='h5'>{match.home}</Typography>
-              <span color='red'>{homeInfo.rank}위 </span>
-              <span>{homeInfo.win}승 {homeInfo.draw}무 {homeInfo.lose}패</span>
-            </Grid>
-            <Grid item xs={1}>VS</Grid>
-            <Grid item xs={2}>
-              <Typography variant='h5'>{match.away}</Typography>
-              <span color='red'>{awayInfo.rank}위 </span>
-              <span>{awayInfo.win}승 {awayInfo.draw}무 {awayInfo.lose}패</span>
-            </Grid>
-            <Grid item xs={3}></Grid>
-          </Grid> */}
         </Grid>
         <Grid item xs={4}>
           <List sx={{ width: '100%', bgcolor: 'background.paper', }}>
