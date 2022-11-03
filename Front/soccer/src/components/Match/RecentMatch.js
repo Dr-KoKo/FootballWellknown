@@ -82,18 +82,22 @@ const RecentMatch = (props) => {
       {/* 팀명, 순위 */}
       <Grid container display={'flex'}>
         <Grid item xs={4} textAlign={'right'}>
-          <Typography>
+          <Typography variant='h6' fontWeight={'bold'}>
             {homeInfo.name}
           </Typography>
           <Typography>
             {homeInfo.rank}위 {homeInfo.win}승 {homeInfo.draw}무 {homeInfo.lose}패 
           </Typography>
         </Grid>
-        <Grid item xs={2} textAlign={'center'}>
-          VS
+        <Grid item xs={2} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+          <Typography variant='h6' fontWeight={'bold'}>
+            VS
+          </Typography>
         </Grid>
         <Grid item xs={4}>
-          {awayInfo.name} <br/>
+          <Typography variant='h6' fontWeight={'bold'}>
+            {awayInfo.name} <br/>
+          </Typography>
           {awayInfo.rank}위 {awayInfo.win}승 {awayInfo.draw}무 {awayInfo.lose}패 
         </Grid>
       </Grid>
@@ -112,7 +116,7 @@ const RecentMatch = (props) => {
             </Typography>
           </Box>
         </Grid>
-        <Grid item xs={2} textAlign={'center'}>
+        <Grid item xs={2} textAlign={'center'} display={'flex'} justifyContent={'center'}>
           <Typography variant='h6'>
             평균 득점
           </Typography>
@@ -146,7 +150,7 @@ const RecentMatch = (props) => {
           </Box>
         </Grid>
         <Grid item xs={2} textAlign={'center'}>
-          <Typography variant='h6'>
+          <Typography variant='h6' display={'flex'} justifyContent={'center'}>
             평균 실점
           </Typography>
         </Grid>
@@ -170,18 +174,18 @@ const RecentMatch = (props) => {
           {homeFinMatch.slice(0).reverse().map((match,index) => {
             if(match.home === homeInfo.name){
               if(match.homeScore < match.awayScore) 
-                return (<StyledBox result='lose'>패</StyledBox>)
+                return (<StyledBox key={index} result='lose'>패</StyledBox>)
               else if(match.homeScore === match.awayScore) 
-                return (<StyledBox result='draw'>무</StyledBox>)
+                return (<StyledBox key={index} result='draw'>무</StyledBox>)
               else 
-                return (<StyledBox result='win'>승</StyledBox>)
+                return (<StyledBox key={index} result='win'>승</StyledBox>)
             }else{
               if(match.homeScore < match.awayScore) 
-                return (<StyledBox result='win'>승</StyledBox>)
+                return (<StyledBox key={index} result='win'>승</StyledBox>)
               else if(match.homeScore === match.awayScore) 
-                return (<StyledBox result='draw'>무</StyledBox>)
+                return (<StyledBox key={index} result='draw'>무</StyledBox>)
               else 
-                return (<StyledBox result='lose'>패</StyledBox>)
+                return (<StyledBox key={index} result='lose'>패</StyledBox>)
             }
           })}
         </Grid>
@@ -194,18 +198,18 @@ const RecentMatch = (props) => {
           {awayFinMatch.map((match,index) => {
             if(match.away === awayInfo.name){
               if(match.homeScore < match.awayScore) 
-                return (<StyledBox result='win'>승</StyledBox>)
+                return (<StyledBox key={index} result='win'>승</StyledBox>)
               else if(match.homeScore === match.awayScore) 
-                return (<StyledBox result='draw'>무</StyledBox>)
+                return (<StyledBox key={index} result='draw'>무</StyledBox>)
               else 
-                return (<StyledBox result='lose'>패</StyledBox>)
+                return (<StyledBox key={index} result='lose'>패</StyledBox>)
             }else{
               if(match.homeScore < match.awayScore) 
-                return (<StyledBox result='lose'>패</StyledBox>)
+                return (<StyledBox key={index} result='lose'>패</StyledBox>)
               else if(match.homeScore === match.awayScore) 
-                return (<StyledBox result='draw'>무</StyledBox>)
+                return (<StyledBox key={index} result='draw'>무</StyledBox>)
               else 
-                return (<StyledBox result='win'>승</StyledBox>)
+                return (<StyledBox key={index} result='win'>승</StyledBox>)
             }
           })}
         </Grid>
