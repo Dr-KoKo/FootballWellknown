@@ -1,8 +1,15 @@
 package com.a203.sixback.scheduler;
 
+import com.a203.sixback.db.redis.MatchCacheRepository;
+import com.a203.sixback.db.repo.PointLogRepo;
+import com.a203.sixback.db.repo.PredictRepo;
 import com.a203.sixback.match.MatchService;
 import com.a203.sixback.match.vo.MatchStatusVO;
+//import com.a203.sixback.redis.RedisService;
 import com.a203.sixback.scheduler.task.InitTask;
+import com.a203.sixback.scheduler.task.LineUpTask;
+import com.a203.sixback.socket.Message;
+import com.a203.sixback.socket.MessageService;
 import com.a203.sixback.team.vo.MatchVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +29,32 @@ public class SchedulerController {
     @Autowired(required = false)
     private MatchService matchService;
 
+    @Autowired(required = false)
+    private MessageService messageService;
+
+//    @Autowired(required = false)
+//    private RedisService redisService;
+
+    @Autowired(required = false)
+    private MatchCacheRepository matchCacheRepository;
+
+    @Autowired(required = false)
+    private PointLogRepo pointLogRepo;
+
+    @Autowired(required = false)
+    private PredictRepo predictRepo;
+
     @Value("${API-KEY}")
     private String apiKey;
 
     @Async
-    @Scheduled(cron = "0 0 0 * * *")
- //   @Scheduled(cron = "0 6 11 * * *")
+    @Scheduled(cron = "0 0 23 * * *")
+//    @Scheduled(cron = "0 43 13 * * *")
     public void mainSchedule() throws Exception {
         log.info("SchedulerController Cron 실행");
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().plusDays(1);
+
         int year = now.getYear();
         int month = now.getMonthValue();
         int day = now.getDayOfMonth();
@@ -43,35 +66,52 @@ public class SchedulerController {
         List<MatchStatusVO> list = matchService.getMatchesByDate(year, month, day);
 
         log.info("{}의 경기 수: {}", now.toString(), list.size());
-/*
 
+/*
         long matchId = 1059375L;
 
-        Runnable task = new InitTask(matchId, apiKey, matchService);
+        Runnable task = new InitTask(matchId, messageService, matchService, matchCacheRepository, pointLogRepo, predictRepo);
 
-        sb.append("10 6 11 * * *");
+        sb.append("10 43 13 * * *");
 
         MainScheduler.getInstance().start(task, sb.toString(), matchId);
-*/
-
-        for(MatchStatusVO matchStatusVo : list) {
+        */
+        for (MatchStatusVO matchStatusVo : list) {
             MatchVO matchVO = matchStatusVo.getMatchVO();
             long matchId = matchVO.getMatchId();
             String date = matchVO.getDate();
 
             log.info("MatchId : {}, MatchDate : {}", matchId, date);
 
+            int minute = Integer.parseInt(date.substring(14, 16));
+            int hour = Integer.parseInt(date.substring(11, 13));
+
             sb.setLength(0);
 
-            sb.append(0).append(" ").append(date.substring(14, 16)).append(" ")
-            .append(date.substring(11, 13)).append(" ").append(date.substring(8, 10)).append(" ")
-            .append(date.substring(5, 7)).append(" ").append("*");
+            sb.append(0).append(" ").append(minute).append(" ")
+                    .append(hour).append(" ").append("*").append(" ")
+                    .append("*").append(" ").append("*");
 
-            Runnable task = new InitTask(matchId, apiKey, matchService);
+            Runnable task = new InitTask(matchId, messageService, matchService, matchCacheRepository, pointLogRepo, predictRepo);
 
             log.info("Cron Trigger : {}", sb.toString());
 
             MainScheduler.getInstance().start(task, sb.toString(), matchId);
+
+            minute = minute >= 30 ? minute - 30 : minute + 30;
+
+            hour = minute >= 30 ? hour : hour == 0 ? 23 : hour - 1;
+
+            sb.setLength(0);
+
+            sb.append(0).append(" ").append(minute).append(" ")
+                    .append(hour).append(" ").append("*").append(" ")
+                    .append("*").append(" ").append("*");
+
+
+            task = new LineUpTask(matchId, matchService);
+
+            MainScheduler.getInstance().start(task, sb.toString(), matchId * 2L);
         }
     }
 }

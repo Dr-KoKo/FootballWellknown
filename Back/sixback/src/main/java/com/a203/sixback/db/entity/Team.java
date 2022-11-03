@@ -46,4 +46,17 @@ public class Team {
         this.goals = arr[3];
         this.loseGoals = arr[4];
     }
+    public void addTeamInfo(int myScore, int otherScore){
+        if(myScore>otherScore){
+            this.win = this.win +1;
+        }
+        else if(myScore==otherScore){
+            this.draw = this.draw+1;
+        }
+        else{
+            this.lose = this.lose+1;
+        }
+        this.goals = this.goals + myScore;
+        this.loseGoals = this.loseGoals + otherScore;
+    }
 }

@@ -32,6 +32,7 @@ public class PlayerMatchVO {
     private int red;
     private long match_id;
     private long player_id;
+    private String playerName;
     //HOME AWAY 중 하나
     private String team;
 //    private int sub;

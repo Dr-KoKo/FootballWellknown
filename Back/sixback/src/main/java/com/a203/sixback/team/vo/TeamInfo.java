@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 public class TeamInfo{
+    private int teamId;
     private String name;
     private String image;
     private int win;

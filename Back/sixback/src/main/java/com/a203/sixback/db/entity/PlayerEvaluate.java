@@ -20,13 +20,24 @@ public class PlayerEvaluate {
     @ManyToOne
     @JoinColumn(name = "matches_id")
     private Matches matches;
-//    @ManyToOne
-//    @JoinColumn(name = "id")
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     @ManyToOne
     @JoinColumn(name = "player_id")
     private Player player;
     @Column
     private int score;
+
+    public PlayerEvaluate(Matches matches, Player player, int score, User user) {
+        this.matches = matches;
+        this.player = player;
+        this.score = score;
+        this.user = user;
+    }
+
+    public void setScore(int score){
+        this.score = score;
+    }
 
 }

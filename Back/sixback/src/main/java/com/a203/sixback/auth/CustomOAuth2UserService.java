@@ -2,6 +2,9 @@ package com.a203.sixback.auth;
 
 import com.a203.sixback.db.enums.ProviderType;
 import com.a203.sixback.db.entity.User;
+import com.a203.sixback.db.enums.RoleType;
+import com.a203.sixback.db.enums.Status;
+import com.a203.sixback.db.redis.UserCacheRepository;
 import com.a203.sixback.db.repo.UserRepo;
 import com.a203.sixback.exception.OAuthProviderMissMatchException;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +25,10 @@ import java.time.LocalDateTime;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepo userRepo;
+    private final UserCacheRepository userCacheRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        System.out.println("LOADUSER");
         OAuth2User user = super.loadUser(userRequest);
 
         try {
@@ -42,7 +45,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        User savedUser = userRepo.findByEmail(userInfo.getEmail());
+        User savedUser = userCacheRepository.getUser(userInfo.getEmail()).orElseGet(
+                ()->userRepo.findByEmail(userInfo.getEmail())
+        );
 
         if (savedUser != null) {
             if (providerType != savedUser.getProviderType()) {
@@ -52,6 +57,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 );
             }
         } else {
+            System.out.println("여기서 새롭게 계정 정보를 생성합니다.");
             savedUser = createUser(userInfo, providerType);
         }
 
@@ -59,8 +65,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
-
-
+        System.out.println("유저를 생성하고 DB에 저장합니다.");
         String nickname;
 
         do {
@@ -69,8 +74,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         User user = User.builder()
                 .nickname(nickname)
+                .point(0)
                 .email(userInfo.getEmail())
                 .providerType(providerType)
+                .roleType(RoleType.USER)
+                .status(Status.ACTIVATED)
                 .build();
 
         return userRepo.saveAndFlush(user);
