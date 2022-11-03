@@ -25,7 +25,7 @@ public interface BoardRepo extends JpaRepository<Board, Long> {
 //
 //    List<Board> findAllByUser(@Param("author") User user);
 
-    List<Board> findAllByUser(User user);
+    Page<Board> findAllByUser(User user, Pageable pageable);
 
 }
 

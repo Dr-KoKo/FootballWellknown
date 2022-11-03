@@ -9,6 +9,8 @@ import com.a203.sixback.db.repo.PointLogRepo;
 import com.a203.sixback.db.repo.PredictRepo;
 import com.a203.sixback.user.res.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -39,11 +41,12 @@ public class UserService {
     }
 
 
-    public ResGetUserBoardsDTO getUserBoards() {
+    public ResGetUserBoardsDTO getUserBoards(int page) {
+        PageRequest pageRequest = PageRequest.of(page -1, 10, Sort.by("id").descending());
 
         User user = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 
-        List<ResGetUserBoardsDTO.GetBoardDTO> userBoardList = boardRepo.findAllByUser(user).stream()
+        List<ResGetUserBoardsDTO.GetBoardDTO> userBoardList = boardRepo.findAllByUser(user,pageRequest).stream()
                 .map(board->new ResGetUserBoardsDTO.GetBoardDTO(board,user,board.getMatch(), board.getTeam(), board.getCategory().getCtgName())).collect(Collectors.toList());
 
         return ResGetUserBoardsDTO.of(200, "성공", userBoardList);
@@ -67,11 +70,13 @@ public class UserService {
         return ResGetUserPredictsDTO.of(200,"성공", predictList);
     }
 
-    public ResGetUserPointDTO getUserPoint() {
+    public ResGetUserPointDTO getUserPoint(int page) {
 
         User user = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 
-        List<ResGetUserPointDTO.GetPointDTO> pointLogList = pointLogRepo.findAllByUser(user).stream().map(ResGetUserPointDTO.GetPointDTO::new).collect(Collectors.toList());
+        PageRequest pageRequest = PageRequest.of(page -1, 10, Sort.by("id").descending());
+
+        List<ResGetUserPointDTO.GetPointDTO> pointLogList = pointLogRepo.findAllByUser(user, pageRequest).stream().map(ResGetUserPointDTO.GetPointDTO::new).collect(Collectors.toList());
 
         return ResGetUserPointDTO.of(200,"성공", pointLogList);
     }

@@ -31,6 +31,7 @@ public class ResGetUserBoardsDTO extends BaseResponseBody {
 
     @Getter
     public static class GetBoardDTO{
+        private Long boardId;
         private String title;
         private String category;
         private String content;
@@ -42,6 +43,7 @@ public class ResGetUserBoardsDTO extends BaseResponseBody {
         private String away;
 
         public GetBoardDTO(Board board, User author, Matches match, Team team, String categoryName){
+            this.boardId = board.getId();
             this.title = board.getTitle();
             this.category = board.getCategory().getCtgName();
             this.content = board.getContent();
