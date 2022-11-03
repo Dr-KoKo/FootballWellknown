@@ -31,4 +31,8 @@ public class MatchPredict {
         this.matches = matches;
         this.whereWin = whereWin;
     }
+
+    public void setWhereWin(String whereWin) {
+        this.whereWin = whereWin;
+    }
 }

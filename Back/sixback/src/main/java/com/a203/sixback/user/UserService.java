@@ -1,13 +1,11 @@
 package com.a203.sixback.user;
 
 import com.a203.sixback.auth.UserPrincipal;
-import com.a203.sixback.db.entity.Board;
-import com.a203.sixback.db.entity.CommentMongo;
-import com.a203.sixback.db.entity.Predict;
-import com.a203.sixback.db.entity.User;
+import com.a203.sixback.db.entity.*;
 //import com.a203.sixback.db.mongo.CommentRepoMongoDB;
 import com.a203.sixback.db.mongo.CommentRepoMongoDB;
 import com.a203.sixback.db.repo.BoardRepo;
+import com.a203.sixback.db.repo.PointLogRepo;
 import com.a203.sixback.db.repo.PredictRepo;
 import com.a203.sixback.user.res.*;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +19,13 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private final BoardRepo boardRepo;
+    private final PointLogRepo pointLogRepo;
     private final CommentRepoMongoDB commentRepoMongoDB;
     private final PredictRepo predictRepo;
 
-    public UserService(BoardRepo boardRepo, CommentRepoMongoDB commentRepoMongoDB, PredictRepo predictRepo) {
+    public UserService(BoardRepo boardRepo, PointLogRepo pointLogRepo, CommentRepoMongoDB commentRepoMongoDB, PredictRepo predictRepo) {
         this.boardRepo = boardRepo;
+        this.pointLogRepo = pointLogRepo;
         this.commentRepoMongoDB = commentRepoMongoDB;
         this.predictRepo = predictRepo;
     }
@@ -44,7 +44,7 @@ public class UserService {
         User user = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 
         List<ResGetUserBoardsDTO.GetBoardDTO> userBoardList = boardRepo.findAllByUser(user).stream()
-                .map(board->new ResGetUserBoardsDTO.GetBoardDTO(board,user,board.getMatch().getId())).collect(Collectors.toList());
+                .map(board->new ResGetUserBoardsDTO.GetBoardDTO(board,user,board.getMatch(), board.getTeam(), board.getCategory().getCtgName())).collect(Collectors.toList());
 
         return ResGetUserBoardsDTO.of(200, "성공", userBoardList);
     }
@@ -71,6 +71,8 @@ public class UserService {
 
         User user = ((UserPrincipal)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 
-        return ResGetUserPointDTO.of(200,"성공", user.getPoint());
+        List<ResGetUserPointDTO.GetPointDTO> pointLogList = pointLogRepo.findAllByUser(user).stream().map(ResGetUserPointDTO.GetPointDTO::new).collect(Collectors.toList());
+
+        return ResGetUserPointDTO.of(200,"성공", pointLogList);
     }
 }

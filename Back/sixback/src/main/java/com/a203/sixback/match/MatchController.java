@@ -54,7 +54,7 @@ public class MatchController {
     }
     @GetMapping("/statistics/{matchId}")
     public ResponseEntity<BaseResponseBody> getPlayerMatches(@PathVariable long matchId){
-        List<PlayerMatchVO> result = matchService.getAllPlayerMatch(matchId);
+        StatisticsVO result = matchService.getAllPlayerMatch(matchId);
         return ResponseEntity.status(200).body(PlayerMatchRes.of(200,"Success",result));
     }
 
@@ -65,9 +65,15 @@ public class MatchController {
     }
 
     @PostMapping("/predict/match")
-    public ResponseEntity<BaseResponseBody> matchPredict(@RequestBody MatchPredictVO matchPredictVO){
+    public ResponseEntity<BaseResponseBody> matchPredict(@RequestBody MatchPredictVO matchPredictVO) {
         matchService.matchPredict(matchPredictVO);
         return ResponseEntity.status(200).body(null);
+    }
+
+    @GetMapping("/predict/match/my/{userEmail}/{matchId}")
+    public ResponseEntity<BaseResponseBody> myMatchPredict(@PathVariable String userEmail, @PathVariable long matchId){
+        MatchPredictVO result = matchService.getMyMatchPredict(userEmail, matchId);
+        return ResponseEntity.status(200).body(MatchPredictRes.of(200,"Success",result));
     }
 
     @GetMapping("/predict/match/all/{matchId}")

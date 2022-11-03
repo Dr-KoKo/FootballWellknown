@@ -176,4 +176,43 @@ public class TeamService {
                 .build();
         return result;
     }
+
+    public TeamInfo getTeam(String name) {
+        Team team = teamRepo.findByName(name);
+        TeamInfo teamInfo = TeamInfo.builder().teamId(team.getId()).build();
+        return teamInfo;
+    }
+
+    public PlayerRankVO getPlayerRanks() {
+        List<PlayerVO2> scorers = new ArrayList<>();
+        List<PlayerVO2> assists = new ArrayList<>();
+        List<Player> players1 = playerRepo.findTop10ByOrderByGoalsDesc();
+        List<Player> players2 = playerRepo.findTop10ByOrderByAssistsDesc();
+
+        for(Player player : players1){
+            scorers.add(PlayerVO2.builder()
+                    .id(player.getId())
+                    .goals(player.getGoals())
+                    .assists(player.getAssists())
+                    .image(player.getImage())
+                    .name(player.getName())
+                    .teamName(player.getTeam().getName())
+                    .joinMatches(player.getJoinMatches())
+                    .position(player.getPosition())
+                    .build());
+        }
+        for(Player player : players2){
+            assists.add(PlayerVO2.builder()
+                    .name(player.getName())
+                    .id(player.getId())
+                    .goals(player.getGoals())
+                    .assists(player.getAssists())
+                    .image(player.getImage())
+                    .teamName(player.getTeam().getName())
+                    .joinMatches(player.getJoinMatches())
+                    .position(player.getPosition())
+                    .build());
+        }
+        return new PlayerRankVO(scorers, assists);
+    }
 }

@@ -53,4 +53,15 @@ public class Player {
     private Team team;
     @OneToMany(mappedBy = "player")
     private List<PlayerMatch> playerMatchList;
+
+    public void setPlayerStat(int goals, int joinMatches, int assists){
+        this.goals = goals;
+        this.joinMatches = joinMatches;
+        this.assists = assists;
+    }
+    public void addPlayerStat(int goals, int assists){
+        this.goals = this.goals+goals;
+        this.joinMatches = this.joinMatches+1;
+        this.assists = this.assists+assists;
+    }
 }

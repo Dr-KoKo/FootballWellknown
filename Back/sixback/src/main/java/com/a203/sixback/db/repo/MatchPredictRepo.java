@@ -10,4 +10,8 @@ import java.util.List;
 public interface MatchPredictRepo extends JpaRepository<MatchPredict, Long> {
 
     List<MatchPredict> findAllByMatches_Id(Long matchId);
+
+    MatchPredict findByMatches_IdAndUser_Id(long match_id, long user_id);
+
+    List<MatchPredict> findAllByMatches_IdAndUser_Email(long matchId, String userEmail);
 }

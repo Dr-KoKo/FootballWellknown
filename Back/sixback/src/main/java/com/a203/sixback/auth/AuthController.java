@@ -3,12 +3,16 @@ package com.a203.sixback.auth;
 import com.a203.sixback.db.entity.UserRefreshToken;
 import com.a203.sixback.db.enums.RoleType;
 import com.a203.sixback.db.repo.UserRefreshTokenRepository;
+import com.a203.sixback.util.model.BaseResponseBody;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.cookie.SetCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -26,9 +30,11 @@ public class AuthController {
     private final AuthTokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
+    private final AuthService authService;
 
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
+
 
     @PostMapping("/login")
     public ApiResponse login(
@@ -139,5 +145,27 @@ public class AuthController {
         }
 
         return ApiResponse.success("token", newAccessToken.getToken());
+    }
+    @DeleteMapping("")
+    public ResponseEntity<BaseResponseBody> signOut(HttpServletRequest request, HttpServletResponse response){
+//        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+//        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Cookie[] cookies = request.getCookies();
+
+        String refreshToken = "";
+        if(cookies != null){
+            for(Cookie c : cookies){
+                if(c.getName().equals(REFRESH_TOKEN)){
+                    System.out.println(c.getValue());
+                    refreshToken = c.getValue().trim();
+                    break;
+                }
+            }
+        }
+        // db에서 리프레시토큰 삭제
+        authService.signOut(refreshToken);
+        CookieUtil.deleteRefreshTokenCookie(response);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200,"success"));
     }
 }
