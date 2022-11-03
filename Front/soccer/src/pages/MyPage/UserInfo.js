@@ -1,17 +1,45 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./UserInfo.css";
-import Profile from '../../components/assets/epl.png';
 import { Link } from "react-router-dom";
 import { Outlet, useParams } from "react-router";
+
+import Box from '@mui/material/Box';
+import Switch from '@mui/material/Switch';
+import Zoom from '@mui/material/Zoom';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
 import UserDetail from "pages/MyPage/UserDetail"
 import UserPredict from "pages/MyPage/UserPredict"
+import UserBoard from "pages/MyPage/UserBoard"
+import UserPoint from "pages/MyPage/UserPoint"
 import HorizonLine from "components/HorizonLine"
+
 
 
 const MyPage = () => {
     const [datas, setDatas] = useState({ email: "1234", nickname: "1234", point: "0" });
     const [loading, setLoading] = useState(true);
+
+    const [checkedDetail, setCheckedDetail] = useState(false);
+    const handleChangeDetail = () => {
+        setCheckedDetail((prev) => !prev);
+    };
+    
+    const [checkedPredict, setCheckedPredict] = useState(false);
+    const handleChangePredict = () => {
+        setCheckedPredict((prev) => !prev);
+    };
+
+    const [checkedBoard, setCheckedBoard] = useState(false);
+    const handleChangeBoard = () => {
+        setCheckedBoard((prev) => !prev);
+    };
+
+    const [checkedScore, setCheckedScore] = useState(false);
+    const handleChangeScore = () => {
+        setCheckedScore((prev) => !prev);
+    };
 
     useEffect(() => {
         axios
@@ -34,41 +62,72 @@ const MyPage = () => {
     return (
 
         <div id="userDiv">
-            <div>
+            <div id="controlDiv">
                 <h1>내 정보</h1>
+                <FormControlLabel
+                    control={<Switch checked={checkedDetail} onChange={handleChangeDetail} />}
+                    label="Show"
+                />
             </div>
             <HorizonLine />
-            <div id="userinfoDiv">
-                <img width="200px" src={Profile} />
-                <UserDetail />
-            </div>
-            <div>
-                <h1>내 예측</h1>
-            </div>
-            <HorizonLine />
-            <UserPredict />
 
-            <div id="buttons">
-                <Link to={"detail"} className="btn">
-                    <div id="matchFrame">
-                        {/* <img className="btns" id="matchImg" src={Match} alt=''></img> */}
-                        <div id="matchText">detail</div>
-                    </div>
-                </Link>
-                <Link to={"predict"} className="btn">
-                    <div id="matchFrame">
-                        {/* <img className="btns" id="matchImg" src={Player} alt=''></img> */}
-                        <div id="matchText">predict</div>
-                    </div>
-                </Link>
-                <Link to={"point"} className="btn">
-                    <div id="matchFrame">
-                        {/* <img className="btns" id="matchImg" src={Text} alt=''></img> */}
-                        <div id="matchText">point</div>
-                    </div>
-                </Link>
+            {/* <div id="userinfoDiv">
+                <UserDetail />
+            </div> */}
+            <div id={checkedDetail+"div"}>
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Zoom in={checkedDetail}>{UserDetail()}</Zoom>
+                </Box>
             </div>
-            <Outlet></Outlet>
+
+
+            <div id="controlDiv">
+                <h1>내 예측</h1>
+                <FormControlLabel
+                    control={<Switch checked={checkedPredict} onChange={handleChangePredict} />}
+                    label="Show"
+                />
+            </div>
+            <HorizonLine />
+
+            <div id={checkedPredict+"div"}>
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Zoom in={checkedPredict}>{UserPredict()}</Zoom>
+                </Box>
+            </div>
+
+            <div id="controlDiv">
+            <h1>내 글</h1>
+                <FormControlLabel
+                    control={<Switch checked={checkedBoard} onChange={handleChangeBoard} />}
+                    label="Show"
+                />
+            </div>
+            <HorizonLine />
+
+            <div id={checkedBoard+"div"}>
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Zoom in={checkedBoard}>{UserBoard()}</Zoom>
+                </Box>
+            </div>
+
+
+            <div id="controlDiv">
+            <h1>내 점수</h1>
+                <FormControlLabel
+                    control={<Switch checked={checkedScore} onChange={handleChangeScore} />}
+                    label="Show"
+                />
+            </div>
+            <HorizonLine />
+
+            <div id={checkedScore+"div"}>
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Zoom in={checkedScore}>{UserPoint()}</Zoom>
+                </Box>
+            </div>
+
+
         </div>
     );
 };

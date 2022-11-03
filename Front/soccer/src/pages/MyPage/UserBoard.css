@@ -10,13 +10,12 @@
     width: 80%;
     font-size: larger;
 }
-#controlDiv{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
 #image{
     width: 30%;
+}
+#category{
+    text-align: center;
+    width: 20%;
 }
 #pts{
     text-align: center;
@@ -96,10 +95,4 @@
 #teamName{
     width: 70%;
     text-align: center;
-}
-#falsediv{
-    display: none;
-}
-#truediv{
-    display: block;
 }
