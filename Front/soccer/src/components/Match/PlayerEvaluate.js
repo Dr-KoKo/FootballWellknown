@@ -46,7 +46,7 @@ const PlayerEvaluate = () => {
   useEffect(()=>{
     axios.get(`http://localhost:8080/api/v1/matches/statistics/${match.matchId}`)
     .then(res => {
-      let data = res.data.result;
+      let data = res.data.result.players;
       let h = [];
       let a = [];
       data.map(player => {
