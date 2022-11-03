@@ -134,11 +134,11 @@ const MatchPredict = () => {
       <Box display={'flex'} justifyContent={'center'}>
         <button className='w-btn w-btn-indigo' onClick={()=>{submit()}}>예측하기</button>
       </Box>
-      <Grid container>
-        <Grid item xs={8}>
+      <Box display={'flex'} justifyContent='center'>
+        <Box width={'66%'}>
           <RecentMatch homeId={homeId} awayId={awayId}/>
-        </Grid>
-        <Grid item xs={4}>
+        </Box>
+        <Box width={'33%'}>
           <List sx={{ width: '100%', bgcolor: 'background.paper', }}>
             <Typography>
               총 {predicts.length}명이 참여했습니다.
@@ -168,9 +168,9 @@ const MatchPredict = () => {
               />
               </ListItem>
             ))}
-          </List>
-        </Grid>
-      </Grid>
+          </List>    
+        </Box>
+      </Box>
     </Fragment>
   );
 };
