@@ -4,6 +4,7 @@
     justify-content: center;
     margin-bottom: 5%;
     position: relative;
+    width: 100%;
 }
 .navbar::before{
     content: '';
