@@ -19,9 +19,4 @@ public class MessageController {
     public void chat(ChatMessage message) {
         messageService.sendMessage(message);
     }
-
-    @MessageMapping("/getUser")
-    public void getUser(String channelId) {
-        messageService.getUserCount(channelId);
-    }
 }
