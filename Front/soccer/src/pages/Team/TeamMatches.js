@@ -3,12 +3,35 @@ import React, { useEffect, useState } from 'react';
 import Loading from "components/Loading";
 import { useParams } from 'react-router';
 import Epl from '../../components/assets/epl.png';
+import { useDispatch } from "react-redux";
 import "./TeamMatches.css";
+
 const TeamMatches = () => {
     const {id} = useParams();
     const [loading, setLoading] = useState(true);
     const [recent, setRecent] = useState(true);
-    function goMatchDetail(matchId) {
+    const dispatch = useDispatch();
+    async function goMatchDetail(matchId) {
+      await axios.get(`http://localhost:8080/api/v1/matches/match/${matchId}`)
+      .then((res) => {
+        console.log(res.data.result);
+        const payload = res.data.result.matchVO;
+        let matchStatus = "";
+        if(res.data.result.matchStatus === "FIN"){
+          matchStatus = "경기종료";
+        }
+        else if(res.data.result.matchStatus === "DELAY"){
+          matchStatus = "지연";
+        }
+        else{
+          matchStatus = "경기전";
+        }
+        dispatch({
+          type: "SET_MATCH",
+          payload,
+          matchStatus,
+        })
+      });
       window.location.href = `/match/${matchId}/MatchPredict`;
     }
     const [datas, setDatas] = useState({
