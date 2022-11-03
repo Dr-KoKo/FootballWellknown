@@ -42,6 +42,12 @@ public class BoardController {
         return boardService.getMatchBoard(matchId, pages);
     }
 
+    @GetMapping("/teams/main/{matchId}")
+    public ResponseEntity teamTop4Board(@PathVariable(value = "matchId") Long matchId) {
+        return boardService.getMatchTop4Board(matchId);
+    }
+
+
     @GetMapping("/teams/{teamId}")
     public ResponseEntity teamBoard(@RequestParam(value="page", required = true) Integer page, @PathVariable(value = "teamId") Long teamId) {
         int pages = 1;

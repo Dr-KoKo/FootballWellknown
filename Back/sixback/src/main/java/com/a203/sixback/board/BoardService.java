@@ -189,7 +189,6 @@ public class BoardService {
 
     public ResponseEntity getTeamTop4Board(int teamId) {
         List<Board> boards = boardRepo.findTop4ByTeamIdOrderByIdDesc(teamId);
-
         List<GetBoardDetailResDTO> getBoards = new LinkedList<>();
 
         for(Board board : boards) {
@@ -202,6 +201,23 @@ public class BoardService {
                     .build()
             );
         }
-        return ResponseEntity.status(200).body(BoardDetailListRes.of(200, "Get Team Top4 Board Success", getBoards));
+        return ResponseEntity.status(200).body(BoardDetailListRes.of(200, "Get Top4 Team Board Success", getBoards));
+    }
+
+    public ResponseEntity getMatchTop4Board(long matchId) {
+        List<Board> boards = boardRepo.findTop4ByMatchIdOrderByIdDesc(matchId);
+        List<GetBoardDetailResDTO> getBoards = new LinkedList<>();
+
+        for(Board board : boards) {
+            getBoards.add(new GetBoardDetailResDTO().builder()
+                    .id(board.getId())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .author(board.getUser().getNickname())
+                    .team(board.getTeam().getId())
+                    .build()
+            );
+        }
+        return ResponseEntity.status(200).body(BoardDetailListRes.of(200, "Get Top4 Match Board Success", getBoards));
     }
 }
