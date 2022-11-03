@@ -3,7 +3,9 @@
   height: 60vh;
   width: 100%;
   overflow: auto;
+  border-radius: 15px 15px 0px 0px;
   background-color: #e2e2e2;
+  opacity: 0.8;
 }
 
 @media (max-width: 600px) {
