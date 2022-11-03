@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-
+import buttonImg from "components/assets/button.png";
 import "./Input.css";
 
 function Input({ setMessage, sendMessage, message }) {
@@ -26,7 +26,7 @@ function Input({ setMessage, sendMessage, message }) {
         ref={input}
       />
       <button className="sendButton" onClick={(e) => sendMessage(e)}>
-        전송
+        <img className="buttonImg" src={buttonImg} />
       </button>
     </form>
   );
