@@ -73,6 +73,10 @@
     opacity: 0.6;
     padding-bottom: 3%;
 } */
+.css-2ulfj5-MuiTypography-root{
+    display: flex;
+    justify-content: space-between;
+}
 #coachBlock{
 
     border-radius: 5px;
