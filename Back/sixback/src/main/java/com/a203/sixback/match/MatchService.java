@@ -216,11 +216,18 @@ public class MatchService {
         return result;
     }
 
+    public TeamBoardVO getTeamInfo(int teamId) {
+        TeamBoardVO result = new TeamBoardVO();
+        Team team = teamRepo.findById(teamId).get();
+        result =  new TeamBoardVO(team.getId(), team.getName(), team.getImage());
+        return result;
+    }
+
     public List<MatchBoardVO> getMatchBoards(int roundId) {
         List<MatchBoardVO> result = new ArrayList<>();
         List<Matches> matches = matchesRepo.findAllByRound(roundId);
         for(Matches match : matches){
-            String name = "[" +match.getRound()+"] "+match.getHome().getName()+ " VS " + match.getAway().getName();
+            String name = "[" +match.getRound()+"R] "+match.getHome().getName()+ " VS " + match.getAway().getName();
             result.add(new MatchBoardVO(match.getId(), name));
         }
         return result;

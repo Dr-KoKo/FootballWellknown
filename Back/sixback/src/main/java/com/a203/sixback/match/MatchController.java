@@ -82,6 +82,12 @@ public class MatchController {
         return ResponseEntity.status(200).body(AllTeamBoardRes.of(200,"Success",result));
     }
 
+    @GetMapping("/boards/teams/{teamId}")
+    public ResponseEntity<BaseResponseBody> getTeamInfo(@PathVariable("teamId") int teamId){
+        TeamBoardVO result = matchService.getTeamInfo(teamId);
+        return ResponseEntity.status(200).body(TeamInfoBoardRes.of(200, "Success", result));
+    }
+
     @GetMapping("/boards/rounds/{roundId}")
     public ResponseEntity<BaseResponseBody> getMatchBoards(@PathVariable("roundId") int roundId){
         List<MatchBoardVO> result = matchService.getMatchBoards(roundId);
