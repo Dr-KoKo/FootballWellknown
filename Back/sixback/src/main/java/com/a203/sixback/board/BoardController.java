@@ -75,33 +75,27 @@ public class BoardController {
 
     @PostMapping("")
     public ResponseEntity createBoard(@RequestBody PostBoardReqDTO postBoardReqDTO) {
-        // 일단 memberId = 1로 테스트
         System.out.println(postBoardReqDTO.getCtgName());
-        Long userId = 5L;
-        return boardService.createBoard(postBoardReqDTO, userId);
+        return boardService.createBoard(postBoardReqDTO);
     }
 
     @PostMapping("/update")
     public ResponseEntity updateBoard(@RequestBody UpdateBoardReqDTO updateBoardReqDTO) {
-        Long userId = 5L;
-//        return boardService.updateBoard(updateBoardReqDTO, userId);
 
-        return boardService.updateBoard(updateBoardReqDTO, userId);
+
+        return boardService.updateBoard(updateBoardReqDTO);
     }
 
     @PostMapping("/delete/{boardId}")
     public ResponseEntity deleteBoard(@PathVariable(value ="boardId") Long boardId) {
-        Long userId = 5L;
-//        return boardService.deleteBoard(boardId, userId);
-        return boardService.deleteBoard(boardId, userId);
+        return boardService.deleteBoard(boardId);
     }
 
 
 
     @PostMapping("/comment")
     public ResponseEntity postComment(@RequestBody PostCommentDTO postCommentDTO) {
-        Long userId = 5L;
-        return commentService.postComment(userId, postCommentDTO);
+        return commentService.postComment(postCommentDTO);
     }
 
     // 시험용
@@ -113,8 +107,7 @@ public class BoardController {
 
     @PostMapping("/commentMongo")
     public ResponseEntity postCommentMongo(@RequestBody PostCommentDTO postCommentDTO) {
-        Long userId = 5L;
-        return commentService.postCommentMongo(userId, postCommentDTO);
+        return commentService.postCommentMongo(postCommentDTO);
     }
 
     @GetMapping("/commentMongo/{boardId}")
@@ -125,14 +118,13 @@ public class BoardController {
 
     @PostMapping("/comment/update")
     public ResponseEntity updateComment(@RequestBody UpdateCommentDTO updateCommentDTO) {
-        Long userId = 5L;
-        return commentService.updateComment(userId, updateCommentDTO);
+
+        return commentService.updateComment(updateCommentDTO);
     }
 
     @PostMapping("/comment/delete")
     public ResponseEntity deleteComment(@RequestBody DeleteCommentDTO deleteCommentDTO) {
-        Long userId = 5L;
-        return commentService.deleteComment(userId, deleteCommentDTO.getCommentId());
+        return commentService.deleteComment(deleteCommentDTO.getCommentId());
     }
 
 }

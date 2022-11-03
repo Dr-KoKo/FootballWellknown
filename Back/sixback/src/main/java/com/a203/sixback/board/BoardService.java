@@ -1,6 +1,7 @@
 package com.a203.sixback.board;
 
 
+import com.a203.sixback.auth.UserPrincipal;
 import com.a203.sixback.board.dto.GetBoardDetailResDTO;
 import com.a203.sixback.board.dto.GetBoardResDTO;
 import com.a203.sixback.board.dto.PostBoardReqDTO;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -32,12 +34,12 @@ public class BoardService {
     private final MatchesRepo matchRepo;
     private final TeamRepo teamRepo;
 
-    public ResponseEntity createBoard(PostBoardReqDTO postBoardReqDTO, Long userId) {
+    public ResponseEntity createBoard(PostBoardReqDTO postBoardReqDTO) {
         User user = null;
         Team team = null;
         Matches match = null;
         try {
-            user = userRepo.findById(userId).get();
+            user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No User"));
         }
@@ -82,10 +84,10 @@ public class BoardService {
 
     }
 
-    public ResponseEntity updateBoard(UpdateBoardReqDTO updateBoardReqDTO, Long userId) {
+    public ResponseEntity updateBoard(UpdateBoardReqDTO updateBoardReqDTO) {
         User user = null;
         try {
-            user = userRepo.findById(userId).get();
+            user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No User"));
         }
@@ -111,10 +113,10 @@ public class BoardService {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Update Board Success"));
     }
 
-    public ResponseEntity deleteBoard(Long boardId, Long userId) {
+    public ResponseEntity deleteBoard(Long boardId) {
         User user = null;
         try {
-            user = userRepo.findById(userId).get();
+            user = user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No User"));
         }
