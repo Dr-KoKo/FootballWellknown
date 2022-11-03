@@ -64,7 +64,7 @@ public class MatchController {
     }
 
     @PostMapping("/predict/match")
-    public ResponseEntity<BaseResponseBody> matchPredict(@RequestBody MatchPredictVO matchPredictVO) {
+    public ResponseEntity<BaseResponseBody> matchPredict(@RequestBody MatchPredictVO matchPredictVO){
         matchService.matchPredict(matchPredictVO);
         return ResponseEntity.status(200).body(null);
     }
@@ -98,6 +98,13 @@ public class MatchController {
         List<MatchBoardVO> result = matchService.getMatchBoards(roundId);
         return ResponseEntity.status(200).body(AllMatchBoardRes.of(200,"Success",result));
     }
+
+    @GetMapping("/history/{matchId}")
+    public ResponseEntity<BaseResponseBody> getMatchHistory(@PathVariable("matchId") long matchId){
+        List<MatchHistoryVO> result = matchService.getMatchHistory(matchId);
+        return ResponseEntity.status(200).body(AllMatchHistoryRes.of(200,"Success",result));
+    }
+
 
     @GetMapping("/boards/matches/{matchId}")
     public ResponseEntity<BaseResponseBody> getMatchRound(@PathVariable("matchId") long matchId){

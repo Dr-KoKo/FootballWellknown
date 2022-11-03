@@ -633,6 +633,25 @@ public class MatchService {
     }
 
 
+    public List<MatchHistoryVO> getMatchHistory(long matchId) {
+        List<MatchHistoryVO> result = new ArrayList<>();
+        List<MatchHistory> histories = matchHistoryRepo.findAllByMatches_IdOrderByTime(matchId);
+
+        for(MatchHistory history: histories){
+            MatchHistoryVO vo = MatchHistoryVO.builder()
+                    .time(history.getTime())
+                    .history(history.getHistory().toString())
+                    .teamType(history.getTeamType().toString())
+                    .mainName(history.getMainName())
+                    .subName(history.getSubName())
+                    .info(history.getInfo())
+                    .build();
+            result.add(vo);
+        }
+        return result;
+    }
+
+
     public int getMatchRound(long matchId) {
         Matches matches = matchesRepo.findById(matchId).get();
         return matches.getRound();
