@@ -24,6 +24,12 @@
   justify-content: flex-end;
   padding: 0 5%;
   margin-top: 3px;
+
+  align-items: center;
+}
+
+.imgBox {
+  align-items: center;
 }
 
 .sentText {
@@ -48,6 +54,10 @@
 
 .justifyEnd {
   justify-content: flex-end;
+}
+
+.justifyCenter {
+  justify-content: center;
 }
 
 .colorWhite {

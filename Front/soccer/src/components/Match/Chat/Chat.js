@@ -1,22 +1,51 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import { useParams } from "react-router";
 import * as Stomp from "@stomp/stompjs";
 import { useSelector } from "react-redux";
 import Messages from "./Messages";
 import Input from "./Input";
+import drawImage from "components/assets/draw.png";
+import unCheckedImage from "components/assets/unchecked.png";
 
 function Chatting() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [connected, setConnected] = useState(false);
+  const [predict, setPredict] = useState([]);
+  const [avatarSrc, setAvatarSrc] = useState(unCheckedImage);
   const client = useRef({});
   const user = useSelector((state) => state.user);
+  const match = useSelector((state) => state.match);
   const params = useParams();
   const matchId = params.matchId;
-  const name = user.nickname === "" ? "noname" : user.nickname;
+  const name = user.nickname === "" ? "익명" : user.nickname;
 
   useEffect(() => {
     connect();
+    if (name !== "익명") {
+      axios
+        .get(
+          `http://localhost:8080/api/v1/matches/predict/match/my/${user.email}/${match.matchId}`
+        )
+        .then((res) => {
+          setPredict(res.data.result.whereWin);
+
+          switch (predict) {
+            case "HOME":
+              setAvatarSrc(match.homeImage);
+              break;
+            case "AWAY":
+              setAvatarSrc(match.awayImage);
+              break;
+            case "DRAW":
+              setAvatarSrc(drawImage);
+              break;
+            default:
+          }
+        });
+    }
+
     return;
   }, []);
 
@@ -85,7 +114,7 @@ function Chatting() {
 
   return (
     <div className="container">
-      <Messages messages={messages} name={name} />
+      <Messages messages={messages} img={avatarSrc} />
       <Input
         message={message}
         setMessage={setMessage}
