@@ -85,9 +85,9 @@ public class CommentService {
         CommentMongo commentMongo = CommentMongo.builder()
                 .comment(postCommentDTO.getComment())
                 .author(user.getNickname())
+                .authorId(userId)
                 .boardId(board.getId())
                 .createDate(LocalDateTime.now())
-                .authorId(16L)
                 .build();
         commentRepoMongo.save(commentMongo);
         return ResponseEntity.ok(BaseResponseBody.of(200, "Post Comment Success"));

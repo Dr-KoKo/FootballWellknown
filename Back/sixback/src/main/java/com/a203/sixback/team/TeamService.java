@@ -177,6 +177,12 @@ public class TeamService {
         return result;
     }
 
+    public TeamInfo getTeam(String name) {
+        Team team = teamRepo.findByName(name);
+        TeamInfo teamInfo = TeamInfo.builder().teamId(team.getId()).build();
+        return teamInfo;
+    }
+
     public PlayerRankVO getPlayerRanks() {
         List<PlayerVO2> scorers = new ArrayList<>();
         List<PlayerVO2> assists = new ArrayList<>();

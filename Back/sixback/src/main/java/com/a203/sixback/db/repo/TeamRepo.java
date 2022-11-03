@@ -8,4 +8,5 @@ import java.util.List;
 
 @Repository
 public interface TeamRepo extends JpaRepository<Team, Integer> {
+    Team findByName(String name);
 }

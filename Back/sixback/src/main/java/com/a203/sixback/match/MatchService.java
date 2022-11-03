@@ -31,6 +31,7 @@ public class MatchService {
     private final PlayerRepo playerRepo;
     private final UserRepo userRepo;
     private final PredictRepo predictRepo;
+    private final MatchPredictRepo matchPredictRepo;
     private final TeamRepo teamRepo;
     public List<MatchStatusVO> getMatchesByRound(int round) {
         List<Matches> matches = matchesRepo.findAllByRound(round);
@@ -213,7 +214,7 @@ public class MatchService {
                         .passOn(matchDet.getPassOn())
                         .yellow(matchDet.getYellow())
                         .build());
-                
+
             }
         }
         result.setPlayers(playerMatchVOList);
@@ -236,15 +237,22 @@ public class MatchService {
 
     public void matchPredict(MatchPredictVO matchPredictVO) {
         Matches matches = matchesRepo.findById(matchPredictVO.getMatchId()).get();
-        User user = userRepo.findById(matchPredictVO.getUserId()).get();
+        User user = userRepo.findByEmail(matchPredictVO.getUserEmail());
 
         String predict = matchPredictVO.getWhereWin();
         MatchResult _predict = "HOME".equals(predict)?
-                MatchResult.HOME_WIN:"DRAW".equals(predict)?
-                MatchResult.DRAW:MatchResult.AWAY_WIN;
+                MatchResult.HOME:"DRAW".equals(predict)?
+                MatchResult.DRAW:MatchResult.AWAY;
 
-        Predict newMatchPredict = new Predict(user, matches, _predict);
-        predictRepo.save(newMatchPredict);
+//        있으면 update 없으면 새거
+        Predict old = predictRepo.findByMatches_IdAndUser_Id(matches.getId(), user.getId());
+        if(old == null){
+            Predict newMatchPredict = new Predict(user, matches, _predict);
+            predictRepo.save(newMatchPredict);
+        }else{
+            old.setMatchResult(_predict);
+            predictRepo.save(old);
+        }
     }
 
     public List<MatchPredictVO> getAllMatchPredict(long matchId) {
@@ -254,7 +262,7 @@ public class MatchService {
             String nickname = userRepo.findById(mp.getUser().getId()).get().getNickname();
 
             String predict = mp.getMatchResult().toString();
-            String _predict = "HOME_WIN".equals(predict)?
+            String _predict = "HOME".equals(predict)?
                     "HOME":"DRAW".equals(predict)?
                     "DRAW":"AWAY";
 
@@ -267,6 +275,15 @@ public class MatchService {
         }
         return result;
     }
+    public MatchPredictVO getMyMatchPredict(String userEmail, long matchId) {
+        Predict matchPredict = predictRepo.findByMatches_IdAndUser_Email(matchId,userEmail);
+
+        MatchPredictVO result = MatchPredictVO.builder()
+                .matchId(matchId)
+                .whereWin(String.valueOf(matchPredict.getMatchResult()))
+                .build();
+        return result;
+    }
 
     public List<TeamBoardVO> getTeams() {
         List<TeamBoardVO> result = new ArrayList<>();
@@ -277,11 +294,18 @@ public class MatchService {
         return result;
     }
 
+    public TeamBoardVO getTeamInfo(int teamId) {
+        TeamBoardVO result = new TeamBoardVO();
+        Team team = teamRepo.findById(teamId).get();
+        result =  new TeamBoardVO(team.getId(), team.getName(), team.getImage());
+        return result;
+    }
+
     public List<MatchBoardVO> getMatchBoards(int roundId) {
         List<MatchBoardVO> result = new ArrayList<>();
         List<Matches> matches = matchesRepo.findAllByRound(roundId);
         for(Matches match : matches){
-            String name = "[" +match.getRound()+"] "+match.getHome().getName()+ " VS " + match.getAway().getName();
+            String name = "[" +match.getRound()+"R] "+match.getHome().getName()+ " VS " + match.getAway().getName();
             result.add(new MatchBoardVO(match.getId(), name));
         }
         return result;
@@ -606,5 +630,11 @@ public class MatchService {
                 .teamType(TeamType.AWAY)
                 .history(History.SUB)
                 .build());
+    }
+
+
+    public int getMatchRound(long matchId) {
+        Matches matches = matchesRepo.findById(matchId).get();
+        return matches.getRound();
     }
 }
