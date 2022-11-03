@@ -10,7 +10,7 @@ import TeamBoard from "pages/Team/TeamBoard";
 import TeamMatches from "pages/Team/TeamMatches";
 import PlayerDetail from "pages/Team/PlayerDetail";
 import MatchDetail from "./pages/MatchPage/MatchDetail";
-import Chatting from "components/Match/Chatting/Chatting";
+import Chat from "components/Match/Chat/Chat";
 import LineUp from "components/Match/LineUp";
 import MatchPredict from "components/Match/MatchPredict";
 import Padlet from "components/Match/Padlet";
@@ -35,7 +35,7 @@ function App() {
         <Route path="/player/:id" element={<PlayerDetail />}></Route>
         <Route path="/match" element={<MatchMain />} />
         <Route path="/match/:matchId" element={<MatchDetail />}>
-          <Route path="Chatting" element={<Chatting />} />
+          <Route path="Chatting" element={<Chat />} />
           <Route path="LineUp" element={<LineUp />} />
           <Route path="MatchPredict" element={<MatchPredict />} />
           <Route path="Padlet" element={<Padlet />} />

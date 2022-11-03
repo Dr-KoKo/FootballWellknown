@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -12,10 +12,9 @@ import Paper from "@mui/material/Paper";
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { Input, InputLabel, Button } from "@mui/material";
+import { Input, InputLabel, Button, Grid } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
-import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 
 function descendingComparator(a, b, orderBy) {
@@ -151,7 +150,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
+            align={headCell.numeric ? "right" : "center"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -187,7 +186,7 @@ const PlayerStatistics = (props) => {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState('');
-  const [score, setScore] = React.useState(-1);
+  const [score, setScore] = React.useState(0);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -225,6 +224,12 @@ const PlayerStatistics = (props) => {
     }
   }
 
+  useEffect(()=>{
+    if(score < 0 || score > 10){
+      alert('0 ~ 10 사이의 숫자를 입력하세요');
+    }
+  },[score]);
+
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -249,6 +254,8 @@ const PlayerStatistics = (props) => {
                         id={labelId}
                         scope="row"
                         padding="none"
+                        align="center"
+                        size="medium"
                       >
                         {row.playerName}
                       </TableCell>
@@ -274,25 +281,33 @@ const PlayerStatistics = (props) => {
           </Table>
         </TableContainer>
         <Box sx={{ minWidth: 120 }}>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">선수</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={selected}
-              label="선수"
-              onChange={handleChange}
-            >
-              {props.team.map((player,index) => (
-                <MenuItem value={player.player_id} key={index}>{player.playerName}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl>
-            <InputLabel htmlFor="score">점수(0.0 ~ 10.0)</InputLabel>
-            <Input id="score" type="number" required onChange={handleScore}/>
-            <Button onClick={submit}>평가하기</Button>
-          </FormControl>
+          <Grid container display={'flex'}>
+            <Grid item xs={4} p={3}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">선수</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={selected}
+                  label="선수"
+                  onChange={handleChange}
+                >
+                  {props.team.map((player,index) => (
+                    <MenuItem value={player.player_id} key={index}>{player.playerName}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+              <Grid item xs={2} p={1}>
+                <FormControl>
+                  <InputLabel htmlFor="score">점수(0 ~ 10)</InputLabel>
+                  <Input id="score" type="number" required onChange={handleScore}/>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4} p={3}>
+                <Button variant='contained' onClick={submit}>평가하기</Button>
+              </Grid>
+          </Grid>
         </Box>
       </Paper>
     </Box>

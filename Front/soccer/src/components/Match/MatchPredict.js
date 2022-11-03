@@ -3,16 +3,26 @@ import React, { Fragment, useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Image from 'mui-image';
 import { useSelector } from 'react-redux';
-import { Box, Button, ButtonBase } from '@mui/material';
+import { Box, Button, ButtonBase, Typography } from '@mui/material';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import drawImage from 'components/assets/draw.png'
+import RecentMatch from './RecentMatch';
 
 const MatchPredict = () => {
   const match = useSelector((state)=>state.match);
+  const user = useSelector((state)=>state.user);
+  const matchStatus = match.matchStatus === "경기종료" ? true : false;
   const [predicts, setPredicts] = useState([]);
   const [homeWin, setHomeWin] = useState(0);
   const [draw, setDraw] = useState(0);
   const [awayWin, setAwayWin] = useState(0);
   const [predictMatch, setPredictMatch] = useState("");
-  const userId = 1;
+  const [homeId, setHomeId] = useState(0);
+  const [awayId, setAwayId] = useState(0);
 
   const clickTeam = (team) => {
     setPredictMatch(team);
@@ -24,11 +34,12 @@ const MatchPredict = () => {
     }else{
       axios.post(`http://localhost:8080/api/v1/matches/predict/match`,{
         matchId: match.matchId,
-        userNickname: "test",
-        userId: 1,
+        userEmail: user.email,
+        userNickname: user.nickname,
         whereWin: predictMatch,
       });
       alert('예측 완료!');
+      window.location.reload();
     }
   };
 
@@ -49,21 +60,26 @@ const MatchPredict = () => {
       setDraw(drawCnt);
       setAwayWin(awayCnt);
     });
-    axios.get(`http://localhost:8080/api/v1/matches/predict/match/my/${userId}/${match.matchId}`)
+    axios.get(`http://localhost:8080/api/v1/matches/predict/match/my/${user.email}/${match.matchId}`)
     .then(res => {
       setPredictMatch(res.data.result[0].whereWin);
-    })
+    });
+    axios.get(`http://localhost:8080/api/v1/teams/name/${match.home}`)
+    .then((res)=>{
+      setHomeId(res.data.result.teamId);
+    });
+    axios.get(`http://localhost:8080/api/v1/teams/name/${match.away}`)
+    .then((res)=>{
+      setAwayId(res.data.result.teamId);
+    });
   }, []);
 
   return (
     <Fragment>
-      <Fragment>
-        총 {predicts.length}명이 참여했습니다.
-      </Fragment>
-      <br/>
-      <Grid container>
+      <Grid container display={'flex'}>
         <Grid item xs={4} >
           <ButtonBase
+            disabled={matchStatus}
             onClick={()=>{clickTeam("HOME")}}
             sx={{
               width:'100%',
@@ -82,6 +98,7 @@ const MatchPredict = () => {
         </Grid>
         <Grid item xs={4} display={'flex'}>
           <ButtonBase
+            disabled={matchStatus}
             onClick={()=>{clickTeam("DRAW")}}
             sx={{
               width:'100%',
@@ -95,6 +112,7 @@ const MatchPredict = () => {
         </Grid>
         <Grid item xs={4} display={'flex'}>
           <ButtonBase 
+            disabled={matchStatus}
             onClick={()=>{clickTeam("AWAY")}}
             sx={{
               width:'100%',
@@ -112,21 +130,61 @@ const MatchPredict = () => {
           </ButtonBase>
         </Grid>
         <Grid>
-          <Button onClick={()=>{submit()}}>예측하기</Button>
+          <Button variant='contained' onClick={()=>{submit()}}>예측하기</Button>
         </Grid>
       </Grid>
-      <Fragment>
-        <ul>
-          {predicts.map((predict, index) => (
-            <li key={index}>
-              {predict.userNickname}
-              {predict.whereWin === "HOME" && `${match.home} 승리`}
-              {predict.whereWin === "DRAW" && "무승부"}
-              {predict.whereWin === "AWAY" && `${match.away} 승리`}
-            </li>
-          ))}
-        </ul>
-      </Fragment>
+      <Grid container>
+        <Grid item xs={8}>
+          <RecentMatch homeId={homeId} awayId={awayId}/>
+          {/* <Grid container>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={2}>
+              <Typography variant='h5'>{match.home}</Typography>
+              <span color='red'>{homeInfo.rank}위 </span>
+              <span>{homeInfo.win}승 {homeInfo.draw}무 {homeInfo.lose}패</span>
+            </Grid>
+            <Grid item xs={1}>VS</Grid>
+            <Grid item xs={2}>
+              <Typography variant='h5'>{match.away}</Typography>
+              <span color='red'>{awayInfo.rank}위 </span>
+              <span>{awayInfo.win}승 {awayInfo.draw}무 {awayInfo.lose}패</span>
+            </Grid>
+            <Grid item xs={3}></Grid>
+          </Grid> */}
+        </Grid>
+        <Grid item xs={4}>
+          <List sx={{ width: '100%', bgcolor: 'background.paper', }}>
+            <Typography>
+              총 {predicts.length}명이 참여했습니다.
+            </Typography>
+            {predicts.map((predict, index) => (
+              <ListItem key={index}>
+                <ListItemAvatar>
+                  <Avatar src={
+                      predict.whereWin === "HOME" ?
+                      match.homeImage : (
+                        predict.whereWin === "AWAY" ?
+                        match.awayImage :
+                        drawImage
+                      )
+                    } />
+              </ListItemAvatar>
+              <ListItemText 
+                primary={predict.userNickname} 
+                secondary= {
+                  predict.whereWin === "HOME" ?
+                  match.home + ' 승리' : (
+                    predict.whereWin === "AWAY" ?
+                    match.away + ' 승리' :
+                    '무승부'
+                  )
+                }
+              />
+              </ListItem>
+            ))}
+          </List>
+        </Grid>
+      </Grid>
     </Fragment>
   );
 };

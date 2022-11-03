@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10%;
+    margin-bottom: 5%;
     position: relative;
 }
 .navbar::before{
@@ -59,7 +59,7 @@
 }
 .navbar_li>div:hover{
 
-    border-bottom: 2px solid #44EC6C;
+    border-bottom: 2px solid #44EC6C ;
     color: black;
 }
 
