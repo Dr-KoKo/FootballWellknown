@@ -16,7 +16,8 @@ import { Input, InputLabel, Button, Grid } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
 import { useSelector } from "react-redux";
-
+import "./PlayerStatistics.css";
+import { Opacity } from "@mui/icons-material";
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -150,7 +151,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "center"}
+            align="center"
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -231,10 +232,10 @@ const PlayerStatistics = (props) => {
   },[score]);
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
+    <Box id='bx' sx={{ width: "100%" }}>
+      <Paper sx={{width: "100%", mb: 2, overflow: 'hidden' }}>
         <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+          <Table sx={{ minWidth: 750}} aria-labelledby="tableTitle">
             <EnhancedTableHead
               order={order}
               orderBy={orderBy}
@@ -252,6 +253,7 @@ const PlayerStatistics = (props) => {
                       <TableCell
                         component="th"
                         id={labelId}
+                        style={{minWidth:150}}
                         scope="row"
                         padding="none"
                         align="center"
@@ -259,20 +261,20 @@ const PlayerStatistics = (props) => {
                       >
                         {row.playerName}
                       </TableCell>
-                      <TableCell align="right">{row.goal}</TableCell>
-                      <TableCell align="right">{row.assist}</TableCell>
-                      <TableCell align="right">{row.shot}</TableCell>
-                      <TableCell align="right">{row.shotOn}</TableCell>
-                      <TableCell align="right">{row.pass}</TableCell>
-                      <TableCell align="right">{row.passOn}</TableCell>
-                      <TableCell align="right">{row.dribble}</TableCell>
-                      <TableCell align="right">{row.dribbleOn}</TableCell>
-                      <TableCell align="right">{row.crossedOn}</TableCell>
-                      <TableCell align="right">{row.tackle}</TableCell>
-                      <TableCell align="right">{row.foul}</TableCell>
-                      <TableCell align="right">{row.clear}</TableCell>
-                      <TableCell align="right">{row.yellow}</TableCell>
-                      <TableCell align="right">{row.red}</TableCell>
+                      <TableCell style={{minWidth:80}} align="center">{row.goal}</TableCell>
+                      <TableCell style={{minWidth:80}} align="center">{row.assist}</TableCell>
+                      <TableCell style={{minWidth:80}} align="center">{row.shot}</TableCell>
+                      <TableCell style={{minWidth:100}} align="center">{row.shotOn}</TableCell>
+                      <TableCell style={{minWidth:80}} align="center">{row.pass}</TableCell>
+                      <TableCell style={{minWidth:100}} align="center">{row.passOn}</TableCell>
+                      <TableCell style={{minWidth:80}} align="center">{row.dribble}</TableCell>
+                      <TableCell style={{minWidth:100}} align="center">{row.dribbleOn}</TableCell>
+                      <TableCell style={{minWidth:100}} align="center">{row.crossedOn}</TableCell>
+                      <TableCell style={{minWidth:80}} align="center">{row.tackle}</TableCell>
+                      <TableCell style={{minWidth:80}} align="center">{row.foul}</TableCell>
+                      <TableCell style={{minWidth:100}} align="center">{row.clear}</TableCell>
+                      <TableCell style={{minWidth:80}} align="center">{row.yellow}</TableCell>
+                      <TableCell style={{minWidth:80}} align="center">{row.red}</TableCell>
                     </TableRow>
                   );
                 }

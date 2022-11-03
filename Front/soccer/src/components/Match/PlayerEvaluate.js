@@ -177,7 +177,7 @@ const PlayerEvaluate = () => {
           <Box className="statColorLeft" sx={{ width: `${homeStat.penalty/20*100}%` }}></Box>
           <Box className="valLeft">{homeStat.penalty}</Box>
         </Box>
-        <Box className="txt">패털티킥</Box>
+        <Box className="txt">패널티킥</Box>
         <Box className="stat-right">
           <Box className="statColorRight" sx={{ width: `${awayStat.penalty/20*100}%` }}></Box>
           <Box className="valRight">{awayStat.penalty}</Box>
