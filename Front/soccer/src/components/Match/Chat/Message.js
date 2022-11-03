@@ -1,22 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
+import ReactEmoji from "react-emoji";
+import drawImage from "components/assets/draw.png";
+import unCheckedImage from "components/assets/unchecked.png";
 import "./Message.css";
 
-import ReactEmoji from "react-emoji";
-
-const Message = ({ message: { type, data, sender }, img }) => {
+const Message = ({ message: { type, data, sender, predict }, match }) => {
+  const [avatarSrc, setAvatarSrc] = useState(unCheckedImage);
   let isSentByUser = false;
 
-  console.log(img);
+  useEffect(() => {
+    switch (predict) {
+      case "HOME":
+        setAvatarSrc(match.homeImage);
+        break;
+      case "AWAY":
+        setAvatarSrc(match.awayImage);
+        break;
+      case "DRAW":
+        setAvatarSrc(drawImage);
+        break;
+      default:
+        break;
+    }
+  }, []);
 
-  if (type === "message") {
+  if (type === "MESSAGE") {
     isSentByUser = true;
   }
 
   return isSentByUser ? (
     <div className="messageContainer justifyStart">
       <div className="imgBox">
-        <Avatar src={img} />
+        <Avatar src={avatarSrc} />
       </div>
       <div className="messageBox backgroundLight">
         <p className="messageText colorDark">{ReactEmoji.emojify(data)}</p>
