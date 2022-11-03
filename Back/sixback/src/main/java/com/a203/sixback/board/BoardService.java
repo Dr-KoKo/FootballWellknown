@@ -5,6 +5,7 @@ import com.a203.sixback.board.dto.GetBoardDetailResDTO;
 import com.a203.sixback.board.dto.GetBoardResDTO;
 import com.a203.sixback.board.dto.PostBoardReqDTO;
 import com.a203.sixback.board.dto.UpdateBoardReqDTO;
+import com.a203.sixback.board.res.BoardDetailListRes;
 import com.a203.sixback.board.res.BoardRes;
 import com.a203.sixback.db.entity.*;
 import com.a203.sixback.db.repo.*;
@@ -73,6 +74,10 @@ public class BoardService {
                 .author(board.getUser().getNickname())
                 .createDate(board.getCreateDate())
                 .build();
+        if(board.getTeam()!=null)
+            getDetail.setTeam(board.getTeam().getId());
+        if(board.getMatch()!=null)
+            getDetail.setMatch(board.getMatch().getId());
     return getDetail;
 
     }
@@ -180,5 +185,22 @@ public class BoardService {
             System.out.println(board);
         }
         return ResponseEntity.status(200).body(BoardRes.of(200, "Get Team Board Success", getBoards, getBoards.size() / 10 + 1));
+    }
+
+    public ResponseEntity getTeamTop4Board(int teamId) {
+        List<Board> boards = boardRepo.findTop4ByOrderByIdDesc();
+
+        List<GetBoardDetailResDTO> getBoards = new LinkedList<>();
+
+        for(Board board : boards) {
+            getBoards.add(new GetBoardDetailResDTO().builder()
+                    .id(board.getId())
+                    .title(board.getTitle())
+                    .author(board.getUser().getNickname())
+                    .team(board.getTeam().getId())
+                    .build()
+            );
+        }
+        return ResponseEntity.status(200).body(BoardDetailListRes.of(200, "Get Team Top4 Board Success", getBoards));
     }
 }

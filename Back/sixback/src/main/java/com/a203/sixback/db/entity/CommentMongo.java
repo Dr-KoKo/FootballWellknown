@@ -19,6 +19,6 @@ public class CommentMongo {
     private Long boardId;
     private String comment;
     private String author;
-    private Long authorId;
+    private Long author_id;
     private LocalDateTime createDate;
 }
