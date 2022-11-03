@@ -42,8 +42,8 @@ public class BoardController {
         return boardService.getMatchBoard(matchId, pages);
     }
 
-    @GetMapping("/teams/main/{matchId}")
-    public ResponseEntity teamTop4Board(@PathVariable(value = "matchId") Long matchId) {
+    @GetMapping("/matches/main/{matchId}")
+    public ResponseEntity matchTop4Board(@PathVariable(value = "matchId") Long matchId) {
         return boardService.getMatchTop4Board(matchId);
     }
 

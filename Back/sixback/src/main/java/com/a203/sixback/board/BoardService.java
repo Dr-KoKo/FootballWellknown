@@ -214,7 +214,7 @@ public class BoardService {
                     .title(board.getTitle())
                     .content(board.getContent())
                     .author(board.getUser().getNickname())
-                    .team(board.getTeam().getId())
+                    .match(board.getMatch().getId())
                     .build()
             );
         }
