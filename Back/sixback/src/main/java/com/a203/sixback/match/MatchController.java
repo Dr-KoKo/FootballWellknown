@@ -46,7 +46,6 @@ public class MatchController {
         MatchStatusVO result = matchService.getMatchDetail(id);
         return ResponseEntity.status(200).body(MatchDetailRes.of(200,"Success",result));
     }
-
     @GetMapping("/{matchId}/lineUps")
     public ResponseEntity<BaseResponseBody> getLineUps(@PathVariable("matchId") long matchId){
         List<LineUpVO> result = matchService.getLineUps(matchId);
@@ -98,5 +97,12 @@ public class MatchController {
     public ResponseEntity<BaseResponseBody> getMatchBoards(@PathVariable("roundId") int roundId){
         List<MatchBoardVO> result = matchService.getMatchBoards(roundId);
         return ResponseEntity.status(200).body(AllMatchBoardRes.of(200,"Success",result));
+    }
+
+    @GetMapping("/boards/matches/{matchId}")
+    public ResponseEntity<BaseResponseBody> getMatchRound(@PathVariable("matchId") long matchId){
+        int result = matchService.getMatchRound(matchId);
+        return ResponseEntity.status(200).body(MatchRoundRes.of(200,"Success",result));
+
     }
 }

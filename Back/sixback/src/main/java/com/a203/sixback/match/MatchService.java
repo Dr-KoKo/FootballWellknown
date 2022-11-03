@@ -633,4 +633,8 @@ public class MatchService {
     }
 
 
+    public int getMatchRound(long matchId) {
+        Matches matches = matchesRepo.findById(matchId).get();
+        return matches.getRound();
+    }
 }
