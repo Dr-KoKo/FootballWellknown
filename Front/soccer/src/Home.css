@@ -40,8 +40,11 @@
     font-weight: bold;
 }
 
-.home-horizon{
-    width: 80%;
+.home-playerRank{
+    display: flex;
+    flex-direction: row;
 }
+
+
 
 

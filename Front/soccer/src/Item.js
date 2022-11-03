@@ -6,7 +6,7 @@ import { teamNameShort } from "const/teamNameShort";
 const day = ['(일)','(월)','(화)','(수)','(목)','(금)','(토)']
 
 const Item = (props) =>{
-    console.log(props.item[0]);
+
 
     return (
         <div className="item-container">

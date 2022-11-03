@@ -12,31 +12,21 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { useDispatch } from 'react-redux';
 import Item from 'Item';
 import HorizonLine from 'components/HorizonLine';
+import GoalCard from 'components/player_card/GoalCard';
+import AssistCard from 'components/player_card/AssistCard'
 
 
 
 const Home = () => {
   const [teamToggle, setTeamToggle] = useState(true);
   const [matchInfo, setMatchInfo] = useState([]);
-  const [round, setRound] = useState(9);
+  const [round, setRound] = useState(15);
   const [loading, setLoading] = useState(true)
   const dispatch = useDispatch();
   const [carousel, setCarousel] = useState([]);
+  const [mostGoal, setMostGoal] =useState([]);
+  const [mostAssist, setMostAssist] =useState([]);
   
-
-  const item = [
-    {
-        name: "Random Name #1",
-        description: "Probably the most random thing you have ever seen!"
-    },
-    {
-        name: "Random Name #2",
-        description: "Hello World!"
-    }
-];
-
-
-
 
   useEffect(() => {
     axios.get(`http://localhost:8080/api/v1/matches/round?round=${round}`).then((response) => {
@@ -45,6 +35,10 @@ const Home = () => {
       const len = response.data.result.length;
       setCarousel([[response.data.result.slice(0,len/2)], [response.data.result.slice(len/2,len)]]);
     });
+    axios.get(`http://localhost:8080/api/v1/teams/players/ranks`).then((response) => {
+      setMostGoal(response.data.result.scorers);
+      setMostAssist(response.data.result.assisters);
+    })
   }, [round]);
 
   const teamButtonClicked = () =>{
@@ -98,7 +92,14 @@ const Home = () => {
           <span style={{fontSize:"1.5rem"}}>|</span>
           <button className='home-categoryButton' id={teamToggle ? null : "curr-home-categoryButton"} onClick={playerButtonClicked}>개인 순위</button>
         </div>
-          {teamToggle ? <TeamInfo count={10}></TeamInfo> : <div>안녕</div>}
+          {teamToggle ? 
+            <TeamInfo count={10}></TeamInfo> 
+            : 
+            <div className='home-playerRank'>
+              <GoalCard category="최다 득점" players={mostGoal}></GoalCard>
+              <AssistCard category="최다 도움" players={mostAssist}></AssistCard>
+            </div>
+          }
       </div>
     </div>
   );
