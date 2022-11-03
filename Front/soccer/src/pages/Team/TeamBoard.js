@@ -24,7 +24,7 @@ const TeamBoard = () => {
             return "내용이 없습니다.";
         }
         str=str.substring(idx+3,str.length);
-        idx=str.search("</p>");
+        idx=str.search("<");
         str=str.substring(0,idx);
         if(str.length>20){
             str=str.substring(0,20) +" ...";
@@ -55,7 +55,7 @@ const TeamBoard = () => {
           });
       }, []);
     return (
-        <div id='mainFrame22'>
+        <div id='mainFrame221'>
             {datas.map((data) => (
                 <div id='frame22'>                
                     <img className='thuimg' src = {strParsing(data.content)} alt=""></img>
