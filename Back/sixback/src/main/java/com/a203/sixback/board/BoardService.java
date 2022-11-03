@@ -188,7 +188,7 @@ public class BoardService {
     }
 
     public ResponseEntity getTeamTop4Board(int teamId) {
-        List<Board> boards = boardRepo.findTop4ByOrderByIdDesc();
+        List<Board> boards = boardRepo.findTop4ByTeamIdOrderByIdDesc(teamId);
 
         List<GetBoardDetailResDTO> getBoards = new LinkedList<>();
 
