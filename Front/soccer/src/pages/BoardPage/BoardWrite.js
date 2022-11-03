@@ -6,7 +6,6 @@ import {
   MenuItem,
   TextField,
   InputLabel,
-  Input,
   Container,
   Box,
   Grid,
@@ -27,7 +26,6 @@ const BoardWrite = () => {
   const [teams, setTeams] = useState([]);
   const [matches, setMatches] = useState([]);
   const [team, setTeam] = useState(null);
-  const [round, setRound] = useState(null);
   const [match, setMatch] = useState(null);
 
   const navigate = useNavigate();

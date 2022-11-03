@@ -29,7 +29,7 @@ const Layout = (props) => {
             <li  id='li'><NavLink className='navbar_li' to="/"><div>HOME</div></NavLink></li>
             <li  id='li'><NavLink className='navbar_li' to="teaminfo"><div>TEAM</div></NavLink></li>
             <li  id='li'><NavLink className='navbar_li' to="match"><div>MATCH</div></NavLink></li>
-            <li  id='li'><NavLink className='navbar_li' to="/"><div>COMMUNITY</div></NavLink></li>
+            <li  id='li'><NavLink className='navbar_li' to="board"><div>COMMUNITY</div></NavLink></li>
             {(state.user.isLogin ? 
               <li  id='li'>
                 <button id='logoutBtn' onClick={onLogoutHandler}>LOGOUT</button></li> 

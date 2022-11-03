@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
-  useLocation,
   useNavigate,
   useParams,
-  useRouteLoaderData,
 } from "react-router";
-import dateFormat, { masks } from "dateformat";
+import dateFormat from "dateformat";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import "./BoardDetail.css";
 import Loading from "components/Loading";
@@ -24,7 +22,6 @@ import {
   TableRow,
 } from "@mui/material";
 import ClassicEditor from "../../util/build/ckeditor";
-import { margin } from "@mui/system";
 const boardUrl = "http://localhost:8080/api/v1/boards/";
 
 const BoardDetail = () => {

@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Loading from 'components/Loading';
 import {
   Button,
   Pagination,
@@ -52,6 +53,7 @@ const BoardList = () => {
   return (
     <Container>
       <Box
+        className="box-board-list"
         sx={{
           backgroundColor: "white",
           borderRadius: "10px",
@@ -89,7 +91,7 @@ const BoardList = () => {
                     {boards.map((board) => (
                       <TableRow
                         key={board.id}
-                        onClick={() => navigate(`detail/${board.id}`)}
+                        onClick={() => navigate(`${board.id}`)}
                         hover
                       >
                         <TableCell align="center">{board.id}</TableCell>
@@ -124,7 +126,7 @@ const BoardList = () => {
               </div>
             </div>
           ) : (
-            <h1>로딩중</h1>
+            <Loading></Loading>
           )}
         </div>
       </Box>

@@ -19,6 +19,10 @@ import PlayerEvaluate from "components/Match/PlayerEvaluate";
 
 import SocialLogin from "./pages/login/SocialLogin";
 import SocialAuth from "./components/user/SocialAuth"
+import Board from "pages/BoardPage/BoardList";
+import BoardDetail from "pages/BoardPage/BoardDetail";
+import BoardWrite from "pages/BoardPage/BoardWrite";
+import BoardModify from "pages/BoardPage/BoardModify";
 
 
 
@@ -43,6 +47,11 @@ function App() {
           <Route path="Padlet" element={<Padlet />} />
           <Route path="PlayerEvaluate" element={<PlayerEvaluate />} />
         </Route>
+        <Route path="/board" element={<Board />}/>
+        <Route path="/board/:id" element={<BoardDetail />}/>
+        <Route path="/board/write" element={<BoardWrite />}/>
+        <Route path="/board/:id/modify" element={<BoardModify/>}/>
+        
         <Route path="/" element={<Home />} />
         <Route path="/user/login" element={<SocialLogin />} />
         <Route path="/oauth/redirect" element={<SocialAuth />} />

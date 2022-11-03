@@ -15,15 +15,12 @@ import {
 } from "@mui/material";
 import ClassicEditor from "../../util/build/ckeditor";
 import Loading from "components/Loading";
-import MatchDetail from "pages/MatchPage/MatchDetail";
-import TeamMatches from "pages/Team/TeamMatches";
 const boardUrl = "http://localhost:8080/api/v1/boards/";
 
 const BoardModify = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { id } = useParams();
-  const [title, setTitle] = useState(state.title);
   const [content, setContent] = useState(state.content);
   const [ctgName, setCtgName] = useState(state.ctgName);
   const [team, setTeam] = useState(state.team);
@@ -45,7 +42,7 @@ const BoardModify = () => {
       method: "POST",
       body: JSON.stringify({
         boardId: id,
-        title: title + "(수정)",
+        title: state.title + "(수정)",
         ctgName: ctgName,
         teamId : sendTeam,
         matchId : sendMatch,
@@ -127,14 +124,14 @@ const BoardModify = () => {
           margin: "20px 0",
         }}
       >
-        {title !== null ? (
+        {state.title !== null ? (
           <Grid sx={{margin: "5px"}}>
             <Grid textAlign={"center"}>
               <h2>게시글 수정</h2>
             </Grid>
             <hr />
             <Grid item xs="12">
-              <h1>{title}</h1>
+              <h1>{state.title}</h1>
             </Grid>
             <hr />
             <Grid container textAlign={"center"} columns="12" sx={{margin: "5px"}}>
