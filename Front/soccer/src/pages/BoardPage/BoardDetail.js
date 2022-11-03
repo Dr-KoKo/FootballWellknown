@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  useNavigate,
-  useParams,
-} from "react-router";
+import { useNavigate, useParams } from "react-router";
 import dateFormat from "dateformat";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import "./BoardDetail.css";
@@ -22,9 +19,11 @@ import {
   TableRow,
 } from "@mui/material";
 import ClassicEditor from "../../util/build/ckeditor";
+import { store } from "../../index";
 const boardUrl = "http://localhost:8080/api/v1/boards/";
 
 const BoardDetail = () => {
+  console.log(store.getState().user);
   const navigate = useNavigate();
   const { id } = useParams();
   const [board, setBoard] = useState(null);
@@ -92,7 +91,10 @@ const BoardDetail = () => {
       "http://localhost:8080/api/v1/boards/commentMongo",
       {
         method: "POST",
-        body: JSON.stringify({ boardId: id, comment: comment }),
+        body: JSON.stringify({
+          boardId: id,
+          comment: comment,
+        }),
         headers: {
           "Content-Type": "application/json",
           // accessToken: getCookie("accessToken"),
@@ -107,7 +109,7 @@ const BoardDetail = () => {
     }
   };
 
-  const deleteBoard = async(event)=> {
+  const deleteBoard = async (event) => {
     alert("deleteBoard");
   };
 
@@ -142,7 +144,13 @@ const BoardDetail = () => {
                   [{board.ctgName}
                   {team != null && " " + team.name}] {board.title}
                 </h1>
-                {match != null && (<div><h2>{match.date} {match.home}vs{match.away}</h2></div>)}
+                {match != null && (
+                  <div>
+                    <h2>
+                      {match.date} {match.home}vs{match.away}
+                    </h2>
+                  </div>
+                )}
               </Grid>
 
               {team == null && <Grid xs="1"></Grid>}
@@ -161,16 +169,30 @@ const BoardDetail = () => {
               >
                 <p>작성자: {board.author}</p>
               </Grid>
-              <Grid item xs="1">
-                <Button variant="contained" onClick={getModifyBoard} sx={{ marginRight: "10px" }}>
-                  글 수정
-                </Button>
-              </Grid>
-              <Grid item xs="1">
-                <Button color="error" variant="contained" onClick={deleteBoard} sx={{ marginRight: "10px" }}>
-                  글 삭제
-                </Button>
-              </Grid>
+
+              {board.author == store.getState().user.nickname && (
+                <Grid item xs="1">
+                  <Button
+                    variant="contained"
+                    onClick={getModifyBoard}
+                    sx={{ marginRight: "10px" }}
+                  >
+                    글 수정
+                  </Button>
+                </Grid>
+              )}
+              {(board.author == store.getState().user.nickname)||(store.getState().auth == 'ADMIN') && (
+                <Grid item xs="1">
+                  <Button
+                    color="error"
+                    variant="contained"
+                    onClick={deleteBoard}
+                    sx={{ marginRight: "10px" }}
+                  >
+                    글 삭제
+                  </Button>
+                </Grid>
+              )}
             </Grid>
             <hr></hr>
             <Grid>
