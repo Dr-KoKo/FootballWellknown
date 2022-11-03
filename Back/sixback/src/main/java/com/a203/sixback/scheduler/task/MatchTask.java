@@ -157,7 +157,7 @@ public class MatchTask implements Runnable {
             }
 */
 
-            MatchResult result = homeTeamScore > awayTeamScore ? MatchResult.HOME_WIN : homeTeamScore == awayTeamScore ? MatchResult.DRAW : MatchResult.AWAY_WIN;
+            MatchResult result = homeTeamScore > awayTeamScore ? MatchResult.HOME : homeTeamScore == awayTeamScore ? MatchResult.DRAW : MatchResult.AWAY;
 
             log.info("배점을 시작합니다.");
             //           givePoint(matchId, result);
