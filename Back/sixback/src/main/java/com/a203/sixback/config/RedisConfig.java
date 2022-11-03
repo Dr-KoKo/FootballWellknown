@@ -53,6 +53,17 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+    @Bean
+    public RedisTemplate<String, Long> chatRedisTemplate(RedisConnectionFactory redisConnectionFactory){
+        RedisTemplate<String, Long> redisTemplate = new RedisTemplate<>();
+
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Long>(Long.class));
+
+        return redisTemplate;
+    }
+
 //    @Bean
 //    public RedisTemplate<String, Ranking>
 
