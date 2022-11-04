@@ -9,7 +9,7 @@ import Player from "../../components/assets/player.jpg";
 import Text from "../../components/assets/text.jpg";
 import "./TeamDetail.css";
 const TeamDetail = () => {
-
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL; 
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [datas, setDatas] = useState({
@@ -19,7 +19,7 @@ const TeamDetail = () => {
   });
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/v1/teams/${id}/details`)
+      .get(`${SERVER_URL}/api/v1/teams/${id}/details`)
       .then((response) => {
         console.log(response.data.result);
         setDatas(response.data.result);
