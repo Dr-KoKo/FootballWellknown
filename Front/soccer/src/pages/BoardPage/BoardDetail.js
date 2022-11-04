@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router";
 import { detailBoard, deleteBoard, postComment } from "services/boardServices";
 import { getTeam, getMatch } from "services/matchServices";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
+// import ClassicEditor from "../../util/build/ckeditor.js";
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import dateFormat from "dateformat";
 import "./BoardDetail.css";
 import Loading from "components/Loading";
@@ -20,8 +22,9 @@ import {
   TableBody,
   TableRow,
 } from "@mui/material";
-import ClassicEditor from "../../util/build/ckeditor";
 import { store } from "../../index";
+
+
 
 const BoardDetail = () => {
   // console.log(store.getState().user);
@@ -42,7 +45,6 @@ const BoardDetail = () => {
         createTeam(result.data.boardDetail.team);
       }
       if (result.data.boardDetail.match) {
-        console.log(result.data.boardDetail.match);
         createMatch(result.data.boardDetail.match);
       }
     }

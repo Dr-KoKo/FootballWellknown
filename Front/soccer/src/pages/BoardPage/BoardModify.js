@@ -3,6 +3,8 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { getTeam, getMatch } from "services/matchServices";
 import dateFormat from "dateformat";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
+// import { ClassicEditor } from "../../util/build/ckeditor";
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import "./BoardModify.css";
 import {
   FormControl,
@@ -14,7 +16,6 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import ClassicEditor from "../../util/build/ckeditor";
 import Loading from "components/Loading";
 
 const boardUrl = "http://localhost:8080/api/v1/boards/";
@@ -44,14 +45,13 @@ const BoardModify = () => {
       boardId: id,
       title: state.title + "(수정)",
       ctgName: ctgName,
-      teamId : sendTeam,
-      matchId : sendMatch,
+      teamId: sendTeam,
+      matchId: sendMatch,
       content: content,
     });
     const result = updateBoard(body);
     console.log(result);
-    if(result.status==200){
-
+    if (result.status == 200) {
     }
     // const result = await fetch(boardUrl + "update", {
     //   method: "POST",
@@ -109,21 +109,20 @@ const BoardModify = () => {
       setMatches(result.result);
     }
   };
-  
+
   const getMatch = async () => {
     const result = await fetch(
       "http://localhost:8080/api/v1/matches/boards/matches/" + state.match,
       {}
     )
-    .then((res)=> res.json())
-    .then((json)=> json);
+      .then((res) => res.json())
+      .then((json) => json);
     console.log(result);
-    if(result.statusCode === 200) {
+    if (result.statusCode === 200) {
       setRound(result.result);
       createMatchList(result.result);
     }
-  }
-  
+  };
 
   useEffect(() => {
     if ((state.ctgName = "팀")) createTeamList();
@@ -140,7 +139,7 @@ const BoardModify = () => {
         }}
       >
         {state.title !== null ? (
-          <Grid sx={{margin: "5px"}}>
+          <Grid sx={{ margin: "5px" }}>
             <Grid textAlign={"center"}>
               <h2>게시글 수정</h2>
             </Grid>
@@ -149,7 +148,12 @@ const BoardModify = () => {
               <h1>{state.title}</h1>
             </Grid>
             <hr />
-            <Grid container textAlign={"center"} columns="12" sx={{margin: "5px"}}>
+            <Grid
+              container
+              textAlign={"center"}
+              columns="12"
+              sx={{ margin: "5px" }}
+            >
               <Grid
                 item
                 xs="10"
@@ -162,7 +166,7 @@ const BoardModify = () => {
                 {dateFormat(state.createDate, "yyyy-mm-dd h:MM")}
               </Grid>
             </Grid>
-            <Grid container columns={16} sx={{marginBottom:"15px"}}>
+            <Grid container columns={16} sx={{ marginBottom: "15px" }}>
               <Grid item xs={3} sx={{ marginRight: "1%" }}>
                 <FormControl fullWidth>
                   <InputLabel>Select Category</InputLabel>
@@ -200,8 +204,7 @@ const BoardModify = () => {
               {ctgName === "경기" && (
                 <Grid item xs={3} sx={{ marginRight: "1%" }}>
                   <FormControl fullWidth>
-
-                    <Select value= {round} id="select-round" >
+                    <Select value={round} id="select-round">
                       {Array(38)
                         .fill()
                         .map((round, i) => (
@@ -235,7 +238,7 @@ const BoardModify = () => {
                 </Grid>
               )}
             </Grid>
-            <hr/>
+            <hr />
             <Grid>
               <CKEditor
                 editor={ClassicEditor}
@@ -250,7 +253,12 @@ const BoardModify = () => {
               />
             </Grid>
             <Grid textAlign={"center"}>
-              <Button size="large" variant="contained" onClick={updateBoard} sx={{margin: "10px", marginBottom: "20px"}}>
+              <Button
+                size="large"
+                variant="contained"
+                onClick={updateBoard}
+                sx={{ margin: "10px", marginBottom: "20px" }}
+              >
                 수정하기
               </Button>
             </Grid>
