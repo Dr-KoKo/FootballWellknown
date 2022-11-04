@@ -44,8 +44,8 @@ public class SchedulerController {
     private String apiKey;
 
     @Async
-//    @Scheduled(cron = "0 0 23 * * *")
-    @Scheduled(cron = "0 49 9 * * *")
+    @Scheduled(cron = "0 0 23 * * *")
+//    @Scheduled(cron = "0 49 9 * * *")
     public void mainSchedule() throws Exception {
         log.info("SchedulerController Cron 실행");
 
@@ -58,8 +58,8 @@ public class SchedulerController {
         log.info("{}-{}-{}", year, month, day);
 
         try {
-            test(year, month, day);
-//            registerMatchSchedule(year, month, day);
+//            test(year, month, day);
+            registerMatchSchedule(year, month, day);
         } catch (Exception e) {
             e.printStackTrace();
         }
