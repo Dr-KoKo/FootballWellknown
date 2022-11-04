@@ -57,6 +57,7 @@ const TeamBoard = () => {
       }, []);
     return (
         <div id='mainFrame221'>
+            {datas.length>0 ? <div>
             {datas.map((data) => (
                 <div id='frame22'>                
                     <img className='thuimg' src = {strParsing(data.content)} alt=""></img>
@@ -68,8 +69,9 @@ const TeamBoard = () => {
                 
                 </div>
             ))}
-        </div>    
-        
+        </div>
+        :<div>작성된 글이 없습니다.</div>}
+        </div>        
     );
 };
 
