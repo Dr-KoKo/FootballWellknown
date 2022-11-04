@@ -1,24 +1,9 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment } from 'react';
 import { Outlet,  } from 'react-router';
 import { Grid, Box, Container, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { store } from 'index';
-import styled from 'styled-components';
-
-const StyledNavLink = styled(NavLink)`
-  color:black;
-  font-size: x-large;
-  font-family: Arial, Helvetica, sans-serif;
-  text-decoration: none;
-  margin: 10px;
-  &:hover,
-  &:focus{
-      color: blue;
-  }
-  &:active{
-      color: red;
-  }
-`;
+import './MatchDetail.css';
 
 const MatchDetail = () => {
   const match = store.getState().match;
@@ -71,27 +56,31 @@ const MatchDetail = () => {
           <Grid item xs={1}/>
         </Grid>
       </Box>
-      <br/>
-      <Grid container spacing={2}>
-        <Grid item xs={2}>
-          <StyledNavLink to="MatchPredict">승부예측</StyledNavLink>
+      {/* 
+        MatchPage내의 navNavLink
+      */}
+      <Box className='nav-link-container'>
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
+            <NavLink to="MatchPredict" className={'nav-link'}>승부예측</NavLink>
+          </Grid>
+          <Grid item xs={2}>
+            <NavLink to="LineUp" className={'nav-link'}>라인업</NavLink>
+          </Grid>
+          <Grid item xs={2}>
+            <NavLink to="History" className={'nav-link'}>중계</NavLink>
+          </Grid>
+          <Grid item xs={2}>
+            <NavLink to="PlayerEvaluate" className={'nav-link'}>선수평가</NavLink>
+          </Grid>
+          <Grid item xs={2}>
+            <NavLink to="Padlet" className={'nav-link'}>패들릿</NavLink>
+          </Grid>
+          <Grid item xs={2}>
+            <NavLink to="Chatting" className={'nav-link'}>채팅</NavLink>
+          </Grid>
         </Grid>
-        <Grid item xs={2}>
-          <StyledNavLink to="LineUp">라인업</StyledNavLink>
-        </Grid>
-        <Grid item xs={2}>
-          <StyledNavLink to="History">중계</StyledNavLink>
-        </Grid>
-        <Grid item xs={2}>
-          <StyledNavLink to="PlayerEvaluate">선수평가</StyledNavLink>
-        </Grid>
-        <Grid item xs={2}>
-          <StyledNavLink to="Padlet">패들릿</StyledNavLink>
-        </Grid>
-        <Grid item xs={2}>
-          <StyledNavLink to="Chatting">채팅</StyledNavLink>
-        </Grid>
-      </Grid>
+      </Box>
       <br/>
       <Fragment>
         <Outlet />
