@@ -5,7 +5,7 @@ import TeamInfo from 'pages/Team/TeamInfo';
 import axios from 'axios';
 
 import Carousel from 'react-material-ui-carousel'
-import { IconButton } from '@mui/material';
+import { IconButton, Paper } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
@@ -14,6 +14,9 @@ import Item from 'Item';
 import HorizonLine from 'components/HorizonLine';
 import GoalCard from 'components/player_card/GoalCard';
 import AssistCard from 'components/player_card/AssistCard'
+import UserRank from 'components/user_rank/UserRank';
+
+import Grid from '@mui/material/Grid';
 
 
 
@@ -62,7 +65,24 @@ const Home = () => {
   return (
     <div id='homeContainer'>
       <div id='home-userRank'>
-        <h1>여기에 유저 포인트 랭킹 컴포넌트를 넣을거에요~</h1>
+        <Grid container spacing={1}>
+          <Grid item xs={6}>
+            <div>
+              <h2>일간 포인트 랭킹</h2>
+              <div className='home-userRankInfo'>
+                  <UserRank />
+              </div>
+            </div>
+          </Grid>
+          <Grid item xs={6}>
+            <div>
+              <h2>주간 포인트 랭킹</h2>
+              <div className='home-userRankInfo'>
+                <UserRank />
+              </div>
+            </div>
+          </Grid>
+        </Grid>
       </div>
      
       <div id='home-matchPlan'>
