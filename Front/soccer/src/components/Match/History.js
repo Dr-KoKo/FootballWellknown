@@ -17,7 +17,7 @@ const History = () => {
   const match = useSelector((state)=>state.match);
   const [histories, setHistories] = useState([]);
   useEffect(() => {
-    axios.get(SERVER_URL+`/api/v1/matches/history/${match.matchId}`)
+    axios.get(`${SERVER_URL}/api/v1/matches/history/${match.matchId}`)
     .then(res => {
       setHistories(res.data.result);
     })

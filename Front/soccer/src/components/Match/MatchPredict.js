@@ -69,11 +69,11 @@ const MatchPredict = () => {
     .then(res => {
       setPredictMatch(res.data.result.whereWin);
     });
-    axios.get(`${SERVER_URL}/api/v1/teams/${match.home}/name`)
+    axios.post(`${SERVER_URL}/api/v1/teams/name`,match.home)
     .then((res)=>{
       setHomeId(res.data.result.teamId);
     });
-    axios.get(`${SERVER_URL}/api/v1/teams/${match.away}/name`)
+    axios.post(`${SERVER_URL}/api/v1/teams/name`,match.away)
     .then((res)=>{
       setAwayId(res.data.result.teamId);
     });
