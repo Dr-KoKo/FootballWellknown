@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import Loading from 'components/Loading';
+import Loading from "components/Loading";
+import { getBoardList } from "../../services/boardServices";
 import {
   Button,
   Pagination,
@@ -15,28 +16,20 @@ import {
   Grid,
   withStyles,
 } from "@mui/material";
-
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import "./BoardList.css";
-
-const url = "http://localhost:8080/api/v1/boards?page=";
 
 const BoardList = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(10);
   const [boards, setBoards] = useState(false);
-  const nowTime = dayjs();
 
   const createBoardList = async (currentPage) => {
-    const result = await fetch(url + currentPage, {})
-      .then((res) => res.json())
-      .then((json) => json);
-    if (result.statusCode === 200) {
-      console.log(result);
-      setBoards(result.boardList);
-      setLastPage(result.lastPage);
+    const result = await getBoardList(currentPage);
+    if (result.status == 200) {
+      // console.log(result.data)
+      setBoards(result.data.boardList);
+      setLastPage(result.data.lastPage);
     }
   };
 
@@ -49,7 +42,6 @@ const BoardList = () => {
     createBoardList(page);
   };
 
-  console.log(boards);
   return (
     <Container>
       <Box
@@ -65,7 +57,10 @@ const BoardList = () => {
           <h1>게시글 목록</h1>
           <hr />
         </Grid>
-        <Grid textAlign={"right"} sx={{ marginRight: "30px", marginBottom: "10px"}}>
+        <Grid
+          textAlign={"right"}
+          sx={{ marginRight: "30px", marginBottom: "10px" }}
+        >
           <Button variant="contained" onClick={() => navigate(`write`)}>
             게시글 작성
           </Button>
@@ -80,11 +75,28 @@ const BoardList = () => {
             <Grid item xs={16}>
               <TableContainer>
                 <Table>
-                  <TableHead sx={{ borderBotton: "solid", backgroundColor: "gray"}}>
+                  <TableHead
+                    sx={{ borderBotton: "solid", backgroundColor: "gray" }}
+                  >
                     <TableRow>
-                      <TableCell align="center" sx={{ fontSize:"20px" ,fontWeight : "bold"}}>글번호</TableCell>
-                      <TableCell align="center" sx={{ fontSize:"20px" ,fontWeight : "bold"}} >제목</TableCell>
-                      <TableCell align="center" sx={{ fontSize:"20px" ,fontWeight : "bold"}}>작성자</TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontSize: "20px", fontWeight: "bold" }}
+                      >
+                        글번호
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontSize: "20px", fontWeight: "bold" }}
+                      >
+                        제목
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontSize: "20px", fontWeight: "bold" }}
+                      >
+                        작성자
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -110,7 +122,7 @@ const BoardList = () => {
                 showFirstButton
                 showLastButton
                 onChange={onChangeHandler}
-                sx={{margin:"15px"}}
+                sx={{ margin: "15px" }}
               ></Pagination>
             </Grid>
           </Grid>

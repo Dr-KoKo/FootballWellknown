@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import dateFormat from "dateformat";
+import { detailBoard, deleteBoard, postComment } from "services/boardServices";
+import { getTeam, getMatch } from "services/matchServices";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
+import dateFormat from "dateformat";
 import "./BoardDetail.css";
 import Loading from "components/Loading";
 import {
@@ -20,58 +22,46 @@ import {
 } from "@mui/material";
 import ClassicEditor from "../../util/build/ckeditor";
 import { store } from "../../index";
-const boardUrl = "http://localhost:8080/api/v1/boards/";
 
 const BoardDetail = () => {
-  console.log(store.getState().user);
+  // console.log(store.getState().user);
   const navigate = useNavigate();
   const { id } = useParams();
   const [board, setBoard] = useState(null);
+  const [commentlist, setCommentlist] = useState(null);
   const [comment, setComment] = useState(null);
   const [team, setTeam] = useState(null);
   const [match, setMatch] = useState(null);
 
+  const getDetailBoard = async (id) => {
+    const result = await detailBoard(id);
+    if (result.status == 200) {
+      setBoard(result.data.boardDetail);
+      setCommentlist(result.data.boardDetail.comments);
+      if (result.data.boardDetail.team) {
+        createTeam(result.data.boardDetail.team);
+      }
+      if (result.data.boardDetail.match) {
+        console.log(result.data.boardDetail.match);
+        createMatch(result.data.boardDetail.match);
+      }
+    }
+  };
+
   const createTeam = async (teamId) => {
-    // const result = await request.get("/api/v1/matches/boards/teams");
-    const result = await fetch(
-      "http://localhost:8080/api/v1/matches/boards/teams/" + teamId,
-      {}
-    )
-      .then((res) => res.json())
-      .then((json) => json);
+    const result = await getTeam(teamId);
     console.log(result);
-    if (result.statusCode === 200) {
-      setTeam(result.result);
+    if (result.status === 200) {
+      setTeam(result.data.result);
     }
   };
 
   const createMatch = async (matchId) => {
-    const ress = await fetch(
-      "http://localhost:8080/api/v1/matches/match/" + matchId,
-      {}
-    )
-      .then((res) => res.json())
-      .then((json) => json);
-    if (ress.statusCode === 200) {
-      console.log(ress.result.matchVO);
-      setMatch(ress.result.matchVO);
-    }
-  };
-
-  const getDetailBoard = async (id) => {
-    const result = await fetch(boardUrl + id, {})
-      .then((res) => res.json())
-      .then((json) => json);
-    if (result.statusCode === 200) {
-      // console.log(result);
-      console.log(result.boardDetail);
-      setBoard(result.boardDetail);
-      if (result.boardDetail.team != null) {
-        createTeam(result.boardDetail.team);
-      }
-      if (result.boardDetail.match != null) {
-        createMatch(result.boardDetail.match);
-      }
+    const result = await getMatch(matchId);
+    console.log(result);
+    if (result.status === 200) {
+      console.log(result.data.result);
+      setMatch(result.data.result.matchVO);
     }
   };
 
@@ -85,32 +75,19 @@ const BoardDetail = () => {
 
   const onSubmitComment = async (event) => {
     event.preventDefault();
-    console.log(comment);
-
-    const result = await fetch(
-      "http://localhost:8080/api/v1/boards/commentMongo",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          boardId: id,
-          comment: comment,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          // accessToken: getCookie("accessToken"),
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((json) => json);
-
-    if (result.statusCode === 200) {
-      window.location.reload();
-    }
+    const body = JSON.stringify({
+      boardId: id,
+      comment: comment,
+    });
+    const result = await postComment(body);
+    console.log(result);
   };
 
-  const deleteBoard = async (event) => {
-    alert("deleteBoard");
+  const postDeleteBoard = async () => {
+    const result = await deleteBoard(id);
+    if(result.data.status == 200) {
+       navigate("../board");
+    }
   };
 
   useEffect(() => {
@@ -181,12 +158,13 @@ const BoardDetail = () => {
                   </Button>
                 </Grid>
               )}
-              {(board.author == store.getState().user.nickname)||(store.getState().auth == 'ADMIN') && (
+              {(board.author == store.getState().user.nickname ||
+                store.getState().auth == "ADMIN") && (
                 <Grid item xs="1">
                   <Button
                     color="error"
                     variant="contained"
-                    onClick={deleteBoard}
+                    onClick={postDeleteBoard}
                     sx={{ marginRight: "10px" }}
                   >
                     글 삭제
@@ -243,7 +221,7 @@ const BoardDetail = () => {
                     </TableCell>
                   </TableHead>
                   <TableBody>
-                    {board.comments.map((comment) => (
+                    {commentlist.map((comment) => (
                       <TableRow key={comment.commentId}>
                         <TableCell align="left">{comment.author}</TableCell>
                         <TableCell align="left">{comment.comment}</TableCell>

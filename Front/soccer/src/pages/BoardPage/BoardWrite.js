@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   FormControl,
   Button,
@@ -13,11 +13,9 @@ import {
 import { useNavigate } from "react-router";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "../../util/build/ckeditor";
-import { axiosAuth, request } from "services/axios";
-import { FilePresent } from "@mui/icons-material";
+import { createBoard } from "services/boardServices";
+import { getTeamList } from "services/matchServices";
 import "./BoardWrite.css";
-// import CKEditor from "@ckeditor/ckeditor5-react";
-const boardWriteUrl = "http://localhost:8080/api/v1/boards/";
 
 const BoardWrite = () => {
   const [title, setTitle] = useState("");
@@ -31,21 +29,15 @@ const BoardWrite = () => {
   const navigate = useNavigate();
 
   const createTeamList = async () => {
-    // const result = await request.get("/api/v1/matches/boards/teams");
-    const result = await fetch(
-      "http://localhost:8080/api/v1/matches/boards/teams",
-      {}
-    )
-      .then((res) => res.json())
-      .then((json) => json);
-    if (result.statusCode === 200) {
-      setTeams(result.result);
+    const result = await getTeamList();
+    if(result.status === 200) {
+      setTeams(result.data.result);
     }
   };
 
-  const createMatchList = async (event) => {
+  const createMatchList = async (round) => {
     const result = await fetch(
-      "http://localhost:8080/api/v1/matches/boards/rounds/" + event,
+      "http://localhost:8080/api/v1/matches/boards/rounds/" + round,
       {}
     )
       .then((res) => res.json())
@@ -75,9 +67,6 @@ const BoardWrite = () => {
   // 등록 버튼 눌렀을 때
   const onSubmitClicked = async (event) => {
     event.preventDefault();
-    console.log(title);
-    console.log(content);
-    console.log(ctgName);
 
     let sendTeam = team;
     let sendMatch = match;
@@ -85,24 +74,17 @@ const BoardWrite = () => {
     if (ctgName !== "팀") sendTeam = null;
     if (ctgName !== "경기") sendMatch = null;
 
-    const result = await fetch(boardWriteUrl, {
-      method: "POST",
-      body: JSON.stringify({
-        title: title,
-        content: content,
-        ctgName: ctgName,
-        matchId: sendMatch,
-        teamId: sendTeam,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        // accessToken: getCookie("accessToken"),
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => json);
-    if (result.statusCode === 200) {
-      navigate('/board');
+    const body = {
+      title: title,
+      content: content,
+      ctgName: ctgName,
+      matchId: sendMatch,
+      teamId: sendTeam,
+    }
+
+    const result = await createBoard(body);
+    if (result.status == 200) {
+      navigate(`/board`)
     }
   };
 
