@@ -5,7 +5,7 @@ import TeamInfo from 'pages/Team/TeamInfo';
 import axios from 'axios';
 
 import Carousel from 'react-material-ui-carousel'
-import { IconButton } from '@mui/material';
+import { IconButton, Paper } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
@@ -14,6 +14,10 @@ import Item from 'Item';
 import HorizonLine from 'components/HorizonLine';
 import GoalCard from 'components/player_card/GoalCard';
 import AssistCard from 'components/player_card/AssistCard'
+import UserRank from 'components/user_rank/UserRank';
+
+import Grid from '@mui/material/Grid';
+import { getMatchInfo, getPlayerInfo } from 'services/homeService';
 
 
 
@@ -26,19 +30,40 @@ const Home = () => {
   const [carousel, setCarousel] = useState([]);
   const [mostGoal, setMostGoal] =useState([]);
   const [mostAssist, setMostAssist] =useState([]);
+
+  const getMatches = async (round) => {
+    const result = await getMatchInfo(round);
+    if(result?.data?.message === 'Success'){
+      setMatchInfo(result.data.result);
+      setLoading(false)
+      const len = result.data.result.length;
+      setCarousel([[result.data.result.slice(0,len/2)], [result.data.result.slice(len/2,len)]]);
+    }
+  }
+
+  const getPlayers = async () => {
+    const result = await getPlayerInfo();
+    if(result?.data?.message === 'Success'){
+      setMostGoal(result.data.result.scorers);
+      setMostAssist(result.data.result.assisters);
+    }
+    
+  }
   
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/v1/matches/round?round=${round}`).then((response) => {
-      setMatchInfo(response.data.result);
-      setLoading(false);
-      const len = response.data.result.length;
-      setCarousel([[response.data.result.slice(0,len/2)], [response.data.result.slice(len/2,len)]]);
-    });
-    axios.get(`http://localhost:8080/api/v1/teams/players/ranks`).then((response) => {
-      setMostGoal(response.data.result.scorers);
-      setMostAssist(response.data.result.assisters);
-    })
+    getMatches(round);
+    // axios.get(`http://localhost:8080/api/v1/matches/round?round=${round}`).then((response) => {
+    //   setMatchInfo(response.data.result);
+    //   setLoading(false);
+    //   const len = response.data.result.length;
+    //   setCarousel([[response.data.result.slice(0,len/2)], [response.data.result.slice(len/2,len)]]);
+    // });
+    getPlayers();
+    // axios.get(`http://localhost:8080/api/v1/teams/players/ranks`).then((response) => {
+    //   setMostGoal(response.data.result.scorers);
+    //   setMostAssist(response.data.result.assisters);
+    // })
   }, [round]);
 
   const teamButtonClicked = () =>{
@@ -62,7 +87,24 @@ const Home = () => {
   return (
     <div id='homeContainer'>
       <div id='home-userRank'>
-        <h1>여기에 유저 포인트 랭킹 컴포넌트를 넣을거에요~</h1>
+        <Grid container spacing={1}>
+          <Grid item xs={6}>
+            <div>
+              <h2>일간 포인트 랭킹</h2>
+              <div className='home-userRankInfo'>
+                  <UserRank />
+              </div>
+            </div>
+          </Grid>
+          <Grid item xs={6}>
+            <div>
+              <h2>주간 포인트 랭킹</h2>
+              <div className='home-userRankInfo'>
+                <UserRank />
+              </div>
+            </div>
+          </Grid>
+        </Grid>
       </div>
      
       <div id='home-matchPlan'>
