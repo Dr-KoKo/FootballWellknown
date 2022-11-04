@@ -17,6 +17,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 // .setHandshakeHandler(handshakeHandler())
-                .setAllowedOrigins("http://localhost:3000", "https://k7a203.p.ssafy.io");
+                .setAllowedOrigins("http://localhost:3000", "https://football-wellknown.com");
     }
 }
