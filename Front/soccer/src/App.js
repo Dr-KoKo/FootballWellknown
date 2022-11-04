@@ -26,6 +26,7 @@ import BoardModify from "pages/BoardPage/BoardModify";
 
 
 function App() {
+
   return (
     <Layout>
       <Routes>
