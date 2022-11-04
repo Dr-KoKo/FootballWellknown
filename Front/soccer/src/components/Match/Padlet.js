@@ -5,6 +5,8 @@ import { useParams } from 'react-router';
 import NoImage from '../../components/assets/noimage.jpg';
 import "./Padlet.css";
 const Padlet = () => {
+    const SERVER_URL = process.env.REACT_APP_LOCAL_SERVER_URL;
+    
     function strParsing(str){
         var idx = str.search("<img");
         if(idx===-1){
@@ -45,7 +47,7 @@ const Padlet = () => {
     ]);
     useEffect(() => {
         axios
-          .get(`http://localhost:8080/api/v1/boards/matches/main/${matchId}`)
+          .get(`${SERVER_URL}/api/v1/boards/matches/main/${matchId}`)
           .then((response) => {
             setDatas(response.data.boardList);
             console.log(response.data.boardList);

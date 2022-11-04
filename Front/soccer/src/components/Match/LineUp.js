@@ -1,35 +1,31 @@
 import axios from 'axios';
 import React, { Fragment, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { Grid, Avatar, Box } from '@mui/material';
+import { Grid, Avatar, Box, Container, Typography } from '@mui/material';
 import { deepOrange, deepPurple } from '@mui/material/colors';
 import { useSelector } from 'react-redux';
 import image from 'components/assets/groundTemplate.png'
 
 const LineUp = () => {
+  const SERVER_URL = process.env.REACT_APP_LOCAL_SERVER_URL;
 
   const match = useSelector((state)=>state.match);
   const [homeFormation, setHomeFormation] = useState([]);
   const [homeMain, setHomeMain] = useState([["",0],["",0],["",0],["",0],[]]);
-  const [homeSub, setHomeSub] = useState([]);
 
   const [awayFormation, setAwayFormation] = useState([]);
   const [awayMain, setAwayMain] = useState([["",0],["",0],["",0],["",0],[]]);
-  const [awaySub, setAwaySub] = useState([]);
 
   let homeCnt = 2;
   let awayCnt = 2;
 
   useEffect(()=>{
-    axios.get(`http://localhost:8080/api/v1/matches/${match.matchId}/lineUps`)
+    axios.get(`${SERVER_URL}/api/v1/matches/${match.matchId}/lineUps`)
     .then((res)=>{
       let data = res.data.result;
       let hf = [];
       let hm = new Array(12);
-      let hs = [];
       let af = [];
       let am = new Array(12);
-      let as = [];
 
       if(data[0].formation !== ""){
         data.map((d) => {
@@ -39,7 +35,6 @@ const LineUp = () => {
             hf = hf.map(Number);
             lineups.map(player => {
               if(player.position === 0){
-                hs.push([player.name, player.number]);
               }else{
                 let names = player.name.split(" ");
                 let name = ""
@@ -61,7 +56,6 @@ const LineUp = () => {
             af = af.map(Number);
             lineups.map(player => {
               if(player.position === 0){
-                as.push([player.name, player.number]);
               }else{
                 let names = player.name.split(" ");
                 let name = ""
@@ -85,18 +79,30 @@ const LineUp = () => {
         });
         setHomeFormation(hf);
         setHomeMain(hm);
-        setHomeSub(hs);
         setAwayFormation(af);
         setAwayMain(am);
-        setAwaySub(as);
       }
     });
   }, []);
   return (
-    <Box display={'flex'} justifyContent={'center'}>
+    <Container sx={{
+      display:'flex',
+      justifyContent:'center',
+      backgroundColor:'white',
+      borderRadius: 10
+    }}
+    >
       {homeFormation.length === 0
       ?
-      <p>출전 선수 명단 확정 전입니다</p>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: 300
+      }}
+      >
+        출전 선수 명단 확정 전입니다
+      </Box>
       :
       (
         <Box
@@ -114,30 +120,40 @@ const LineUp = () => {
           <Grid container>
             <Grid item xs={12} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
               <Avatar sx={{  width:32, height:32, bgcolor: deepOrange[500] }}>{homeMain[0][1]}</Avatar>
-              {homeMain[0][0]}
+                <Typography fontWeight={'bold'}>
+                  {homeMain[0][0]}
+                </Typography>
             </Grid>
             {homeMain[1].map((player,index) => (
               <Grid item xs={12/homeMain[1].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepOrange[500] }}>{player[1]}</Avatar>
-                {player[0]}
+                <Typography fontWeight={'bold'}>
+                  {player[0]}
+                </Typography>
               </Grid>
             ))}
             {homeMain[2].map((player,index) => (
               <Grid item xs={12/homeMain[2].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepOrange[500] }}>{player[1]}</Avatar>
-                {player[0]}
+                <Typography fontWeight={'bold'}>
+                  {player[0]}
+                </Typography>
               </Grid>
             ))}
             {homeMain[3].map((player,index) => (
               <Grid item xs={12/homeMain[3].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepOrange[500] }}>{player[1]}</Avatar>
-                {player[0]}
+                <Typography fontWeight={'bold'}>
+                  {player[0]}
+                </Typography>
               </Grid>
             ))}
             {homeMain.length > 4 && homeMain[4].map((player,index) => (
               <Grid item xs={12/homeMain[4].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepOrange[500] }}>{player[1]}</Avatar>
-                {player[0]}
+                <Typography fontWeight={'bold'}>
+                  {player[0]}
+                </Typography>
               </Grid>
             ))}
           </Grid>
@@ -146,38 +162,48 @@ const LineUp = () => {
             {awayMain[0].map((player,index) => (
               <Grid item xs={12/awayMain[0].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepPurple[500] }}>{player[1]}</Avatar>
-                {player[0]}
+                <Typography fontWeight={'bold'}>
+                  {player[0]}
+                </Typography>
               </Grid>
             ))}
             {awayMain[1].map((player,index) => (
               <Grid item xs={12/awayMain[1].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepPurple[500] }}>{player[1]}</Avatar>
-                {player[0]}
+                <Typography fontWeight={'bold'}>
+                  {player[0]}
+                </Typography>
               </Grid>
             ))}
             {awayMain[2].map((player,index) => (
               <Grid item xs={12/awayMain[2].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepPurple[500] }}>{player[1]}</Avatar>
-                {player[0]}
+                <Typography fontWeight={'bold'}>
+                  {player[0]}
+                </Typography>
               </Grid>
             ))}
             {awayMain[3].map((player,index) => (
               <Grid item xs={12/awayMain[3].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepPurple[500] }}>{player[1]}</Avatar>
-                {player[0]}
+                <Typography fontWeight={'bold'}>
+                  {player[0]}
+                </Typography>
               </Grid>
             ))}
             {awayMain.length > 4 && awayMain[4].map((player,index) => (
               <Grid item xs={12/awayMain[4].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepPurple[500] }}>{player[1]}</Avatar>
-                {player[0]}
+                <Typography fontWeight={'bold'}>
+                  {player[0]}
+                </Typography>
               </Grid>
             ))}
           </Grid>
         </Box>
         )
       }
-    </Box>
+    </Container>
   );
 };
 
