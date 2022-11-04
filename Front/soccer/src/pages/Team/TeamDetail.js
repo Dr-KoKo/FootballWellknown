@@ -34,7 +34,7 @@ const TeamDetail = () => {
         <div id="image">
           <img id="realImage" src={datas.teamInfo.image} alt=""></img>
         </div>
-        <table id="table">
+        <table id="table232">
           <thead>
             <tr>
               <th className="th2" id="rank">Rank</th>
