@@ -60,26 +60,29 @@ const MyPage = () => {
     // } 
 
     return (
-
-        <div id="userDiv">
+        <div id='frf1'>
+        <div id="userDiv1">
             <div id="controlDiv">
                 <h1>내 정보</h1>
-                <FormControlLabel
+                {/* <FormControlLabel
                     control={<Switch checked={checkedDetail} onChange={handleChangeDetail} />}
                     label="Show"
-                />
+                /> */}
             </div>
             <HorizonLine />
 
-            {/* <div id="userinfoDiv">
-                <UserDetail />
-            </div> */}
-            <div id={checkedDetail+"div"}>
+            
+            {/* <div id={checkedDetail+"div"}>
                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Zoom in={checkedDetail}>{UserDetail()}</Zoom>
                 </Box>
-            </div>
+            </div> */}
+            <Box id="userBox1" sx={{width:"100%" }}>
 
+            <div id="userinfoDiv">
+                <UserDetail />
+            </div>
+            </Box>
 
             <div id="controlDiv">
                 <h1>내 예측</h1>
@@ -91,7 +94,7 @@ const MyPage = () => {
             <HorizonLine />
 
             <div id={checkedPredict+"div"}>
-                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Box sx={{ display: 'flex', width:'100%', justifyContent: 'center' }}>
                     <Zoom in={checkedPredict}>{UserPredict()}</Zoom>
                 </Box>
             </div>
@@ -128,6 +131,7 @@ const MyPage = () => {
             </div>
 
 
+        </div>
         </div>
     );
 };

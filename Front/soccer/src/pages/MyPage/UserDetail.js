@@ -3,61 +3,98 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 // import GetUserInfo from "api/user";
 import Loading from "components/Loading";
-// import "./TeamInfo.css";
+import "./UserDetail.css";
 import Profile from "components/assets/epl.png"
-import Box from '@mui/material/Box';
-  
+import {
+  Button,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Container,
+  Box,
+  Grid,
+  withStyles,
+} from "@mui/material";
+import { Margin } from "@mui/icons-material";
 
 const UserDetail = () => {
-    const [user, setUser] = useState({ email: "1234", nickname: "1234", point: "0" });
-    const [loadingUser, setLoadingUser] = useState(true);
+  const [user, setUser] = useState({ email: "1234", nickname: "1234", point: "0" });
+  const [loadingUser, setLoadingUser] = useState(true);
 
-    useEffect(() => {
-        axios
-            .get(`http://localhost:8080/api/v1/users`, {
-                headers: {
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb25naGFyMjAwNEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjY4NjQ4MTgzfQ.HOqV8j9U9D3GJMX0eSZtaL-tWffNMCeQNNP6Ei_92WQ`
-                }
-            })
-            .then((response) => {
-                console.log(response.data);
-                setUser(response.data);
-                setLoadingUser(false);
-            });
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/api/v1/users`, {
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb25naGFyMjAwNEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjY4NjQ4MTgzfQ.HOqV8j9U9D3GJMX0eSZtaL-tWffNMCeQNNP6Ei_92WQ`
+        }
+      })
+      .then((response) => {
+        console.log(response.data);
+        setUser(response.data);
+        setLoadingUser(false);
+      });
 
-    }, []);
+  }, []);
 
-    // function goTeamDetail(id){
-    //   window.location.href=`/teamdetail/${id}`;
-    // } 
+  // function goTeamDetail(id){
+  //   window.location.href=`/teamdetail/${id}`;
+  // } 
 
-    return (
-        <Box sx={{ }}>
-        <div id="userDiv">
-            {loadingUser ? <Loading /> : <div id="userDet">
-                <img width="400px" src={Profile} />
-
-                <table id="table">
-                    <thead>
-                        <tr>
-                            <th id="rank">Email</th>
-                            <th id="result">Nickname</th>
-                            <th id="pts">Point</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td id="rank">{user.email}</td>
-                            <td id="result">{user.nickname}</td>
-                            <td id="pts">{user.point}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            }
+  return (
+      <div id="userDiv">
+        {loadingUser ? <Loading /> : <div id="userDet1">
+          <img id="userProfile1" width="40%" height="300px" src={Profile} />
+          <Grid item xs={16} sx={{width:'60%'}} >
+            <TableContainer >
+              <Table>
+                <TableBody>
+                  <TableRow
+                    key={user.email}
+                    hover
+                  >
+                    <TableCell align="center">Email</TableCell>
+                    <TableCell align="center">{user.email}</TableCell>
+                  </TableRow>
+                  <TableRow
+                    key={user.email}
+                    hover
+                  >
+                    <TableCell align="center">Nickname</TableCell>
+                    <TableCell align="center">{user.nickname}</TableCell>
+                  </TableRow>
+                  <TableRow
+                    key={user.email}
+                    hover
+                  >
+                    <TableCell align="center">Point</TableCell>
+                    <TableCell align="center">{user.point}</TableCell>
+                  </TableRow>
+                  <TableRow
+                    key={user.email}
+                    hover
+                  >
+                    <TableCell align="center">주간 랭킹</TableCell>
+                    <TableCell align="center">{user.point}</TableCell>
+                  </TableRow>
+                  <TableRow
+                    key={user.email}
+                    hover
+                  >
+                    <TableCell align="center">전체 랭킹</TableCell>
+                    <TableCell align="center">{user.point}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
         </div>
-        </Box>
-    );
+        }
+      </div>
+  );
 };
 
 export default UserDetail;

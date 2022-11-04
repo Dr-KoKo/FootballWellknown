@@ -23,9 +23,17 @@ const MyPage = () => {
     const [datas, setDatas] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [lastPage, setLastPage] = useState(10);
+
+    const onChangeHandler = (event, page) => {
+        setCurrentPage(page);
+        createPointList(page);
+    };
+
+    const createPointList = async (currentPage) => {
         axios
-            .get(`http://localhost:8080/api/v1/users/points`, {
+            .get(`http://localhost:8080/api/v1/users/points/${currentPage}`, {
                 headers: {
                     Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb25naGFyMjAwNEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjY4NjQ4MTgzfQ.HOqV8j9U9D3GJMX0eSZtaL-tWffNMCeQNNP6Ei_92WQ`
                 }
@@ -33,38 +41,47 @@ const MyPage = () => {
             .then((response) => {
                 console.log(response.data);
                 setDatas(response.data.pointList);
+                // response.json()
+                setLastPage(response.data.lastPage);
                 setLoading(false);
             });
+    };
+
+
+    useEffect(() => {
+        createPointList(currentPage);
     }, []);
 
     return (
-        <div id="teamDiv">
-            {loadingBoard ? <Loading /> :
+        <div id="hhhh">
+            {loading ? <Loading /> :
 
                 <div id="teamDet">
-                    <Grid>
+                    <Grid
+                        display={"flex"}
+                        justifyContent={"center"}
+                        container
+                        columns={16}
+                    >
                         <Grid item xs={16}>
                             <TableContainer>
                                 <Table>
-                                    <TableHead sx={{ borderBotton: "solid", backgroundColor: "gray" }}>
+                                    <TableHead sx={{ borderBotton: "solid", backgroundColor: "white" }}>
                                         <TableRow>
-                                            <TableCell align="center" sx={{ fontSize: "20px", fontWeight: "bold" }}>글번호</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: "20px", fontWeight: "bold" }} >제목</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: "20px", fontWeight: "bold" }}>작성자</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: "20px", fontWeight: "bold" }}>카테고리</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: "20px", fontWeight: "bold" }}>날짜</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: "20px", fontWeight: "bold" }} >종류</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: "20px", fontWeight: "bold" }}>포인트</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {boardList.map((board) => (
+                                        {datas.map((point) => (
                                             <TableRow
-                                                key={board.id}
-                                                onClick={() => navigate(`detail/${board.id}`)}
-                                                hover
+                                                id='ptr1'
+                                                key={point.id}
                                             >
-                                                <TableCell align="center">{board.boardId}</TableCell>
-                                                <TableCell align="center">{board.title}</TableCell>
-                                                <TableCell align="center">{board.writer}</TableCell>
-                                                <TableCell align="center">{board.categoryName}</TableCell>
+                                                <TableCell align="center">{point.getDate}</TableCell>
+                                                <TableCell align="center">{point.getType}</TableCell>
+                                                <TableCell align="center">{point.point}</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>

@@ -1,50 +1,33 @@
-#frf1{
-    display: flex;
-    width: 100%;
-    justify-content: center;
-}
-#userBox1{
-    position: relative;
-}
-#userBox1::after{
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    content: "";
-    background-color: white;
-    opacity: 0.5;
-    border-radius: 5px;
-    z-index: -1;
-}
-#userDiv1{
+/* #userDiv{
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width: 60%;
+    width: 80%;
+    margin-left: 10%;
+} */
+#userProfile1{
+    margin-right: 10%;
 }
 #table{
     margin-top: 5%;
     width: 80%;
     font-size: larger;
 }
-#controlDiv{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
 #image{
-    width: 30%;
+    width: 40%;
+}
+#category{
+    text-align: center;
+    width: 20%;
 }
 #pts{
     text-align: center;
     width: 30%;
 }
-#userinfoDiv{
-    width: 100%;
+#userDet1{
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 #teamTable{
     width: 100%;
@@ -116,10 +99,4 @@
 #teamName{
     width: 70%;
     text-align: center;
-}
-#falsediv{
-    display: none;
-}
-#truediv{
-    display: block;
 }

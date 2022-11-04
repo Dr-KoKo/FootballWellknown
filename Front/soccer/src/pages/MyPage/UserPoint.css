@@ -1,7 +1,7 @@
-#ubtr1{
+#ptr1{
     position: relative;
 }
-#ubtr1::after{
+#ptr1::after{
     position: absolute;
     top: 0;
     left: 0;
@@ -9,7 +9,7 @@
     bottom: 0;
     content: "";
     background-color: white;
-    opacity: 0.3;
+    opacity: 0.5;
     border-radius: 5px;
     z-index: -1;
 }

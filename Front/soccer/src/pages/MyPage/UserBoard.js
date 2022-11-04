@@ -4,7 +4,7 @@ import axios from "axios";
 // import GetUserInfo from "api/user";
 import Loading from "components/Loading";
 import { Link, useNavigate } from "react-router-dom";
-// import "./TeamInfo.css";
+import "./UserBoard.css";
 import {
     Button,
     Pagination,
@@ -34,10 +34,6 @@ const MyPage = () => {
         createBoardList(page);
     };
 
-
-    const url = "http://localhost:8080/api/v1/boards?page=";
-
-
     const createBoardList = async (currentPage) => {
         axios
             .get(`http://localhost:8080/api/v1/users/boards/${currentPage}`, {
@@ -58,7 +54,7 @@ const MyPage = () => {
 
     useEffect(() => {
         createBoardList(currentPage);
-        
+
     }, []);
 
     // function goTeamDetail(id){
@@ -66,15 +62,19 @@ const MyPage = () => {
     // } 
 
     return (
-        <div id="teamDiv">
+        <div id="hhhh">
             {loadingBoard ? <Loading /> :
 
                 <div id="teamDet">
-                    <Grid>
+                    <Grid
+                        display={"flex"}
+                        justifyContent={"center"}
+                        container
+                        columns={16}>
                         <Grid item xs={16}>
                             <TableContainer>
                                 <Table>
-                                    <TableHead sx={{ borderBotton: "solid", backgroundColor: "gray" }}>
+                                    <TableHead sx={{ borderBotton: "solid", backgroundColor: "white" }}>
                                         <TableRow>
                                             <TableCell align="center" sx={{ fontSize: "20px", fontWeight: "bold" }}>글번호</TableCell>
                                             <TableCell align="center" sx={{ fontSize: "20px", fontWeight: "bold" }} >제목</TableCell>
@@ -85,6 +85,7 @@ const MyPage = () => {
                                     <TableBody>
                                         {boardList.map((board) => (
                                             <TableRow
+                                                id='ubtr1'                                                
                                                 key={board.id}
                                                 onClick={() => navigate(`detail/${board.id}`)}
                                                 hover
@@ -110,8 +111,6 @@ const MyPage = () => {
                             ></Pagination>
                         </Grid>
                     </Grid>
-
-
                 </div>
             }
         </div>

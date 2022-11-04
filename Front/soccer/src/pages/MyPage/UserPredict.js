@@ -3,7 +3,21 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 // import GetUserInfo from "api/user";
 import Loading from "components/Loading";
-// import "./TeamInfo.css";
+import "./UserPredict.css";
+import {
+    Button,
+    Pagination,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Container,
+    Box,
+    Grid,
+    withStyles,
+} from "@mui/material";
 
 const MyPage = () => {
     const [datas, setDatas] = useState([]);
@@ -28,28 +42,36 @@ const MyPage = () => {
     // } 
 
     return (
+        
+        <div id="hhhh">
 
-        <div id="teamDiv">
-
-            {loading ? <Loading /> : <div id="teamDet">
+            {loading ? <Loading /> : <div id="hhhh">
                 <table id="table">
-                    <thead>
-                        <tr>
-                            <th id="rank">away</th>
-                            <th id="result">awayImg</th>
-                            <th id="pts">home</th>
-                            <th id="pts">homeImg</th>
-                            <th id="pts">myPredict</th>
+                    <thead id="radius">
+                        <tr id="userPTR">
+                            {/* <th id="rank">away</th> */}
+                            <th>매치</th>
+                            <th id="rank">myPredict</th>
+                            <th id="rank">결과</th>
                         </tr>
                     </thead>
                     <tbody>
                         {datas.map((data) => (
-                            <tr>
-                                <td id="rank">{data.away}</td>
-                                <td id="result"><img src={data.awayImg}/></td>
-                                <td id="pts">{data.home}</td>
-                                <td id="pts"><img src={data.homeImg}/></td>
-                                <td id="pts">{data.myPredict}</td>
+                            <tr id="userPTR2">
+                                {/* <td id="rank">{data.away}</td> */}
+                                <td id="td1">
+                                    <div id="tdContent">
+                                        <div id="tdRound">[15R]</div>
+                                        <div id="tdName">{data.home}</div>
+                                    <img id="imglogo" src={data.homeImg}/>
+                                    <div id="blank">vs</div>
+                                    <img id="imglogo" src={data.awayImg}/>
+                                    <div id="tdName">{data.away}</div>
+                                    
+                                    
+                                    </div></td>
+                                {/* <td id="rank">{data.home}</td> */}
+                                <td id="rank">{data.myPredict}</td>
                             </tr>
                         ))}
                     </tbody>
