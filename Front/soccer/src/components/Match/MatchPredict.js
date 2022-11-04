@@ -148,7 +148,7 @@ const MatchPredict = () => {
             <RecentMatch homeId={homeId} awayId={awayId}/>
           </Box>
           <Box width={'33%'}>
-            <List sx={{ width: '100%', bgcolor: 'background.paper', }}>
+            <List sx={{ width: '100%', bgcolor: 'background.paper', overflow: 'auto', maxHeight: 400}}>
               <Typography>
                 총 {predicts.length}명이 참여했습니다.
               </Typography>

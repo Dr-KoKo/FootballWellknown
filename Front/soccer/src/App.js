@@ -10,7 +10,6 @@ import TeamBoard from "pages/Team/TeamBoard";
 import TeamMatches from "pages/Team/TeamMatches";
 import PlayerDetail from "pages/Team/PlayerDetail";
 import MatchDetail from "./pages/MatchPage/MatchDetail";
-import Chat from "components/Match/Chat/Chat";
 import History from "components/Match/History";
 import LineUp from "components/Match/LineUp";
 import MatchPredict from "components/Match/MatchPredict";
@@ -40,7 +39,6 @@ function App() {
         <Route path="/player/:id" element={<PlayerDetail />}></Route>
         <Route path="/match" element={<MatchMain />} />
         <Route path="/match/:matchId" element={<MatchDetail />}>
-          <Route path="Chatting" element={<Chat />} />
           <Route path="LineUp" element={<LineUp />} />
           <Route path="History" element={<History />} />
           <Route path="MatchPredict" element={<MatchPredict />} />
