@@ -12,11 +12,12 @@ import { deepOrange } from '@mui/material/colors';
 import HistoryContent from './HistoryContent';
 
 const History = () => {
+  const SERVER_URL = process.env.REACT_APP_LOCAL_SERVER_URL;
 
   const match = useSelector((state)=>state.match);
   const [histories, setHistories] = useState([]);
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/v1/matches/history/${match.matchId}`)
+    axios.get(SERVER_URL+`/api/v1/matches/history/${match.matchId}`)
     .then(res => {
       setHistories(res.data.result);
     })

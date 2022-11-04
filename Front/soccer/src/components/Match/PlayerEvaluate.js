@@ -34,6 +34,8 @@ function a11yProps(index) {
 }
 
 const PlayerEvaluate = () => {
+  const SERVER_URL = process.env.REACT_APP_LOCAL_SERVER_URL;
+
   const match = useSelector((state) => state.match);
   const [loading, setLoading] = useState(true);
   const [homeStat, setHomeStat] = useState({
@@ -80,7 +82,7 @@ const PlayerEvaluate = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/v1/matches/statistics/${match.matchId}`)
+      .get(`${SERVER_URL}/api/v1/matches/statistics/${match.matchId}`)
       .then((res) => {
         let data = res.data.result;
         let h = [];

@@ -27,6 +27,8 @@ const StyledBox = styled(Box)((props) => ({
   margin: 2
 }));
 const RecentMatch = (props) => {
+  const SERVER_URL = process.env.REACT_APP_LOCAL_SERVER_URL;
+
   const [homeInfo, setHomeInfo] = useState({
     name: "",
     win: 0,
@@ -53,7 +55,7 @@ const RecentMatch = (props) => {
   const [awayAvgLoseScore, setAwayAvgLoseScore] = useState(0);
 
   useEffect(()=>{
-    axios.get(`http://localhost:8080/api/v1/teams/${props.homeId}/details`)
+    axios.get(`${SERVER_URL}/api/v1/teams/${props.homeId}/details`)
       .then(res=>{
         let temp = res.data.result;
         setHomeInfo(temp.teamInfo);
@@ -62,7 +64,7 @@ const RecentMatch = (props) => {
         setHomeAvgScore((temp.teamInfo.goals / matchNums).toFixed(2));
         setHomeAvgLoseScore((temp.teamInfo.loseGoals / matchNums).toFixed(2));
       });
-      axios.get(`http://localhost:8080/api/v1/teams/${props.awayId}/details`)
+      axios.get(`${SERVER_URL}/api/v1/teams/${props.awayId}/details`)
       .then(res=>{
         let temp = res.data.result;
         setAwayInfo(temp.teamInfo);
