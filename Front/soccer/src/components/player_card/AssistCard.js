@@ -93,7 +93,7 @@ const AssistCard = (props) =>{
 
     return (
         <div className="card-container">
-            <Card sx={{ backgroundColor: 'transparent'}}>
+            <Card sx={{ backgroundColor: 'transparent'}} raised={true}>
                 <h2 style={{marginLeft: '1rem'}}>{props.category}</h2>
                 <div style={{minHeight:'200px'}}>{topPlayers()}</div>
             </Card>
