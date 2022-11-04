@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "../../util/build/ckeditor";
+import { ClassicEditor } from "../../util/build/ckeditor";
 import { createBoard } from "services/boardServices";
 import { getTeamList } from "services/matchServices";
 import "./BoardWrite.css";

@@ -40,27 +40,40 @@ const BoardModify = () => {
     if (ctgName !== "팀") sendTeam = null;
     if (ctgName !== "경기") sendMatch = null;
 
-    const result = await fetch(boardUrl + "update", {
-      method: "POST",
-      body: JSON.stringify({
-        boardId: id,
-        title: state.title + "(수정)",
-        ctgName: ctgName,
-        teamId : sendTeam,
-        matchId : sendMatch,
-        content: content,
+    const body = JSON.stringify({
+      boardId: id,
+      title: state.title + "(수정)",
+      ctgName: ctgName,
+      teamId : sendTeam,
+      matchId : sendMatch,
+      content: content,
+    });
+    const result = updateBoard(body);
+    console.log(result);
+    if(result.status==200){
 
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        // accessToken: getCookie("accessToken"),
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => json);
-    if (result.statusCode === 200) {
-      navigate("/board/detail/" + id);
     }
+    // const result = await fetch(boardUrl + "update", {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     boardId: id,
+    //     title: state.title + "(수정)",
+    //     ctgName: ctgName,
+    //     teamId : sendTeam,
+    //     matchId : sendMatch,
+    //     content: content,
+
+    //   }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     // accessToken: getCookie("accessToken"),
+    //   },
+    // })
+    //   .then((res) => res.json())
+    //   .then((json) => json);
+    // if (result.statusCode === 200) {
+    //   navigate("/board/detail/" + id);
+    // }
   };
 
   const onCtgChaged = (event) => {
