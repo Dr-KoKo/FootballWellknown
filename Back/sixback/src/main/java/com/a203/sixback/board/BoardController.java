@@ -29,13 +29,13 @@ public class BoardController {
             pages = page;
         }
         List<GetBoardResDTO> boards = boardService.getBoardList(pages);
-        return ResponseEntity.status(200).body(BoardRes.of(200, "message", boards, boards.size()/10 + 1));
+        long lastPage = boardService.getLastPage();
+        return ResponseEntity.status(200).body(BoardRes.of(200, "message", boards, (int) lastPage));
     }
 
     @GetMapping("/matches/{matchId}")
     public ResponseEntity matchBoard(@RequestParam(value="page", required = true) Integer page, @PathVariable(value = "matchId") Long matchId) {
         int pages = 1;
-
         if(page != null) {
             pages = page;
         }

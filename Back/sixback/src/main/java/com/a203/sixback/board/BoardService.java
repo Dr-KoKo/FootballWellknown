@@ -127,7 +127,8 @@ public class BoardService {
         } catch(Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No Board"));
         }
-        if(board.getUser() != user){
+        if(board.getUser().getId() != user.getId()){
+
             return ResponseEntity.status(405).body(BaseResponseBody.of(405,  "No Authorization"));
         }
 
@@ -221,5 +222,10 @@ public class BoardService {
             );
         }
         return ResponseEntity.status(200).body(BoardDetailListRes.of(200, "Get Top4 Match Board Success", getBoards));
+    }
+
+    public long getLastPage(){
+        long boardSize = boardRepo.count();
+        return boardSize / 10 + (boardSize %10 == 0 ? 0 : 1);
     }
 }
