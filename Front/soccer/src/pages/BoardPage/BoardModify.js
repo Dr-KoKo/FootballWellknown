@@ -3,7 +3,8 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { getTeam, getMatch } from "services/matchServices";
 import dateFormat from "dateformat";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import { ClassicEditor } from "../../util/build/ckeditor";
+// import { ClassicEditor } from "../../util/build/ckeditor";
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import "./BoardModify.css";
 import {
   FormControl,
