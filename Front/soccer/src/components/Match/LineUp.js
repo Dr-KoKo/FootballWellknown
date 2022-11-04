@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { Grid, Avatar, Box } from '@mui/material';
+import { Grid, Avatar, Box, Container } from '@mui/material';
 import { deepOrange, deepPurple } from '@mui/material/colors';
 import { useSelector } from 'react-redux';
 import image from 'components/assets/groundTemplate.png'
@@ -93,10 +93,24 @@ const LineUp = () => {
     });
   }, []);
   return (
-    <Box display={'flex'} justifyContent={'center'}>
+    <Container sx={{
+      display:'flex',
+      justifyContent:'center',
+      backgroundColor:'white',
+      borderRadius: 10
+    }}
+    >
       {homeFormation.length === 0
       ?
-      <p>출전 선수 명단 확정 전입니다</p>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: 300
+      }}
+      >
+        출전 선수 명단 확정 전입니다
+      </Box>
       :
       (
         <Box
@@ -177,7 +191,7 @@ const LineUp = () => {
         </Box>
         )
       }
-    </Box>
+    </Container>
   );
 };
 
