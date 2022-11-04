@@ -5,6 +5,7 @@ import Loading from 'components/Loading';
 import Grid from '@mui/material/Grid';
 import './PlayerDetail.css';
 const PlayerDetail = () => {
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL; 
     const {id} = useParams();
     const [datas, setDatas] = useState({
         number :"5",
@@ -24,7 +25,7 @@ const PlayerDetail = () => {
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         axios
-          .get(`http://localhost:8080/api/v1/teams/players/${id}`)
+          .get(SERVER_URL+`/api/v1/teams/players/${id}`)
           .then((response) => {
             setDatas(response.data.result);
             console.log(response.data.result);

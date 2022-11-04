@@ -85,10 +85,24 @@ const LineUp = () => {
     });
   }, []);
   return (
-    <Box display={'flex'} justifyContent={'center'}>
+    <Container sx={{
+      display:'flex',
+      justifyContent:'center',
+      backgroundColor:'white',
+      borderRadius: 10
+    }}
+    >
       {homeFormation.length === 0
       ?
-      <p>출전 선수 명단 확정 전입니다</p>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: 300
+      }}
+      >
+        출전 선수 명단 확정 전입니다
+      </Box>
       :
       (
         <Box
@@ -169,7 +183,7 @@ const LineUp = () => {
         </Box>
         )
       }
-    </Box>
+    </Container>
   );
 };
 

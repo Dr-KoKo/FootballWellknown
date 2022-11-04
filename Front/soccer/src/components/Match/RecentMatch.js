@@ -77,14 +77,13 @@ const RecentMatch = (props) => {
   return (
     <Box
       sx={{
-        backgroundColor: 'whitesmoke',
-        opacity: 0.7
+        width: '100%',
       }}
     >
       {/* 팀명, 순위 */}
       <Grid container display={'flex'}>
-        <Grid item xs={4} textAlign={'right'}>
-          <Typography variant='h6' fontWeight={'bold'}>
+        <Grid item xs={5} textAlign={'right'}>
+          <Typography variant='h5' fontWeight={'bold'}>
             {homeInfo.name}
           </Typography>
           <Typography>
@@ -96,8 +95,8 @@ const RecentMatch = (props) => {
             VS
           </Typography>
         </Grid>
-        <Grid item xs={4}>
-          <Typography variant='h6' fontWeight={'bold'}>
+        <Grid item xs={5}>
+          <Typography variant='h5' fontWeight={'bold'}>
             {awayInfo.name} <br/>
           </Typography>
           {awayInfo.rank}위 {awayInfo.win}승 {awayInfo.draw}무 {awayInfo.lose}패 
@@ -105,7 +104,7 @@ const RecentMatch = (props) => {
       </Grid>
       {/* 평균 득실 */}
       <Grid container display={'flex'}>
-        <Grid item xs={4} display={'flex'} justifyContent={'flex-end'} textAlign={'right'}>
+        <Grid item xs={5} display={'flex'} justifyContent={'flex-end'} textAlign={'right'}>
           <Box sx={{
             width: 70 * homeAvgScore,
             height: 20,
@@ -123,7 +122,7 @@ const RecentMatch = (props) => {
             평균 득점
           </Typography>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={5}>
           <Box sx={{
             width: 70 * awayAvgScore,
             height: 20,
@@ -138,7 +137,7 @@ const RecentMatch = (props) => {
         </Grid>
       </Grid>
       <Grid container display={'flex'}>
-        <Grid item xs={4} display={'flex'} justifyContent={'flex-end'} textAlign={'right'}>
+        <Grid item xs={5} display={'flex'} justifyContent={'flex-end'} textAlign={'right'}>
           <Box sx={{
             width: 70 * homeAvgLoseScore,
             height: 20,
@@ -156,7 +155,7 @@ const RecentMatch = (props) => {
             평균 실점
           </Typography>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={5}>
           <Box sx={{
             width: 70 * awayAvgLoseScore,
             height: 20,
@@ -172,7 +171,7 @@ const RecentMatch = (props) => {
       </Grid>
       {/* 최근경기 */}
       <Grid container display={'flex'}>
-        <Grid item xs={4} display={'flex'} justifyContent={'flex-end'} textAlign={'right'}>
+        <Grid item xs={5} display={'flex'} justifyContent={'flex-end'} textAlign={'right'}>
           {homeFinMatch.slice(0).reverse().map((match,index) => {
             if(match.home === homeInfo.name){
               if(match.homeScore < match.awayScore) 
@@ -192,11 +191,11 @@ const RecentMatch = (props) => {
           })}
         </Grid>
         <Grid item xs={2} textAlign={'center'}>
-          <Typography variant='h6'>
+          <Typography variant='h6' textAlign={'center'}>
             최근 경기
           </Typography>
         </Grid>
-        <Grid item xs={4} display={'flex'}>
+        <Grid item xs={5} display={'flex'}>
           {awayFinMatch.map((match,index) => {
             if(match.away === awayInfo.name){
               if(match.homeScore < match.awayScore) 

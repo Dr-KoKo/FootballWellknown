@@ -1,0 +1,14 @@
+.box-board-list{
+    position: relative;
+}
+.box-board-list::after{
+    position: absolute;
+    background-color: white;
+    opacity: 0.7;
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+}

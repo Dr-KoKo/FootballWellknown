@@ -105,7 +105,16 @@ const PlayerEvaluate = () => {
     <Box>
       {loading? <Loading /> :<Box>
       {homeStat.possession===null?
-    <Box>경기 시작전 입니다.</Box>:
+    <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: 300,
+          backgroundColor: 'white',
+          borderRadius: 10
+        }}
+    >경기 시작 전입니다.</Box>:
     <Box>
       <Box id="highFr">통계</Box>
       <Box className="stat">

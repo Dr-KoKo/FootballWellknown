@@ -7,6 +7,7 @@ import { useParams } from "react-router";
 import PlayerImg from "../../components/assets/playerf.jpg";
 import "./TeamPlayer.css"
 const TeamPlayer = () => {
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL; 
   const { id } = useParams();
   const [datas, setDatas] = useState({
     gks: [], fws: [], dfs: [], mfs: []
@@ -17,7 +18,7 @@ const TeamPlayer = () => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/v1/teams/${id}/players`)
+      .get(`${SERVER_URL}/api/v1/teams/${id}/players`)
       .then((response) => {
         setDatas(response.data.result);
         setLoading(false);
