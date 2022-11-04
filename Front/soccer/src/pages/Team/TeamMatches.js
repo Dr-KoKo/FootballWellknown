@@ -7,12 +7,13 @@ import { useDispatch } from "react-redux";
 import "./TeamMatches.css";
 
 const TeamMatches = () => {
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL; 
     const {id} = useParams();
     const [loading, setLoading] = useState(true);
     const [recent, setRecent] = useState(true);
     const dispatch = useDispatch();
     async function goMatchDetail(matchId) {
-      await axios.get(`http://localhost:8080/api/v1/matches/match/${matchId}`)
+      await axios.get(`${SERVER_URL}/api/v1/matches/match/${matchId}`)
       .then((res) => {
         console.log(res.data.result);
         const payload = res.data.result.matchVO;
@@ -41,7 +42,7 @@ const TeamMatches = () => {
       });
       useEffect(() => {
         axios
-          .get(`http://localhost:8080/api/v1/teams/${id}/details`)
+          .get(`${SERVER_URL}/api/v1/teams/${id}/details`)
           .then((response) => {
             console.log(response.data.result);
             setDatas(response.data.result);

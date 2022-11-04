@@ -1,0 +1,12 @@
+  #title {
+    align-items: center;
+  }
+
+  #titleGrid {
+    align-items: center;
+  }
+
+  .ck-editor__editable {
+    min-height: 400px;
+    margin: 10px;
+  }

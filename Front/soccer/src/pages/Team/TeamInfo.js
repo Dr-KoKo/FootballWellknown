@@ -3,10 +3,11 @@ import axios from "axios";
 import Loading from "components/Loading";
 import "./TeamInfo.css";
 const TeamInfo = (props) => {
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL; 
   const [datas, setDatas] = useState([{ name: "1234" }]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    axios.get("http://localhost:8080/api/v1/teams/ranks").then((response) => {
+    axios.get(SERVER_URL+"/api/v1/teams/ranks").then((response) => {
       setDatas(response.data.result);
       setLoading(false);
     });

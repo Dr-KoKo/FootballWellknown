@@ -6,6 +6,7 @@ import NoImage from '../../components/assets/noimage.jpg';
 import "./TeamBoard.css";
 import { fontSize } from '@mui/system';
 const TeamBoard = () => {
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL; 
     function strParsing(str){
         var idx = str.search("<img");
         if(idx===-1){
@@ -46,7 +47,7 @@ const TeamBoard = () => {
     ]);
     useEffect(() => {
         axios
-          .get(`http://localhost:8080/api/v1/boards/teams/main/${id}`)
+          .get(`${SERVER_URL}/api/v1/boards/teams/main/${id}`)
           .then((response) => {
             setDatas(response.data.boardList);
             console.log(response.data.boardList);
@@ -56,6 +57,7 @@ const TeamBoard = () => {
       }, []);
     return (
         <div id='mainFrame221'>
+            {datas.length>0 ? <div>
             {datas.map((data) => (
                 <div id='frame22'>                
                     <img className='thuimg' src = {strParsing(data.content)} alt=""></img>
@@ -67,8 +69,9 @@ const TeamBoard = () => {
                 
                 </div>
             ))}
-        </div>    
-        
+        </div>
+        :<div>작성된 글이 없습니다.</div>}
+        </div>        
     );
 };
 

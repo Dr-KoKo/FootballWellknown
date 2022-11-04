@@ -182,6 +182,7 @@ EnhancedTableHead.propTypes = {
 };
 
 const PlayerStatistics = (props) => {
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
   const match = useSelector((state)=>state.match);
   const [order, setOrder] = React.useState("asc");
@@ -211,7 +212,7 @@ const PlayerStatistics = (props) => {
       alert('0.0 ~ 10.0 사이의 숫자를 입력하세요');
     }
     else{
-      axios.post(`http://localhost:8080/api/v1/matches/predict/player`,{
+      axios.post(`${SERVER_URL}/api/v1/matches/predict/player`,{
         matchId: match.matchId,
         userEmail: 'test@test.com',
         playerId: selected,

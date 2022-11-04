@@ -45,7 +45,7 @@
     display: flex;
 }
 #image{
-    width: 40%;
+    width: 50%;
 }
 #player{
     padding-left: 3%;
@@ -118,8 +118,8 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#82C23F', endColorstr='#0C863C', GradientType=0 );
 }
 #first{
-    margin-top: 1%;
+    margin-top: 5%;
 }
 .history{
-    margin-top: 1%;
+    margin-top: 5%;
 }

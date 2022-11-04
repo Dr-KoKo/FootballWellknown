@@ -7,7 +7,7 @@ import { logoutRequest } from 'services/userServices';
 import { LOGOUT } from "../modules/types";
 
 const Layout = (props) => {
-  const state = useSelector(state=>state);
+  const state = useSelector(state => state);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -21,15 +21,15 @@ const Layout = (props) => {
   };
   return (
     <Fragment>
-        <nav className='navbar'>
-          <Link to="/">
+      <nav className='navbar'>
+        <Link to="/">
           <img id='logo' src={Logo} alt=''></img>
           </Link>
           <ul  id='ul'>
             <li  id='li'><NavLink className='navbar_li' to="/"><div>HOME</div></NavLink></li>
             <li  id='li'><NavLink className='navbar_li' to="teaminfo"><div>TEAM</div></NavLink></li>
             <li  id='li'><NavLink className='navbar_li' to="match"><div>MATCH</div></NavLink></li>
-            <li  id='li'><NavLink className='navbar_li' to="/"><div>COMMUNITY</div></NavLink></li>
+            <li  id='li'><NavLink className='navbar_li' to="board"><div>COMMUNITY</div></NavLink></li>
             {(state.user.isLogin ? 
               <li  id='li'>
                 <button id='logoutBtn' onClick={onLogoutHandler}>LOGOUT</button></li> 

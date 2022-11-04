@@ -16,6 +16,8 @@ import "../MatchPage/MatchMain.css";
 
 const day = ['(일)','(월)','(화)','(수)','(목)','(금)','(토)']
 const MatchMain = () => {
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
   const dispatch = useDispatch();
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
@@ -43,7 +45,7 @@ const MatchMain = () => {
   };
 
   const moveToDetail = async (matchId) => {
-    await axios.get(`http://localhost:8080/api/v1/matches/match/${matchId}`)
+    await axios.get(`${SERVER_URL}/api/v1/matches/match/${matchId}`)
     .then((res) => {
       console.log(res.data.result);
       const payload = res.data.result.matchVO;
@@ -68,7 +70,7 @@ const MatchMain = () => {
 
   useEffect(() => {
     axios
-    .get(`http://localhost:8080/api/v1/matches/dates?year=${value.substring(0,4)}&month=${value.substring(4,6)}`)
+    .get(`${SERVER_URL}/api/v1/matches/dates?year=${value.substring(0,4)}&month=${value.substring(4,6)}`)
     .then((res) => {
         setMatches(res.data.result);
     });
