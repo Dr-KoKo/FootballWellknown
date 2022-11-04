@@ -182,7 +182,7 @@ EnhancedTableHead.propTypes = {
 };
 
 const PlayerStatistics = (props) => {
-  const SERVER_URL = process.env.REACT_APP_LOCAL_SERVER_URL;
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
   const match = useSelector((state)=>state.match);
   const [order, setOrder] = React.useState("asc");

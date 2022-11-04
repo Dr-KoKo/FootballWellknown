@@ -27,7 +27,7 @@ const StyledBox = styled(Box)((props) => ({
   margin: 2
 }));
 const RecentMatch = (props) => {
-  const SERVER_URL = process.env.REACT_APP_LOCAL_SERVER_URL;
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
   const [homeInfo, setHomeInfo] = useState({
     name: "",

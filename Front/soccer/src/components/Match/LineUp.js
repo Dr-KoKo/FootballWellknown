@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import image from 'components/assets/groundTemplate.png'
 
 const LineUp = () => {
-  const SERVER_URL = process.env.REACT_APP_LOCAL_SERVER_URL;
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
   const match = useSelector((state)=>state.match);
   const [homeFormation, setHomeFormation] = useState([]);

@@ -12,7 +12,7 @@ import { deepOrange } from '@mui/material/colors';
 import HistoryContent from './HistoryContent';
 
 const History = () => {
-  const SERVER_URL = process.env.REACT_APP_LOCAL_SERVER_URL;
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
   const match = useSelector((state)=>state.match);
   const [histories, setHistories] = useState([]);

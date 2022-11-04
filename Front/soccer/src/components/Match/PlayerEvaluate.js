@@ -34,7 +34,7 @@ function a11yProps(index) {
 }
 
 const PlayerEvaluate = () => {
-  const SERVER_URL = process.env.REACT_APP_LOCAL_SERVER_URL;
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
   const match = useSelector((state) => state.match);
   const [loading, setLoading] = useState(true);

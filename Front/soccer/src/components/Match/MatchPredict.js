@@ -15,7 +15,7 @@ import Loading from 'components/Loading';
 import './MatchPredict.css';
 
 const MatchPredict = () => {
-  const SERVER_URL = process.env.REACT_APP_LOCAL_SERVER_URL;
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
   const match = useSelector((state)=>state.match);
   const user = useSelector((state)=>state.user);
