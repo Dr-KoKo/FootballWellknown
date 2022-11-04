@@ -51,7 +51,6 @@ public class MatchTask implements Runnable {
             for (Object object : jsonArray) {
                 JSONObject jsonObject = (JSONObject) object;
 
-/*
 
                 checkEvent((JSONArray) jsonObject.get("goalscorer"), "Goal_");
                 checkEvent((JSONArray) jsonObject.get("cards"), "Card_");
@@ -60,7 +59,6 @@ public class MatchTask implements Runnable {
 
                 checkEvent((JSONArray) substitutions.get("home"), "SubstitutionsHome_");
                 checkEvent((JSONArray) substitutions.get("away"), "SubstitutionsAway_");
-*/
 
                 checkStatus(jsonObject);
             }
@@ -146,7 +144,6 @@ public class MatchTask implements Runnable {
 
             Integer homeTeamScore = Integer.parseInt(jsonObject.get("match_hometeam_score").toString());
             Integer awayTeamScore = Integer.parseInt(jsonObject.get("match_awayteam_score").toString());
-/*
 
             try {
                 matchService.savePlayerMatch(matchId);
@@ -155,12 +152,11 @@ public class MatchTask implements Runnable {
                 e.printStackTrace();
                 throw new Exception();
             }
-*/
 
             MatchResult result = homeTeamScore > awayTeamScore ? MatchResult.HOME : homeTeamScore == awayTeamScore ? MatchResult.DRAW : MatchResult.AWAY;
 
             log.info("배점을 시작합니다.");
-            //           givePoint(matchId, result);
+                      givePoint(matchId, result);
         }
     }
 
