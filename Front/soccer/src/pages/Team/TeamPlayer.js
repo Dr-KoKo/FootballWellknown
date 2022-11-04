@@ -46,7 +46,7 @@ const TeamPlayer = () => {
             <Card sx={{ maxWidth: 345, height:'100%' }} onClick={() => goPlayerDetail(data.id)}>
               <CardMedia
                 component="img"
-                sx={{width:'100%', height:'65%'}}
+                sx={{width:'100%', height:'65%', objectFit:'contain'}}
                 image={(data.image===null)? {PlayerImg}:data.image}
                 alt=""
               />
@@ -76,7 +76,7 @@ const TeamPlayer = () => {
             <Card sx={{ maxWidth: 345, height:'100%' }} onClick={() => goPlayerDetail(data.id)}>
               <CardMedia
                 component="img"
-                sx={{width:'100%', height:'65%'}}
+                sx={{width:'100%', height:'65%', objectFit:'contain'}}
                 image={(data.image===null)? {PlayerImg}:data.image}
                 alt=""
               />
@@ -106,7 +106,7 @@ const TeamPlayer = () => {
             <Card sx={{ maxWidth: 345, height :'100%'}} onClick={() => goPlayerDetail(data.id)}>
               <CardMedia
                 component="img"
-                sx={{width:'100%', height:'65%'}}
+                sx={{width:'100%', height:'65%', objectFit:'contain'}}
                 image={(data.image===null)? {PlayerImg}:data.image}
                 alt=""
               />
@@ -133,10 +133,10 @@ const TeamPlayer = () => {
       <Grid container>
         {datas.fws.map((data) => (
           <Grid id='mb-1' item xs={4} p={1}>
-            <Card sx={{ maxWidth: 345, height:'100%' }} onClick={() => goPlayerDetail(data.id)}>
+            <Card sx={{ maxWidth: 345, height:'100%'}} onClick={() => goPlayerDetail(data.id)}>
               <CardMedia
                 component="img"
-                sx={{width:'100%', height:'65%'}}
+                sx={{width:'100%', height:'65%', objectFit:'contain'}}
                 height={'100%'}
                 image={(data.image===null)? {PlayerImg}:data.image}
                 alt=""
