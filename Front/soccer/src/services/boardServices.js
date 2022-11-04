@@ -23,13 +23,13 @@ export const createBoard = async (dataToSubmit) => {
 };
 
 export const deleteBoard = async (boardId) => {
-    try {
-        const payload = await axiosAuth.post(`${BOARD_URL}/delete/${boardId}`)
-        return payload;
-    } catch (err) {
-        return err;
-    }
-}
+  try {
+    const payload = await axiosAuth.post(`${BOARD_URL}/delete/${boardId}`);
+    return payload;
+  } catch (err) {
+    return err;
+  }
+};
 
 export const detailBoard = async (id) => {
   try {
@@ -39,26 +39,25 @@ export const detailBoard = async (id) => {
   } catch (err) {
     return err;
   }
-
 };
 
 export const postComment = async (dataToSubmit) => {
-    try{
-        const payload = await axiosAuth.post(COMMENT_URL, dataToSubmit);
-        return payload;
-    } catch (err) {
-        return err;
-    }
-}
+  try {
+    const payload = await axiosAuth.post(COMMENT_URL, dataToSubmit);
+    return payload;
+  } catch (err) {
+    return err;
+  }
+};
 
 export const updateBoard = async (dataToSubmit) => {
-    try {
-        const payload = null;
-        return payload
-    } catch (err) {
-        return err;
-    }
-}
+  try {
+    const payload = null;
+    return payload;
+  } catch (err) {
+    return err;
+  }
+};
 
 // // board 상세보기
 // export const detailBoard = async (idx) => {
