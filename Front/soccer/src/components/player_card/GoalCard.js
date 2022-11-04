@@ -4,24 +4,41 @@ import { CardContent, CardMedia } from "@mui/material";
 import Typography from '@mui/material/Typography';
 import './PlayerCard.css'
 
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
 
 const GoalCard = (props) =>{
 
+    // slider 세팅
+    const settings = {
+        dots: false,
+        vertical: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        autoplay: true,
+        autoplaySpeed: 2000,
+      };
+
     
     
-    const top3Players = () => {
+    const topPlayers = () => {
         const result = [];
         for(let i = 0; i < 3; i++){
-            if(i == 0){
+            if(i === 0){
                 result.push(
-                    <div style={{display:'flex'}}>
+                    <div key={i} style={{display:'flex'}}>
                         <CardMedia
                             component="img"
                             image={props.players[i].image}
                             sx={{ width: 151, margin: "1rem" }}
                         >    
                         </CardMedia>
-                        <CardContent key={i}>
+                        <CardContent>
                             <div style={{display:'flex'}}>
                                 <Typography variant="h5" sx={{ width: '4rem', fontSize: '1.5rem', marginRight:'1.5rem'}} mb={0.5}>
                                     {`${i+1}위`}
@@ -37,23 +54,8 @@ const GoalCard = (props) =>{
                         </CardContent>
                     </div>
                 )
-            }else{
-                result.push(
-                    <CardContent key={i}>
-                            <div style={{display:'flex'}}>
-                                <Typography variant="h5" sx={{ width: '6rem', fontSize: '1.3rem', marginRight:'1.5rem'}} mb={0.5}>
-                                    {`${i+1}위`}
-                                </Typography>
-                                <Typography variant="h5" sx={{ width: '16rem', fontSize: '1.3rem', fontWeight:'bold', marginRight:'2rem'}} mb={0.5}>
-                                    {`${props.players[i].name}`}
-                                </Typography>
-                                <Typography variant="h5" sx={{ width: '4rem', fontSize: '1.3rem', fontWeight:'bold' }} mb={0.5}>
-                                {`${props.players[i].goals} 골`}
-                                </Typography>
-                            </div>
-                            <Typography variant="body2" sx={{ width: '12rem', fontSize:'0.7rem', marginLeft: '7.5rem', color:'black'}}>{props.players[i].teamName}</Typography>
-                        </CardContent>)
             }
+           
             
         }
         return result;
@@ -61,22 +63,31 @@ const GoalCard = (props) =>{
 
     const otherPlayers = () => {
         const result = [];
-        for(let i = 3; i < 10; i++){
+        for(let i = 1; i < 10; i++){
                 result.push(
-                    <CardContent key={i}>
+                    <div key={i} id='otherCard'>
+                        <CardMedia
+                                component="img"
+                                image={props.players[i].image}
+                                sx={{ width: 151, margin: "1rem", height: 151}}
+                            >    
+                        </CardMedia>
+                        <CardContent>
                             <div style={{display:'flex'}}>
-                                <Typography variant="h5" sx={{ width: '6rem', fontSize: '1.3rem', marginRight:'1.5rem'}} mb={0.5}>
+                                <Typography variant="h5" sx={{ width: '4rem', fontSize: '1.3rem', marginRight:'1.5rem'}} mb={0.5}>
                                     {`${i+1}위`}
                                 </Typography>
-                                <Typography variant="h5" sx={{ width: '16rem', fontSize: '1.3rem', fontWeight:'bold', marginRight:'2rem'}} mb={0.5}>
+                                <Typography variant="h5" sx={{ width: '12rem', fontSize: '1.3rem', fontWeight:'bold', marginRight:'2rem'}} mb={0.5}>
                                     {`${props.players[i].name}`}
                                 </Typography>
-                                <Typography variant="h5" sx={{ width: '4rem', fontSize: '1.3rem', fontWeight:'bold' }} mb={0.5}>
+                                <Typography variant="h5" sx={{ width: '5rem', fontSize: '1.3rem', fontWeight:'bold' }} mb={0.5}>
                                 {`${props.players[i].goals} 골`}
                                 </Typography>
                             </div>
-                            <Typography variant="body2" sx={{ width: '12rem', fontSize:'0.7rem', marginLeft: '7.5rem', color:'black'}}>{props.players[i].teamName}</Typography>
-                        </CardContent>)
+                            <Typography variant="body2" sx={{ width: '10rem', fontSize:'0.7rem', marginLeft: '5.5rem', color:'black'}}>{props.players[i].teamName}</Typography>
+                        </CardContent>
+                        </div>
+                        )
             }
             
  
@@ -88,9 +99,11 @@ const GoalCard = (props) =>{
         <div className="card-container">
             <Card sx={{ backgroundColor: 'transparent'}}>
                 <h2 style={{marginLeft: '1rem'}}>{props.category}</h2>
-                <div style={{minHeight:'400px'}}>{top3Players()}</div>
+                <div style={{minHeight:'200px'}}>{topPlayers()}</div>
             </Card>
-            <div>{otherPlayers()}</div>
+            <Slider {...settings}>
+                {otherPlayers()}
+            </Slider>
         </div>
     )
 }
