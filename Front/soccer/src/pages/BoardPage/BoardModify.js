@@ -3,7 +3,6 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { getTeam, getMatch } from "services/matchServices";
 import dateFormat from "dateformat";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import { ClassicEditor } from "../../util/build/ckeditor";
 import "./BoardModify.css";
 import {
   FormControl,
@@ -23,6 +22,7 @@ const BoardModify = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { id } = useParams();
+  const ClassicEditor = require("../../util/build/ckeditor.js");
   const [content, setContent] = useState(state.content);
   const [ctgName, setCtgName] = useState(state.ctgName);
   const [team, setTeam] = useState(state.team);
@@ -52,27 +52,6 @@ const BoardModify = () => {
     console.log(result);
     if (result.status == 200) {
     }
-    // const result = await fetch(boardUrl + "update", {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     boardId: id,
-    //     title: state.title + "(수정)",
-    //     ctgName: ctgName,
-    //     teamId : sendTeam,
-    //     matchId : sendMatch,
-    //     content: content,
-
-    //   }),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     // accessToken: getCookie("accessToken"),
-    //   },
-    // })
-    //   .then((res) => res.json())
-    //   .then((json) => json);
-    // if (result.statusCode === 200) {
-    //   navigate("/board/detail/" + id);
-    // }
   };
 
   const onCtgChaged = (event) => {
