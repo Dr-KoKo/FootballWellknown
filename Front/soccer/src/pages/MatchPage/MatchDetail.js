@@ -17,6 +17,7 @@ const MatchDetail = () => {
             sx={{
               backgroundColor: "white",
               borderRadius: "10px",
+              paddingTop : '16px',
               opacity: 0.8,
               textAlign: "center",
             }}
