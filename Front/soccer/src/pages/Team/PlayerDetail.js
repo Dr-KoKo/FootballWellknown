@@ -40,7 +40,7 @@ const PlayerDetail = () => {
         <div id='frame'>
             <div id='position'><div id='p'>{position(datas.position)}</div><span id='name'>{datas.name}</span></div>
             <div id='profile'>
-                <img id='image' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0rrd_u4sPTBOkZgR5VOmOOTf3KNi5P0vy0g&usqp=CAU" alt=''></img>
+                <img id='image' src={datas.image} alt=''></img>
                 <div id='player'>
                     <div className='red' id='first'>National : <span id='black'>{datas.country}</span></div>
                     <div className='red'>Number : <span id='black'>{datas.number}</span></div>
@@ -50,7 +50,7 @@ const PlayerDetail = () => {
                     <div className='red'>Played : <span id='black'>{datas.joinMatches}</span></div>
                     <div className='red'>Goals : <span id='black'>{datas.goals}</span></div>
                     <div className='red'>Assists : <span id='black'>{datas.assists}</span></div>
-                    <div className='red'>Historys : <span id='black' ><Grid  className='history' container spacing={2}>
+                    <div className='red hs'>Historys : <span id='black' className='history' ><Grid   container spacing={2}>
                 {histories.map((history) => (
                     <Grid id='hs' item xs={6}>{history}</Grid>
                 ))}</Grid></span>
