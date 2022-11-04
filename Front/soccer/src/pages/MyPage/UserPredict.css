@@ -1,0 +1,68 @@
+#userDiv{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 80%;
+    margin-left: 10%;
+}
+#teamDet{
+    width: 100%;
+}
+#radius{
+    border-radius: 5px;
+}
+#userPTR{
+    background-color: white;
+}
+#userPTR2{
+    position: relative;
+}
+#userPTR2::after{
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    opacity: 0.2;
+    border-radius: 5px;
+    background-color: white;
+
+}
+#hhhh{
+    width: 100%;
+}
+/* #imglogo{
+    width: 10%;
+} */
+#table{
+    margin-top: 5%;
+    width: 100%;
+    font-size: larger;
+}
+#td1{
+    width: 70%;
+}
+#tdContent{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+#tdRound{
+    margin-left: 2.5%;
+    width: 5%;
+    margin-right: 2.5%;
+    text-align: center;
+}
+#imglogo{
+    width: 10%;
+}
+#tdName{
+    width: 25%;
+    text-align: center;
+}
+#blank{
+    width: 20%;
+    text-align: center;
+}

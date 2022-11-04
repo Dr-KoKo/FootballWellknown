@@ -17,3 +17,10 @@
     opacity: 0.1;
     background-color: white;
 }
+
+#otherCard{
+    display: flex !important;
+    align-items: center;
+}
+                
+

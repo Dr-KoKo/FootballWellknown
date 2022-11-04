@@ -8,6 +8,7 @@ import {
 
 // 요청 URL
 export const USER_URL = "/api/v1/users";
+export const USER_PREDICT_URL = "/api/v1/users/predicts"
 export const AUTH_URL = "/api/v1/auth";
 
 
@@ -19,6 +20,15 @@ export const getUserInfo = async () => {
         return err;
     }
 };
+
+export const getUserPredict = async () => {
+  try{
+    const payload = await axiosAuth.get(`${USER_PREDICT_URL}`)
+    return payload
+  } catch(err){
+    return err
+  }
+}
 
 
 // 로그아웃

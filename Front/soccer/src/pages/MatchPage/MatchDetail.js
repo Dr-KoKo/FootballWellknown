@@ -20,8 +20,7 @@ const MatchDetail = () => {
               paddingTop : '16px',
               opacity: 0.8,
               textAlign: "center",
-            }}
-          >
+            }}>
             <Grid container spacing={2}>
               <Grid item xs={1} />
               <Grid item xs={3}>
@@ -39,8 +38,7 @@ const MatchDetail = () => {
                     color: "white",
                     borderRadius: "10px",
                     margin: "10px",
-                  }}
-                >
+                  }}>
                   {matchStatus}
                 </Box>
                 <Box>
@@ -91,7 +89,7 @@ const MatchDetail = () => {
                 <NavLink to="Padlet" className={"nav-link"}>
                   패들릿
                 </NavLink>
-              <Grid item xs={1} />
+                <Grid item xs={1} />
               </Grid>
             </Grid>
           </Box>
@@ -105,7 +103,6 @@ const MatchDetail = () => {
           <Chatting />
         </Grid>
       </Grid>
-
     </Container>
   );
 };

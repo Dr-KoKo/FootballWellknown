@@ -28,12 +28,11 @@
   justify-content: flex-end;
   padding: 2% 3%;
   margin-top: 3px;
-
-  align-items: center;
 }
 
 .imgBox {
   margin-right: 1%;
+  display: flex;
 }
 
 .sentText {
