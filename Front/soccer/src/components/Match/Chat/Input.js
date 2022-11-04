@@ -17,7 +17,6 @@ function Input({ setMessage, sendMessage, message }) {
       <input
         className="input"
         type="text"
-        placeholder="전송하려는 메세지를 입력하세요."
         value={message}
         onChange={({ target: { value } }) => setMessage(value)}
         onKeyPress={(event) =>

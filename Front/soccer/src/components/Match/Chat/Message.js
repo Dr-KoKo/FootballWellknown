@@ -34,10 +34,12 @@ const Message = ({ message: { type, data, sender, predict }, match }) => {
       <div className="imgBox">
         <Avatar src={avatarSrc} sx={{ backgroundColor: "dark" }} />
       </div>
-      <div className="messageBox backgroundLight">
-        <p className="messageText colorDark">{ReactEmoji.emojify(data)}</p>
+      <div className="sizeController">
+        <div className="sizeController messageBox backgroundLight">
+          <p className="messageText colorDark">{ReactEmoji.emojify(data)}</p>
+        </div>
+        <p className="sentText pl-10 ">{sender}</p>
       </div>
-      <p className="sentText pl-10 ">{sender}</p>
     </div>
   ) : (
     <div className="messageContainer justifyEnd">

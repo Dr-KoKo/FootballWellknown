@@ -7,7 +7,7 @@ import { logoutRequest } from 'services/userServices';
 import { LOGOUT } from "../modules/types";
 
 const Layout = (props) => {
-  const state = useSelector(state=>state);
+  const state = useSelector(state => state);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -21,8 +21,8 @@ const Layout = (props) => {
   };
   return (
     <Fragment>
-        <nav className='navbar'>
-          <Link to="/">
+      <nav className='navbar'>
+        <Link to="/">
           <img id='logo' src={Logo} alt=''></img>
           </Link>
           <ul  id='ul'>
