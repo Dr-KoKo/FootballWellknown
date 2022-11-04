@@ -1,6 +1,8 @@
 import axios from "axios";
 import { store } from "..";
 
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+
 /**
  * 인증 필요없는 axios
  */
@@ -27,6 +29,7 @@ export const axiosAuth = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
   timeout: 10000,
   withCredentials: true,
+  
 });
 
 axiosAuth.interceptors.request.use(
@@ -34,6 +37,7 @@ axiosAuth.interceptors.request.use(
     const accessToken = store.getState().user.token;
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
+      
     }
     return config;
   },
