@@ -46,7 +46,7 @@ const TeamPlayer = () => {
             <Card sx={{ maxWidth: 345, height:'100%' }} onClick={() => goPlayerDetail(data.id)}>
               <CardMedia
                 component="img"
-                sx={{width:'100%', height:'65%', objectFit:'contain'}}
+                sx={{width:'100%', height:'65%', objectFit:'fill'}}
                 image={(data.image===null)? {PlayerImg}:data.image}
                 alt=""
               />
@@ -76,7 +76,7 @@ const TeamPlayer = () => {
             <Card sx={{ maxWidth: 345, height:'100%' }} onClick={() => goPlayerDetail(data.id)}>
               <CardMedia
                 component="img"
-                sx={{width:'100%', height:'65%', objectFit:'contain'}}
+                sx={{width:'100%', height:'65%', objectFit:'fill'}}
                 image={(data.image===null)? {PlayerImg}:data.image}
                 alt=""
               />
@@ -106,7 +106,7 @@ const TeamPlayer = () => {
             <Card sx={{ maxWidth: 345, height :'100%'}} onClick={() => goPlayerDetail(data.id)}>
               <CardMedia
                 component="img"
-                sx={{width:'100%', height:'65%', objectFit:'contain'}}
+                sx={{width:'100%', height:'65%', objectFit:'fill'}}
                 image={(data.image===null)? {PlayerImg}:data.image}
                 alt=""
               />
@@ -136,7 +136,7 @@ const TeamPlayer = () => {
             <Card sx={{ maxWidth: 345, height:'100%'}} onClick={() => goPlayerDetail(data.id)}>
               <CardMedia
                 component="img"
-                sx={{width:'100%', height:'65%', objectFit:'contain'}}
+                sx={{width:'100%', height:'65%', objectFit:'fill'}}
                 height={'100%'}
                 image={(data.image===null)? {PlayerImg}:data.image}
                 alt=""
