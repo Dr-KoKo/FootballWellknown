@@ -14,7 +14,7 @@ public class LineUpTask implements Runnable{
     @Override
     public void run() {
         try {
-            matchService.saveLineUps(matchId);
+            matchService.saveLineUps(matchId / 2L);
             MainScheduler.getInstance().stop(matchId);
         } catch (Exception e) {
             throw new RuntimeException(e);
