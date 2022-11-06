@@ -44,12 +44,12 @@ public class SchedulerController {
     private String apiKey;
 
     @Async
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 23 * * *")
 //    @Scheduled(cron = "0 49 9 * * *")
     public void mainSchedule() throws Exception {
         log.info("SchedulerController Cron 실행");
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().plusDays(1);
 
         int year = now.getYear();
         int month = now.getMonthValue();
