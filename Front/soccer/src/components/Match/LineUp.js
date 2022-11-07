@@ -4,6 +4,7 @@ import { Grid, Avatar, Box, Container, Typography } from '@mui/material';
 import { deepOrange, deepPurple } from '@mui/material/colors';
 import { useSelector } from 'react-redux';
 import image from 'components/assets/groundTemplate.png'
+import './LineUp.css';
 
 const LineUp = () => {
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -106,28 +107,29 @@ const LineUp = () => {
       :
       (
         <Box
-          width={'50%'}
+          width={'60%'}
           height={'200%'}
           justifyContent={'center'}
           sx={{
               backgroundImage: `url(${image})`,
               backgroundRepeat: 'no-repeat',
               backgroundSize: '100% 100%',
-              color: 'white'
+              color: 'white',
+              opacity: 0.9
             }}
         >
           {/* 홈 */}
           <Grid container>
             <Grid item xs={12} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
               <Avatar sx={{  width:32, height:32, bgcolor: deepOrange[500] }}>{homeMain[0][1]}</Avatar>
-                <Typography fontWeight={'bold'}>
+                <Typography className='lineup-name'>
                   {homeMain[0][0]}
                 </Typography>
             </Grid>
             {homeMain[1].map((player,index) => (
               <Grid item xs={12/homeMain[1].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepOrange[500] }}>{player[1]}</Avatar>
-                <Typography fontWeight={'bold'}>
+                <Typography className='lineup-name'>
                   {player[0]}
                 </Typography>
               </Grid>
@@ -135,7 +137,7 @@ const LineUp = () => {
             {homeMain[2].map((player,index) => (
               <Grid item xs={12/homeMain[2].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepOrange[500] }}>{player[1]}</Avatar>
-                <Typography fontWeight={'bold'}>
+                <Typography className='lineup-name'>
                   {player[0]}
                 </Typography>
               </Grid>
@@ -143,7 +145,7 @@ const LineUp = () => {
             {homeMain[3].map((player,index) => (
               <Grid item xs={12/homeMain[3].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepOrange[500] }}>{player[1]}</Avatar>
-                <Typography fontWeight={'bold'}>
+                <Typography className='lineup-name'>
                   {player[0]}
                 </Typography>
               </Grid>
@@ -151,7 +153,7 @@ const LineUp = () => {
             {homeMain.length > 4 && homeMain[4].map((player,index) => (
               <Grid item xs={12/homeMain[4].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepOrange[500] }}>{player[1]}</Avatar>
-                <Typography fontWeight={'bold'}>
+                <Typography className='lineup-name'>
                   {player[0]}
                 </Typography>
               </Grid>
@@ -162,7 +164,7 @@ const LineUp = () => {
             {awayMain[0].map((player,index) => (
               <Grid item xs={12/awayMain[0].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepPurple[500] }}>{player[1]}</Avatar>
-                <Typography fontWeight={'bold'}>
+                <Typography className='lineup-name'>
                   {player[0]}
                 </Typography>
               </Grid>
@@ -170,7 +172,7 @@ const LineUp = () => {
             {awayMain[1].map((player,index) => (
               <Grid item xs={12/awayMain[1].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepPurple[500] }}>{player[1]}</Avatar>
-                <Typography fontWeight={'bold'}>
+                <Typography className='lineup-name'>
                   {player[0]}
                 </Typography>
               </Grid>
@@ -178,7 +180,7 @@ const LineUp = () => {
             {awayMain[2].map((player,index) => (
               <Grid item xs={12/awayMain[2].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepPurple[500] }}>{player[1]}</Avatar>
-                <Typography fontWeight={'bold'}>
+                <Typography className='lineup-name'>
                   {player[0]}
                 </Typography>
               </Grid>
@@ -186,7 +188,7 @@ const LineUp = () => {
             {awayMain[3].map((player,index) => (
               <Grid item xs={12/awayMain[3].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepPurple[500] }}>{player[1]}</Avatar>
-                <Typography fontWeight={'bold'}>
+                <Typography className='lineup-name'>
                   {player[0]}
                 </Typography>
               </Grid>
@@ -194,7 +196,7 @@ const LineUp = () => {
             {awayMain.length > 4 && awayMain[4].map((player,index) => (
               <Grid item xs={12/awayMain[4].length} key={index} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'} p={1.5}>
                 <Avatar sx={{  width:32, height:32, bgcolor: deepPurple[500] }}>{player[1]}</Avatar>
-                <Typography fontWeight={'bold'}>
+                <Typography className='lineup-name'>
                   {player[0]}
                 </Typography>
               </Grid>
