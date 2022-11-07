@@ -7,9 +7,7 @@ import com.a203.sixback.ranking.res.ResponseRankingDTO;
 import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -53,6 +51,14 @@ public class RankingController {
             return ResponseEntity.badRequest().body(BaseResponseBody.of(400, "잘못된 요청입니다."));
         }
         return ResponseEntity.ok().body(ResRankingDTO.of(200, "성공", result));
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<BaseResponseBody> registerScore(){
+        rankingCacheRepository.addScore("donghar2004@gmail.com", 10);
+        rankingCacheRepository.addScore("koxogml@naver.com",5);
+        rankingCacheRepository.addScore("kh.kim9700@gmail.com",8);
+        return ResponseEntity.ok().body(BaseResponseBody.of(200, "성공"));
     }
 
 }
