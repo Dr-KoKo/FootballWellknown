@@ -55,9 +55,9 @@ public class RankingController {
 
     @PostMapping("/test")
     public ResponseEntity<BaseResponseBody> registerScore(){
-        rankingCacheRepository.addScore("donghar2004@gmail.com", 10);
-        rankingCacheRepository.addScore("koxogml@naver.com",5);
-        rankingCacheRepository.addScore("kh.kim9700@gmail.com",8);
+        rankingCacheRepository.addScore("GOO3837678538", 10);
+        rankingCacheRepository.addScore("GOO8838923192",5);
+        rankingCacheRepository.addScore("GOO3285927599",8);
         return ResponseEntity.ok().body(BaseResponseBody.of(200, "성공"));
     }
 

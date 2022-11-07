@@ -95,4 +95,15 @@ public class RankingService {
     public List<ResponseRankingDTO> getWeeklyRankingList(){
         return rankingCacheRepository.getRankingList(DayType.WEEKLY);
     }
+
+    @Transactional
+    public void refreshDailyRanking(){
+        rankingCacheRepository.refreshDailyRanking();
+    }
+
+    @Transactional
+    public void refreshWeeklyRanking(){
+        rankingCacheRepository.refreshWeeklyRanking();
+    }
+
 }

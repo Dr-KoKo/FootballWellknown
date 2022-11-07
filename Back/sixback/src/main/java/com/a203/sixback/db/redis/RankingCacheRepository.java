@@ -27,7 +27,7 @@ public class RankingCacheRepository {
     }
 
     /**
-     * @param value eamil
+     * @param value email
      * @param score 획득 점수
      */
     public void addScore(String value, double score) {
@@ -67,8 +67,18 @@ public class RankingCacheRepository {
         return collect;
     }
 
+    public void refreshDailyRanking(){
+        String key = getKey(DayType.DAILY);
+        rankingRedisTemplate.delete(key);
+    }
+
+    public void refreshWeeklyRanking(){
+        String key = getKey(DayType.WEEKLY);
+        rankingRedisTemplate.delete(key);
+    }
+
     private String getKey(DayType dayType) {
-        return dayType.name();
+        return dayType.name()+"RANKING";
     }
 
 }
