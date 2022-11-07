@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "ckeditor5-custom-build/build/ckeditor";
+import ClassicEditor from "../../util/build/ckeditor";
 import { createBoard } from "services/boardServices";
 import { getTeamList } from "services/matchServices";
 import "./BoardWrite.css";
@@ -200,7 +200,10 @@ const BoardWrite = () => {
               editor={ClassicEditor}
               config={{
                 language: "ko",
-                placeholder: "내용!",
+                placeholder: "내용!",                      
+                simpleUpload: {
+                  uploadUrl: 'localhost:8080/api/vi/editor/upload'
+                },
               }}
               onChange={(event, editor) => {
                 setContent(editor.getData());

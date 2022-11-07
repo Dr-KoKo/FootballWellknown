@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import { detailBoard, deleteBoard, postComment } from "services/boardServices";
 import { getTeam, getMatch } from "services/matchServices";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "ckeditor5-custom-build/build/ckeditor";
+import ClassicEditor from "../../util/build/ckeditor";
 import dateFormat from "dateformat";
 import "./BoardDetail.css";
 import Loading from "components/Loading";
@@ -177,6 +177,9 @@ const BoardDetail = () => {
                 editor={ClassicEditor}
                 config={{
                   language: "ko",
+                  simpleUpload: {
+                    uploadUrl: 'localhost:8080/api/vi/editor/upload'
+                  },
                 }}
                 data={board.content}
                 onReady={(editor) => {
