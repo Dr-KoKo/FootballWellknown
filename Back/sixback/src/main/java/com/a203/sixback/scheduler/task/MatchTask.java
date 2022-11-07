@@ -7,12 +7,14 @@ import com.a203.sixback.db.redis.MatchCacheRepository;
 import com.a203.sixback.db.repo.PointLogRepo;
 import com.a203.sixback.db.repo.PredictRepo;
 import com.a203.sixback.match.MatchService;
+import com.a203.sixback.ranking.RankingService;
 import com.a203.sixback.scheduler.MainScheduler;
 import com.a203.sixback.socket.Message;
 import com.a203.sixback.socket.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -25,9 +27,12 @@ public class MatchTask implements Runnable {
     private long matchId;
     private MessageService messageService;
     private MatchService matchService;
+    private RankingService rankingService;
     private MatchCacheRepository matchCacheRepository;
     private PointLogRepo pointLogRepo;
     private PredictRepo predictRepo;
+    @Value("${matchScore}")
+    private int matchScore;
 
     public MatchTask(long matchId, MessageService messageService, MatchService matchService, MatchCacheRepository matchCacheRepository, PointLogRepo pointLogRepo, PredictRepo predictRepo) {
         this.matchId = matchId;
@@ -154,28 +159,12 @@ public class MatchTask implements Runnable {
         }
     }
 
-    @Transactional
     private void givePoint(Long matchId, MatchResult result) {
         List<Predict> correctPredictList = predictRepo.findAllByMatches_Id(matchId).stream().filter(x -> result.toString().equals(x.getMatchResult().toString())).collect(Collectors.toList());
-        ;
 
-        LocalDateTime now = LocalDateTime.now();
+        log.info("총 {}개의 데이터 저장 시작합니다.", correctPredictList.size());
 
-        List<PointLog> pointLogList = new ArrayList<>(correctPredictList.size());
-
-        for (Predict predict : correctPredictList) {
-            PointLog log = PointLog.builder()
-                    .user(predict.getUser())
-                    .mp(predict)
-                    .point(1)
-                    .distribute_time(now)
-                    .build();
-            pointLogList.add(log);
-        }
-
-        log.info("총 {}개의 데이터 저장 시작합니다.", pointLogList.size());
-
-        pointLogRepo.saveAll(pointLogList);
+        rankingService.addAllScore(correctPredictList, matchScore);
     }
 
 }
