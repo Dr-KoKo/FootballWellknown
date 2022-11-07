@@ -2,7 +2,10 @@ package com.a203.sixback.db.redis;
 
 import com.a203.sixback.db.enums.DayType;
 import com.a203.sixback.ranking.res.ResponseRankingDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
@@ -18,7 +21,8 @@ public class RankingCacheRepository {
 
     private final RedisTemplate<String, String> rankingRedisTemplate;
 
-    public RankingCacheRepository(RedisTemplate<String, String> rankingRedisTemplate) {
+    @Autowired
+    public RankingCacheRepository(@Qualifier("rankRedisTemplate") RedisTemplate<String, String> rankingRedisTemplate) {
         this.rankingRedisTemplate = rankingRedisTemplate;
     }
 

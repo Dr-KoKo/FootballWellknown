@@ -18,8 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RankingController {
 
-    private RankingService rankingService;
-    private RankingCacheRepository rankingCacheRepository;
+    private final RankingService rankingService;
+    private final RankingCacheRepository rankingCacheRepository;
 
     @GetMapping("")
     public ResponseEntity<? extends BaseResponseBody> getRanking() {
@@ -27,6 +27,7 @@ public class RankingController {
         try {
             result = rankingCacheRepository.getRankingList(DayType.ALL);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BaseResponseBody.of(400, "잘못된 요청입니다."));
         }
         return ResponseEntity.ok().body(ResRankingDTO.of(200, "성공", result));
