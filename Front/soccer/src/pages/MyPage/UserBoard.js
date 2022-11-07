@@ -36,7 +36,7 @@ const MyPage = () => {
 
     const createBoardList = async (currentPage) => {
         axios
-            .get(`http://localhost:8080/api/v1/users/boards/${currentPage}`, {
+            .get(`https://football-wellknown.com/api/v1/users/boards/${currentPage}`, {
                 headers: {
                     Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb25naGFyMjAwNEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjY4NjQ4MTgzfQ.HOqV8j9U9D3GJMX0eSZtaL-tWffNMCeQNNP6Ei_92WQ`
                 }

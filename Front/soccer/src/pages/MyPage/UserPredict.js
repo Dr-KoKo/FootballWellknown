@@ -25,7 +25,7 @@ const MyPage = () => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:8080/api/v1/users/predicts`, {
+            .get(`https://football-wellknown.com/api/v1/users/predicts`, {
                 headers: {
                     Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb25naGFyMjAwNEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjY4NjQ4MTgzfQ.HOqV8j9U9D3GJMX0eSZtaL-tWffNMCeQNNP6Ei_92WQ`
                 }
