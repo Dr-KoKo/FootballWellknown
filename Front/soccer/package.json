@@ -9,6 +9,8 @@
     "@mui/lab": "^5.0.0-alpha.106",
     "@mui/material": "^5.10.12",
     "@mui/styled-engine-sc": "^5.10.6",
+    "@ckeditor/ckeditor5-build-classic": "^35.2.1",
+    "@ckeditor/ckeditor5-react": "^5.0.2",
     "@reduxjs/toolkit": "^1.8.6",
     "@stomp/stompjs": "^6.1.2",
     "@testing-library/jest-dom": "^5.16.5",
