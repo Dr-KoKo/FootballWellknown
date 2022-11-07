@@ -63,6 +63,7 @@ public class MatchTask implements Runnable {
                 checkStatus(jsonObject);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -93,26 +94,24 @@ public class MatchTask implements Runnable {
 
         String sender = "admin";
         String channelId = String.valueOf(matchId);
-        String data = null;
+        String data = "";
 
-        if ("goal".equals(prefix)) {
+        if ("Goal_".equals(prefix)) {
             data = jsonObject.get("score").toString();
 
             matchService.saveGoals(jsonObject, matchId);
-        } else if ("cards".equals(prefix)) {
+        } else if ("Card_".equals(prefix)) {
             String falut = "".equals(jsonObject.get("home_fault").toString()) ? jsonObject.get("away_fault").toString() : jsonObject.get("home_fault").toString();
             data = jsonObject.get("card").toString() + "<br>" + falut;
 
             matchService.saveCards(jsonObject, matchId);
         } else {
-            int time = Integer.parseInt(jsonObject.get("time").toString());
-            data = time < 46 ? ("전반전 " + time + "분") : ("후반전 " + (time - 45) + "분");
-            data += "<br>교체   ( " + jsonObject.get("substitution").toString() + " )";
+            data = jsonObject.get("time").toString() + "분" + "<br>교체   ( " + jsonObject.get("substitution").toString() + " )";
 
 
-            if ("substitutions_home".equals(prefix)) {
+            if ("SubstitutionsHome_".equals(prefix)) {
                 matchService.saveHomeSub(jsonObject, matchId);
-            } else if ("substitutions_away".equals(prefix)) {
+            } else if ("SubstitutionsAway_".equals(prefix)) {
                 matchService.saveAwaySub(jsonObject, matchId);
             }
         }
@@ -122,7 +121,7 @@ public class MatchTask implements Runnable {
 
     private void sendMessage(String data) {
         BaseMessage message = BaseMessage.builder().type(MessageType.NOTICE).sender(sender).channelId(String.valueOf(matchId)).data(data).build();
-
+        log.info("message: {}", data);
   //      messageService.sendMessage(message);
     }
 
