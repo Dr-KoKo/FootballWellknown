@@ -329,12 +329,12 @@ public class MatchService {
 
     // 라인업 나올시에 저장하는 거
     public void saveLineUps(Long matchId) throws Exception{
-        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject= new JSONObject();
 
-        String str = "https://apiv3.apifootball.com/?action=get_events&match_id="+matchId+"APIkey=" + apiKey;
+        String str = "https://apiv3.apifootball.com/?action=get_events&match_id="+matchId+"&APIkey=" + apiKey;
         URL url = new URL(str);
         InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
-        jsonObject = (JSONObject) JSONValue.parseWithException(isr);
+        jsonObject = (JSONObject) ((JSONArray) JSONValue.parseWithException(isr)).get(0);
         JSONObject lineups = (JSONObject) jsonObject.get("lineup");
         JSONObject homeLineups = (JSONObject) lineups.get("home");
         JSONObject awayLineups = (JSONObject) lineups.get("away");
@@ -408,7 +408,7 @@ public class MatchService {
     public void savePlayerMatch(long matchId) throws Exception{
         // 경기 결과에 따른 선수 세부 스탯 저장
         JSONObject jsonObject = new JSONObject();
-        String str = "https://apiv3.apifootball.com/?action=get_statistics&match_id="+matchId+"&APIkey=" + apiKey;
+        String str = "https://apiv3.apifootball.com/?action=get_statistics&match_id="+matchId+"APIkey=" + apiKey;
         URL url = new URL(str);
         InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
         jsonObject = (JSONObject) JSONValue.parseWithException(isr);
@@ -444,6 +444,7 @@ public class MatchService {
             playerMatch.setShotOn(Integer.parseInt(playerStat.get("player_shots_on_goal").toString()));
             playerMatch.setTackle(Integer.parseInt(playerStat.get("player_tackles").toString()));
             playerMatch.setTeam(playerStat.get("team_name").toString().toUpperCase());
+            playerMatch.setExpertRate(Integer.parseInt(playerStat.get("player_rating").toString()));
             playerMatchRepo.save(playerMatch);
         }
     }
