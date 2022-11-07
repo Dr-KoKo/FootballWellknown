@@ -27,5 +27,8 @@ public interface BoardRepo extends JpaRepository<Board, Long> {
 
     Page<Board> findAllByUser(User user, Pageable pageable);
 
+    List<Board> findTop4ByTeamIdOrderByIdDesc(Integer teamId);
+
+    List<Board> findTop4ByMatchIdOrderByIdDesc(Long matchId);
 }
 

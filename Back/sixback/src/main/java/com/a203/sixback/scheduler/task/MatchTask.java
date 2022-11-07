@@ -3,13 +3,14 @@ package com.a203.sixback.scheduler.task;
 import com.a203.sixback.db.entity.PointLog;
 import com.a203.sixback.db.entity.Predict;
 import com.a203.sixback.db.enums.MatchResult;
+import com.a203.sixback.db.enums.MessageType;
 import com.a203.sixback.db.redis.MatchCacheRepository;
 import com.a203.sixback.db.repo.PointLogRepo;
 import com.a203.sixback.db.repo.PredictRepo;
 import com.a203.sixback.match.MatchService;
 import com.a203.sixback.ranking.RankingService;
 import com.a203.sixback.scheduler.MainScheduler;
-import com.a203.sixback.socket.Message;
+import com.a203.sixback.socket.BaseMessage;
 import com.a203.sixback.socket.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
@@ -34,6 +35,8 @@ public class MatchTask implements Runnable {
     @Value("${matchScore}")
     private int matchScore;
 
+    private final String sender = "System";
+
     public MatchTask(long matchId, MessageService messageService, MatchService matchService, MatchCacheRepository matchCacheRepository, PointLogRepo pointLogRepo, PredictRepo predictRepo) {
         this.matchId = matchId;
         this.messageService = messageService;
@@ -54,17 +57,18 @@ public class MatchTask implements Runnable {
                 JSONObject jsonObject = (JSONObject) object;
 
 
-                checkEvent((JSONArray) jsonObject.get("goalscorer"), "goal");
-                checkEvent((JSONArray) jsonObject.get("cards"), "cards");
+                checkEvent((JSONArray) jsonObject.get("goalscorer"), "Goal_");
+                checkEvent((JSONArray) jsonObject.get("cards"), "Card_");
 
                 JSONObject substitutions = (JSONObject) jsonObject.get("substitutions");
 
-                checkEvent((JSONArray) substitutions.get("home"), "substitutions_home");
-                checkEvent((JSONArray) substitutions.get("away"), "substitutions_away");
+                checkEvent((JSONArray) substitutions.get("home"), "SubstitutionsHome_");
+                checkEvent((JSONArray) substitutions.get("away"), "SubstitutionsAway_");
 
                 checkStatus(jsonObject);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -88,39 +92,42 @@ public class MatchTask implements Runnable {
         int size = jsonArray.size();
         int value = getRedis(key);
 
-        if (value == size)
-            return;
+        if (value == size) return;
 
         JSONObject jsonObject = (JSONObject) jsonArray.get(value);
         matchCacheRepository.setMatch(key, value + 1);
 
         String sender = "admin";
         String channelId = String.valueOf(matchId);
-        String data = null;
+        String data = "";
 
-        if ("goal".equals(prefix)) {
+        if ("Goal_".equals(prefix)) {
             data = jsonObject.get("score").toString();
 
             matchService.saveGoals(jsonObject, matchId);
-        } else if ("cards".equals(prefix)) {
+        } else if ("Card_".equals(prefix)) {
             String falut = "".equals(jsonObject.get("home_fault").toString()) ? jsonObject.get("away_fault").toString() : jsonObject.get("home_fault").toString();
             data = jsonObject.get("card").toString() + "<br>" + falut;
 
             matchService.saveCards(jsonObject, matchId);
         } else {
-            int time = Integer.parseInt(jsonObject.get("time").toString());
-            data = time < 46 ? ("전반전 " + time + "분") : ("후반전 " + (time - 45) + "분");
-            data += "<br>교체   ( " + jsonObject.get("substitution").toString() + " )";
+            data = jsonObject.get("time").toString() + "분" + "<br>교체   ( " + jsonObject.get("substitution").toString() + " )";
 
 
-            if ("substitutions_home".equals(prefix)) {
+            if ("SubstitutionsHome_".equals(prefix)) {
                 matchService.saveHomeSub(jsonObject, matchId);
-            } else if ("substitutions_away".equals(prefix)) {
+            } else if ("SubstitutionsAway_".equals(prefix)) {
                 matchService.saveAwaySub(jsonObject, matchId);
             }
         }
 
-        messageService.message(new Message(prefix, sender, channelId, data));
+        sendMessage(data);
+    }
+
+    private void sendMessage(String data) {
+        BaseMessage message = BaseMessage.builder().type(MessageType.NOTICE).sender(sender).channelId(String.valueOf(matchId)).data(data).build();
+        log.info("message: {}", data);
+  //      messageService.sendMessage(message);
     }
 
     private void checkStatus(JSONObject jsonObject) throws Exception {
@@ -132,11 +139,11 @@ public class MatchTask implements Runnable {
 
         if ("Finished".equals(matchStatus)) {
             log.info("경기가 끝났습니다.");
-            matchCacheRepository.getAndDeleteMatch("goal" + matchId);
-            matchCacheRepository.getAndDeleteMatch("card" + matchId);
-            matchCacheRepository.getAndDeleteMatch("substitutions_home" + matchId);
-            matchCacheRepository.getAndDeleteMatch("substitutions_away" + matchId);
-            messageService.message(new Message("notice", "admin", String.valueOf(matchId), "경기가 종료되었습니다."));
+            matchCacheRepository.getAndDeleteMatch("Goal_" + matchId);
+            matchCacheRepository.getAndDeleteMatch("Card_" + matchId);
+            matchCacheRepository.getAndDeleteMatch("SubstitutionsHome_" + matchId);
+            matchCacheRepository.getAndDeleteMatch("SubstitutionsAway_" + matchId);
+            sendMessage("경기가 종료되었습니다.");
             MainScheduler.getInstance().stop(matchId);
 
             Integer homeTeamScore = Integer.parseInt(jsonObject.get("match_hometeam_score").toString());
@@ -150,12 +157,10 @@ public class MatchTask implements Runnable {
                 throw new Exception();
             }
 
-            MatchResult result = homeTeamScore > awayTeamScore ?
-                    MatchResult.HOME : homeTeamScore == awayTeamScore ?
-                    MatchResult.DRAW : MatchResult.AWAY;
+            MatchResult result = homeTeamScore > awayTeamScore ? MatchResult.HOME : homeTeamScore == awayTeamScore ? MatchResult.DRAW : MatchResult.AWAY;
 
             log.info("배점을 시작합니다.");
-            givePoint(matchId, result);
+                      givePoint(matchId, result);
         }
     }
 

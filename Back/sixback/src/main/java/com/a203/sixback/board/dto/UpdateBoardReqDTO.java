@@ -10,4 +10,6 @@ public class UpdateBoardReqDTO {
     private String title;
     private String ctgName;
     private String content;
+    private int temaId;
+    private Long matchId;
 }

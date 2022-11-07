@@ -8,7 +8,6 @@ import com.a203.sixback.match.vo.MatchStatusVO;
 //import com.a203.sixback.redis.RedisService;
 import com.a203.sixback.scheduler.task.InitTask;
 import com.a203.sixback.scheduler.task.LineUpTask;
-import com.a203.sixback.socket.Message;
 import com.a203.sixback.socket.MessageService;
 import com.a203.sixback.team.vo.MatchVO;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +31,6 @@ public class SchedulerController {
     @Autowired(required = false)
     private MessageService messageService;
 
-//    @Autowired(required = false)
-//    private RedisService redisService;
-
     @Autowired(required = false)
     private MatchCacheRepository matchCacheRepository;
 
@@ -44,12 +40,9 @@ public class SchedulerController {
     @Autowired(required = false)
     private PredictRepo predictRepo;
 
-    @Value("${API-KEY}")
-    private String apiKey;
-
     @Async
     @Scheduled(cron = "0 0 23 * * *")
-//    @Scheduled(cron = "0 43 13 * * *")
+//    @Scheduled(cron = "0 17 10 * * *")
     public void mainSchedule() throws Exception {
         log.info("SchedulerController Cron 실행");
 
@@ -61,21 +54,53 @@ public class SchedulerController {
 
         log.info("{}-{}-{}", year, month, day);
 
+        try {
+//            test(2022, 11, 6);
+            registerMatchSchedule(year, month, day);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void test(int year, int month, int day) throws Exception {
+        List<MatchStatusVO> list = matchService.getMatchesByDate(year, month, day);
+
+        log.info("{}-{}-{}의 경기 수: {}", year, month, day, list.size());
+
+        for (MatchStatusVO matchStatusVo : list) {
+            MatchVO matchVO = matchStatusVo.getMatchVO();
+            long matchId = matchVO.getMatchId();
+            String date = matchVO.getDate();
+
+            log.info("MatchId : {}, MatchDate : {}", matchId, date);
+
+            int minute = Integer.parseInt(date.substring(14, 16));
+            int hour = Integer.parseInt(date.substring(11, 13));
+
+            String cronTrigger = "30 17 10 * * *";
+
+            Runnable task = new InitTask(matchId, messageService, matchService, matchCacheRepository, pointLogRepo, predictRepo);
+
+            log.info("Cron Trigger : {}", cronTrigger);
+
+            MainScheduler.getInstance().start(task, cronTrigger, matchId);
+
+            task = new LineUpTask(matchId, matchService);
+
+            cronTrigger = "10 17 10 * * *";
+
+            MainScheduler.getInstance().start(task, cronTrigger, matchId * 2L);
+        }
+    }
+
+    private void registerMatchSchedule(int year, int month, int day) throws Exception {
         StringBuilder sb = new StringBuilder();
 
         List<MatchStatusVO> list = matchService.getMatchesByDate(year, month, day);
 
-        log.info("{}의 경기 수: {}", now.toString(), list.size());
+        log.info("{}-{}-{}의 경기 수: {}", year, month, day, list.size());
 
-/*
-        long matchId = 1059375L;
-
-        Runnable task = new InitTask(matchId, messageService, matchService, matchCacheRepository, pointLogRepo, predictRepo);
-
-        sb.append("10 43 13 * * *");
-
-        MainScheduler.getInstance().start(task, sb.toString(), matchId);
-        */
         for (MatchStatusVO matchStatusVo : list) {
             MatchVO matchVO = matchStatusVo.getMatchVO();
             long matchId = matchVO.getMatchId();

@@ -1,5 +1,6 @@
 package com.a203.sixback.board;
 
+import com.a203.sixback.auth.UserPrincipal;
 import com.a203.sixback.board.dto.GetCommentResDTO;
 import com.a203.sixback.board.dto.PostCommentDTO;
 import com.a203.sixback.board.dto.UpdateCommentDTO;
@@ -15,6 +16,7 @@ import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,10 +32,10 @@ public class CommentService {
 
     private final CommentRepoMongoDB commentRepoMongo;
 
-    public ResponseEntity postComment(Long userId, PostCommentDTO postCommentDTO) {
+    public ResponseEntity postComment(PostCommentDTO postCommentDTO) {
         User user = null;
         try {
-            user = userRepo.findById(userId).get();
+            user = user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No User"));
         }
@@ -68,10 +70,10 @@ public class CommentService {
         return getComments;
     }
 
-    public ResponseEntity postCommentMongo(Long userId, PostCommentDTO postCommentDTO) {
+    public ResponseEntity postCommentMongo(PostCommentDTO postCommentDTO) {
         User user = null;
         try {
-            user = userRepo.findById(userId).get();
+            user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No User"));
         }
@@ -85,9 +87,9 @@ public class CommentService {
         CommentMongo commentMongo = CommentMongo.builder()
                 .comment(postCommentDTO.getComment())
                 .author(user.getNickname())
+                .authorId(user.getId())
                 .boardId(board.getId())
                 .createDate(LocalDateTime.now())
-                .authorId(16L)
                 .build();
         commentRepoMongo.save(commentMongo);
         return ResponseEntity.ok(BaseResponseBody.of(200, "Post Comment Success"));
@@ -109,10 +111,10 @@ public class CommentService {
         return getComments;
     }
 
-    public ResponseEntity updateComment(Long userId, UpdateCommentDTO updateCommentDTO) {
+    public ResponseEntity updateComment(UpdateCommentDTO updateCommentDTO) {
         User user = null;
         try {
-            user = userRepo.findById(userId).get();
+            user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No User"));
         }
@@ -133,10 +135,10 @@ public class CommentService {
         return ResponseEntity.ok(BaseResponseBody.of(200, "Update Comment Success"));
     }
 
-    public ResponseEntity deleteComment(Long userId, String commentId) {
+    public ResponseEntity deleteComment(String commentId) {
         User user = null;
         try {
-            user = userRepo.findById(userId).get();
+            user = user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No User"));
         }
