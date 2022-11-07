@@ -33,7 +33,7 @@ const AssistCard = (props) =>{
                         <CardMedia
                             component="img"
                             image={props.players[i].image}
-                            sx={{ width: 151, margin: "1rem", height:151}}
+                            sx={{ width: 151, margin: "1rem"}}
                         >    
                         </CardMedia>
                         <CardContent>
