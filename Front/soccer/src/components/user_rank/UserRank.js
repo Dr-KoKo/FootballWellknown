@@ -61,7 +61,7 @@ const UserRank = (props) => {
             </div>
         :
         // 데이터 못 받으면 로딩
-        <Loading />}
+        null}
         </>
     )
 }
