@@ -116,6 +116,9 @@ public class MatchService {
         List<LineUp> homeLineUp = new ArrayList<>();
         List<LineUp> awayLineUp = new ArrayList<>();
         for(int i=0;i<playerMatchList.size();i++){
+            if(playerMatchList.get(i).getPosition()==0){
+                continue;
+            }
             if(playerMatchList.get(i).getTeam().equals("HOME")){
                 homeLineUp.add(new LineUp(playerMatchList.get(i).getPlayer().getName(),
                         playerMatchList.get(i).getPlayer().getNumber(),
