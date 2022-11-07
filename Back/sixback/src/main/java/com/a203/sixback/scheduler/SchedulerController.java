@@ -7,7 +7,9 @@ import com.a203.sixback.match.MatchService;
 import com.a203.sixback.match.vo.MatchStatusVO;
 //import com.a203.sixback.redis.RedisService;
 import com.a203.sixback.scheduler.task.InitTask;
+import com.a203.sixback.scheduler.task.LineUpTask;
 import com.a203.sixback.socket.MessageService;
+import com.a203.sixback.team.vo.MatchVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,9 +31,6 @@ public class SchedulerController {
     @Autowired(required = false)
     private MessageService messageService;
 
-//    @Autowired(required = false)
-//    private RedisService redisService;
-
     @Autowired(required = false)
     private MatchCacheRepository matchCacheRepository;
 
@@ -45,8 +44,8 @@ public class SchedulerController {
     private String apiKey;
 
     @Async
-//    @Scheduled(cron = "0 0 23 * * *")
-    @Scheduled(cron = "0 49 9 * * *")
+    @Scheduled(cron = "0 0 23 * * *")
+//    @Scheduled(cron = "0 49 9 * * *")
     public void mainSchedule() throws Exception {
         log.info("SchedulerController Cron 실행");
 
@@ -58,11 +57,17 @@ public class SchedulerController {
 
         log.info("{}-{}-{}", year, month, day);
 
+        try {
+//            test(year, month, day);
+            registerMatchSchedule(year, month, day);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void test(int year, int month, int day) throws Exception {
         StringBuilder sb = new StringBuilder();
-
-        List<MatchStatusVO> list = matchService.getMatchesByDate(year, month, day);
-
-        log.info("{}의 경기 수: {}", now.toString(), list.size());
 
         long matchId = 1059375L;
 
@@ -71,8 +76,16 @@ public class SchedulerController {
         sb.append("10 49 9 * * *");
 
         MainScheduler.getInstance().start(task, sb.toString(), matchId);
+    }
 
-        /*for (MatchStatusVO matchStatusVo : list) {
+    private void registerMatchSchedule(int year, int month, int day) throws Exception {
+        StringBuilder sb = new StringBuilder();
+
+        List<MatchStatusVO> list = matchService.getMatchesByDate(year, month, day);
+
+        log.info("{}-{}-{}의 경기 수: {}", year, month, day, list.size());
+
+        for (MatchStatusVO matchStatusVo : list) {
             MatchVO matchVO = matchStatusVo.getMatchVO();
             long matchId = matchVO.getMatchId();
             String date = matchVO.getDate();
@@ -108,6 +121,6 @@ public class SchedulerController {
             task = new LineUpTask(matchId, matchService);
 
             MainScheduler.getInstance().start(task, sb.toString(), matchId * 2L);
-        }*/
+        }
     }
 }
