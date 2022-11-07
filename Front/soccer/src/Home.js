@@ -18,6 +18,7 @@ import UserRank from 'components/user_rank/UserRank';
 
 import Grid from '@mui/material/Grid';
 import { getMatchInfo, getPlayerInfo } from 'services/homeService';
+import { getDailyRank, getWeeklyRank } from 'services/userServices';
 
 
 
@@ -30,6 +31,22 @@ const Home = () => {
   const [carousel, setCarousel] = useState([]);
   const [mostGoal, setMostGoal] =useState([]);
   const [mostAssist, setMostAssist] =useState([]);
+  const [dailyRank, setDailyRank] = useState([]);
+  const [weeklyRank, setWeeklyRank] = useState([]);
+
+  const loadDailyRank = async () => {
+      const result = await getDailyRank();
+      if(result?.data?.message === '성공'){
+          setDailyRank(result.data.responseRankingDTOList);
+        }
+  }
+
+  const loadWeeklyRank = async () => {
+      const result = await getWeeklyRank();
+      if(result?.data?.message === '성공'){
+          setWeeklyRank(result.data.responseRankingDTOList);
+        }
+  }
 
   const getMatches = async (round) => {
     const result = await getMatchInfo(round);
@@ -53,19 +70,12 @@ const Home = () => {
 
   useEffect(() => {
     getMatches(round);
-    // axios.get(`http://localhost:8080/api/v1/matches/round?round=${round}`).then((response) => {
-    //   setMatchInfo(response.data.result);
-    //   setLoading(false);
-    //   const len = response.data.result.length;
-    //   setCarousel([[response.data.result.slice(0,len/2)], [response.data.result.slice(len/2,len)]]);
-    // });
     getPlayers();
-    // axios.get(`http://localhost:8080/api/v1/teams/players/ranks`).then((response) => {
-    //   setMostGoal(response.data.result.scorers);
-    //   setMostAssist(response.data.result.assisters);
-    // })
+    loadDailyRank();
+    loadWeeklyRank();
   }, [round]);
 
+  
   const teamButtonClicked = () =>{
     setTeamToggle(true);
   }
@@ -92,7 +102,7 @@ const Home = () => {
             <div>
               <h2>일간 포인트 랭킹</h2>
               <div className='home-userRankInfo'>
-                  <UserRank />
+                  <UserRank list={dailyRank}/>
               </div>
             </div>
           </Grid>
@@ -100,7 +110,7 @@ const Home = () => {
             <div>
               <h2>주간 포인트 랭킹</h2>
               <div className='home-userRankInfo'>
-                <UserRank />
+                <UserRank list={weeklyRank}/>
               </div>
             </div>
           </Grid>

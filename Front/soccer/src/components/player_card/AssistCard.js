@@ -7,6 +7,7 @@ import './PlayerCard.css'
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import { pink } from "@mui/material/colors";
 
 
 const AssistCard = (props) =>{
@@ -33,7 +34,7 @@ const AssistCard = (props) =>{
                         <CardMedia
                             component="img"
                             image={props.players[i].image}
-                            sx={{ width: 151, margin: "1rem", height:151}}
+                            sx={{ width: 151, margin: "1rem", height: 151}}
                         >    
                         </CardMedia>
                         <CardContent>
@@ -65,7 +66,7 @@ const AssistCard = (props) =>{
                         <CardMedia
                                 component="img"
                                 image={props.players[i].image}
-                                sx={{ width: 151, margin: "1rem" }}
+                                sx={{ width: 151, margin: "1rem", height: 151 }}
                             >    
                         </CardMedia>
                         <CardContent>
