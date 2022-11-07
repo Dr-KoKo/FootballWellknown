@@ -19,8 +19,8 @@ public interface MatchesRepo extends JpaRepository<Matches, Long> {
     List<Matches> findRecentREADYMatches(@Param("teamId") int teamId);
 
     List<Matches> findAllByRound(int round);
-    @Query(nativeQuery = true, value="select * from matches where year(match_date)=:year and month(match_date)=:month ;")
-    List<Matches> findAllByYearAndMonth(@Param("year") int year, @Param("month") int month);
+    @Query(nativeQuery = true, value="select * from matches where year(match_date)=:year and month(match_date)=:month order by match_date;")
+    List<Matches> findAllByYearAndMonthOrderByMatch_Date(@Param("year") int year, @Param("month") int month);
 
     @Query(nativeQuery = true, value="select * from matches where year(match_date)=:year and month(match_date)=:month and day(match_date)=:day ;")
     List<Matches> findAllByYearAndMonthAndDay(@Param("year") int year, @Param("month") int month, @Param("day") int day);

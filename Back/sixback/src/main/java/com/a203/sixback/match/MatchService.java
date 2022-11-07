@@ -72,7 +72,7 @@ public class MatchService {
         return result;
     }
     public List<MatchStatusVO> getMatchesByMonth(int year, int month) {
-        List<Matches> matches = matchesRepo.findAllByYearAndMonth(year,month);
+        List<Matches> matches = matchesRepo.findAllByYearAndMonthOrderByMatch_Date(year,month);
         List<MatchStatusVO> result = new ArrayList<>();
         for(Matches match : matches){
             MatchVO matchVO = MatchVO.builder()
