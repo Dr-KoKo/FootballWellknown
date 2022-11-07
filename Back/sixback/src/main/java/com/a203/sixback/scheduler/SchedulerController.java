@@ -40,12 +40,9 @@ public class SchedulerController {
     @Autowired(required = false)
     private PredictRepo predictRepo;
 
-    @Value("${API-KEY}")
-    private String apiKey;
-
     @Async
     @Scheduled(cron = "0 0 23 * * *")
-//    @Scheduled(cron = "0 49 9 * * *")
+//    @Scheduled(cron = "0 17 10 * * *")
     public void mainSchedule() throws Exception {
         log.info("SchedulerController Cron 실행");
 
@@ -58,7 +55,7 @@ public class SchedulerController {
         log.info("{}-{}-{}", year, month, day);
 
         try {
-//            test(year, month, day);
+//            test(2022, 11, 6);
             registerMatchSchedule(year, month, day);
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,15 +64,34 @@ public class SchedulerController {
     }
 
     private void test(int year, int month, int day) throws Exception {
-        StringBuilder sb = new StringBuilder();
+        List<MatchStatusVO> list = matchService.getMatchesByDate(year, month, day);
 
-        long matchId = 1059375L;
+        log.info("{}-{}-{}의 경기 수: {}", year, month, day, list.size());
 
-        Runnable task = new InitTask(matchId, messageService, matchService, matchCacheRepository, pointLogRepo, predictRepo);
+        for (MatchStatusVO matchStatusVo : list) {
+            MatchVO matchVO = matchStatusVo.getMatchVO();
+            long matchId = matchVO.getMatchId();
+            String date = matchVO.getDate();
 
-        sb.append("10 49 9 * * *");
+            log.info("MatchId : {}, MatchDate : {}", matchId, date);
 
-        MainScheduler.getInstance().start(task, sb.toString(), matchId);
+            int minute = Integer.parseInt(date.substring(14, 16));
+            int hour = Integer.parseInt(date.substring(11, 13));
+
+            String cronTrigger = "30 17 10 * * *";
+
+            Runnable task = new InitTask(matchId, messageService, matchService, matchCacheRepository, pointLogRepo, predictRepo);
+
+            log.info("Cron Trigger : {}", cronTrigger);
+
+            MainScheduler.getInstance().start(task, cronTrigger, matchId);
+
+            task = new LineUpTask(matchId, matchService);
+
+            cronTrigger = "10 17 10 * * *";
+
+            MainScheduler.getInstance().start(task, cronTrigger, matchId * 2L);
+        }
     }
 
     private void registerMatchSchedule(int year, int month, int day) throws Exception {

@@ -8,6 +8,7 @@ import com.a203.sixback.db.repo.*;
 import com.a203.sixback.match.vo.*;
 import com.a203.sixback.team.vo.MatchVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MatchService {
@@ -408,7 +410,7 @@ public class MatchService {
     public void savePlayerMatch(long matchId) throws Exception{
         // 경기 결과에 따른 선수 세부 스탯 저장
         JSONObject jsonObject = new JSONObject();
-        String str = "https://apiv3.apifootball.com/?action=get_statistics&match_id="+matchId+"APIkey=" + apiKey;
+        String str = "https://apiv3.apifootball.com/?action=get_statistics&match_id="+matchId+"&APIkey=" + apiKey;
         URL url = new URL(str);
         InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
         jsonObject = (JSONObject) JSONValue.parseWithException(isr);
@@ -426,6 +428,7 @@ public class MatchService {
                 savedPlayer.addPlayerStat(Integer.parseInt(playerStat.get("player_goals").toString()),Integer.parseInt(playerStat.get("player_assists").toString()));
                 playerRepo.save(savedPlayer);
             }
+
             PlayerMatch playerMatch = playerMatchRepo.findByMatches_IdAndPlayer_Id(matchId, player.get().getId());
             playerMatch.setGoal(Integer.parseInt(playerStat.get("player_goals").toString()));
             playerMatch.setAssist(Integer.parseInt(playerStat.get("player_assists").toString()));
