@@ -61,7 +61,7 @@ public class RankingCacheRepository {
 
         List<ResponseRankingDTO> collect = typedTuples.stream()
                 .map(ResponseRankingDTO::convertToResponseRankingDto)
-                .sorted(((o1, o2) -> (int) (o1.getScore() - o2.getScore())))
+                .sorted(((o1, o2) -> (int) (o2.getScore() - o1.getScore())))
                 .collect(Collectors.toList());
 
         return collect;
