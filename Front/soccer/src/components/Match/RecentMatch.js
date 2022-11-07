@@ -1,6 +1,7 @@
 import { Box, Grid, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 const StyledBox = styled(Box)((props) => ({
@@ -26,8 +27,9 @@ const StyledBox = styled(Box)((props) => ({
   height: 'fit-content',
   margin: 2
 }));
-const RecentMatch = (props) => {
+const RecentMatch = () => {
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const match = useSelector((state)=>state.match);
 
   const [homeInfo, setHomeInfo] = useState({
     name: "",
@@ -55,7 +57,7 @@ const RecentMatch = (props) => {
   const [awayAvgLoseScore, setAwayAvgLoseScore] = useState(0);
 
   useEffect(()=>{
-    axios.get(`${SERVER_URL}/api/v1/teams/${props.homeId}/details`)
+    axios.get(`${SERVER_URL}/api/v1/teams/${match.homeId}/details`)
       .then(res=>{
         let temp = res.data.result;
         setHomeInfo(temp.teamInfo);
@@ -64,7 +66,7 @@ const RecentMatch = (props) => {
         setHomeAvgScore((temp.teamInfo.goals / matchNums).toFixed(2));
         setHomeAvgLoseScore((temp.teamInfo.loseGoals / matchNums).toFixed(2));
       });
-      axios.get(`${SERVER_URL}/api/v1/teams/${props.awayId}/details`)
+      axios.get(`${SERVER_URL}/api/v1/teams/${match.awayId}/details`)
       .then(res=>{
         let temp = res.data.result;
         setAwayInfo(temp.teamInfo);
@@ -73,7 +75,7 @@ const RecentMatch = (props) => {
         setAwayAvgScore((temp.teamInfo.goals / matchNums).toFixed(2));
         setAwayAvgLoseScore((temp.teamInfo.loseGoals / matchNums).toFixed(2));
       });
-  }, [props]);
+  }, []);
   return (
     <Box
       sx={{

@@ -49,6 +49,20 @@ const MatchMain = () => {
     .then((res) => {
       console.log(res.data.result);
       const payload = res.data.result.matchVO;
+      axios.post(`${SERVER_URL}/api/v1/teams/name`,payload.home)
+      .then((res)=>{
+        dispatch({
+          type: "SET_HOME_ID",
+          payload: res.data.result.teamId
+        });
+      });
+      axios.post(`${SERVER_URL}/api/v1/teams/name`,payload.away)
+      .then((res)=>{
+        dispatch({
+          type: "SET_AWAY_ID",
+          payload: res.data.result.teamId
+        });
+      });
       let matchStatus = "";
       if(res.data.result.matchStatus === "FIN"){
         matchStatus = "경기종료";

@@ -25,8 +25,6 @@ const MatchPredict = () => {
   const [draw, setDraw] = useState(0);
   const [awayWin, setAwayWin] = useState(0);
   const [predictMatch, setPredictMatch] = useState("");
-  const [homeId, setHomeId] = useState(0);
-  const [awayId, setAwayId] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const clickTeam = (team) => {
@@ -68,14 +66,6 @@ const MatchPredict = () => {
     axios.get(`${SERVER_URL}/api/v1/matches/predict/match/my/${user.email}/${match.matchId}`)
     .then(res => {
       setPredictMatch(res.data.result.whereWin);
-    });
-    axios.post(`${SERVER_URL}/api/v1/teams/name`,match.home)
-    .then((res)=>{
-      setHomeId(res.data.result.teamId);
-    });
-    axios.post(`${SERVER_URL}/api/v1/teams/name`,match.away)
-    .then((res)=>{
-      setAwayId(res.data.result.teamId);
     });
     setLoading(false);
   }, []);
@@ -145,7 +135,7 @@ const MatchPredict = () => {
         </Box>
         <Box display={'flex'} justifyContent='center'>
           <Box width={'66%'}>
-            <RecentMatch homeId={homeId} awayId={awayId}/>
+            <RecentMatch />
           </Box>
           <Box width={'33%'}>
             <List sx={{ width: '100%', bgcolor: 'background.paper', overflow: 'auto', maxHeight: 400}}>
