@@ -1,4 +1,4 @@
-import { axiosAuth } from './axios';
+import { axiosAuth, request } from './axios';
 import { store } from "..";
 import {
     TOKEN_DELETE
@@ -10,6 +10,27 @@ import {
 export const USER_URL = "/api/v1/users";
 export const USER_PREDICT_URL = "/api/v1/users/predicts"
 export const AUTH_URL = "/api/v1/auth";
+export const USER_RANK_URL = "/api/v1/ranking";
+
+export const getDailyRank = async () => {
+  try{
+    const payload = await request.get(`${USER_RANK_URL}/daily`)
+    return payload;
+  }
+  catch(err){
+    return err;
+  }
+}
+
+export const getWeeklyRank = async () => {
+  try{
+    const payload = await request.get(`${USER_RANK_URL}/weekly`)
+    return payload;
+  }
+  catch(err){
+    return err;
+  }
+}
 
 
 export const getUserInfo = async () => {
