@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { getTeam, getMatch } from "services/matchServices";
 import dateFormat from "dateformat";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "../../util/build/ckeditor";
 import "./BoardModify.css";
 import {
   FormControl,
@@ -22,7 +23,7 @@ const BoardModify = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { id } = useParams();
-  const ClassicEditor = require("../../util/build/ckeditor.js");
+  // const ClassicEditor = require("../../util/build/ckeditor.js");
   const [content, setContent] = useState(state.content);
   const [ctgName, setCtgName] = useState(state.ctgName);
   const [team, setTeam] = useState(state.team);

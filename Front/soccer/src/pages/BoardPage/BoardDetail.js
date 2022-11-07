@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import { detailBoard, deleteBoard, postComment } from "services/boardServices";
 import { getTeam, getMatch } from "services/matchServices";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "../../util/build/ckeditor";
 import dateFormat from "dateformat";
 import "./BoardDetail.css";
 import Loading from "components/Loading";
@@ -26,7 +27,7 @@ const BoardDetail = () => {
   // console.log(store.getState().user);
   const navigate = useNavigate();
   const { id } = useParams();
-  const ClassicEditor = require("../../util/build/ckeditor.js");
+  // const ClassicEditor = require("../../util/build/ckeditor.js");
   const [board, setBoard] = useState(null);
   const [commentlist, setCommentlist] = useState(null);
   const [comment, setComment] = useState(null);
