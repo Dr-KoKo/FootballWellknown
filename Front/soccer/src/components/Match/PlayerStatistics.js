@@ -84,28 +84,16 @@ const headCells = [
     label: "패스",
   },
   {
-    id: "passOn",
-    numeric: true,
-    disablePadding: false,
-    label: "패스성공",
-  },
-  {
     id: "dribble",
     numeric: true,
     disablePadding: false,
     label: "드리블",
   },
   {
-    id: "dribbleOn",
-    numeric: true,
-    disablePadding: false,
-    label: "드리블성공",
-  },
-  {
     id: "crossedOn",
     numeric: true,
     disablePadding: false,
-    label: "크로스성공",
+    label: "크로스",
   },
   {
     id: "tackle",
@@ -266,11 +254,9 @@ const PlayerStatistics = (props) => {
                       <TableCell style={{minWidth:80}} align="center">{row.assist}</TableCell>
                       <TableCell style={{minWidth:80}} align="center">{row.shot}</TableCell>
                       <TableCell style={{minWidth:100}} align="center">{row.shotOn}</TableCell>
-                      <TableCell style={{minWidth:80}} align="center">{row.pass}</TableCell>
-                      <TableCell style={{minWidth:100}} align="center">{row.passOn}</TableCell>
-                      <TableCell style={{minWidth:80}} align="center">{row.dribble}</TableCell>
-                      <TableCell style={{minWidth:100}} align="center">{row.dribbleOn}</TableCell>
-                      <TableCell style={{minWidth:100}} align="center">{row.crossedOn}</TableCell>
+                      <TableCell style={{minWidth:80}} align="center">{row.passOn} / {row.pass}</TableCell>
+                      <TableCell style={{minWidth:80}} align="center">{row.dribbleOn} / {row.dribble}</TableCell>
+                      <TableCell style={{minWidth:100}} align="center">{row.crossedOn} / {row.crossed}</TableCell>
                       <TableCell style={{minWidth:80}} align="center">{row.tackle}</TableCell>
                       <TableCell style={{minWidth:80}} align="center">{row.foul}</TableCell>
                       <TableCell style={{minWidth:100}} align="center">{row.clear}</TableCell>
