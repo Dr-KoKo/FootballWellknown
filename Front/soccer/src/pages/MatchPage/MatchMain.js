@@ -24,7 +24,6 @@ const MatchMain = () => {
   const [value, setValue] = useState(currentYear.toString()+currentMonth.toString());
   const [matches, setMatches] = useState(
     [{
-      
       matchVO:{
         matchId: 0,
         date: "",
@@ -44,25 +43,35 @@ const MatchMain = () => {
     setValue(newValue);
   };
 
+  const setHomeId = async(home) => {
+    console.log(home);
+    await axios.post(`${SERVER_URL}/api/v1/teams/name`,home)
+    .then((res)=>{
+      console.log(res.data.result.teamId);
+      dispatch({
+        type: "SET_HOME_ID",
+        payload: res.data.result.teamId
+      });
+    });
+  };
+  const setAwayId = async(away) => {
+    console.log(away);
+    await axios.post(`${SERVER_URL}/api/v1/teams/name`,away)
+    .then((res)=>{
+      console.log(res.data.result.teamId);
+      dispatch({
+        type: "SET_AWAY_ID",
+        payload: res.data.result.teamId
+      });
+    });
+  };
+
   const moveToDetail = async (matchId) => {
+    let homeId = 0;
+    let awayId = 0;
     await axios.get(`${SERVER_URL}/api/v1/matches/match/${matchId}`)
     .then((res) => {
-      console.log(res.data.result);
       const payload = res.data.result.matchVO;
-      axios.post(`${SERVER_URL}/api/v1/teams/name`,payload.home)
-      .then((res)=>{
-        dispatch({
-          type: "SET_HOME_ID",
-          payload: res.data.result.teamId
-        });
-      });
-      axios.post(`${SERVER_URL}/api/v1/teams/name`,payload.away)
-      .then((res)=>{
-        dispatch({
-          type: "SET_AWAY_ID",
-          payload: res.data.result.teamId
-        });
-      });
       let matchStatus = "";
       if(res.data.result.matchStatus === "FIN"){
         matchStatus = "경기종료";
@@ -77,8 +86,13 @@ const MatchMain = () => {
         type: "SET_MATCH",
         payload,
         matchStatus,
-      })
+      });
+      homeId = payload.home;
+      awayId = payload.away;
     });
+    await setHomeId(homeId);
+    await setAwayId(awayId);
+    console.log("set");
     window.location.href = `/match/${matchId}/MatchPredict`;
   }
 
@@ -99,8 +113,6 @@ const MatchMain = () => {
             aria-label="lab API tabs example"
             textColor="black"
             scrollButtons={true}
-            // sx={{width:'100%', display:'flex', justifyContent:'space-around'}}
-            // centered
           >
             <Tab label="2022년 8월" value="202208" />
             <Tab label="9월" value="202209" />

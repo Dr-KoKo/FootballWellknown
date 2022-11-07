@@ -31,9 +31,15 @@ export default function (state = initState, action){
         matchStatus: action.matchStatus,
       }
     case "SET_HOME_ID":
-      initState.homeId = action.payload
-    case "SET_AWAY_ID":
-      initState.awayId = action.payload
+      return {
+        ...state,
+        homeId: action.payload
+      }
+      case "SET_AWAY_ID":  
+        return {
+          ...state,
+          awayId: action.payload
+        }
     default:
       return state;
   }
