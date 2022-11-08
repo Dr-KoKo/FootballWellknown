@@ -18,8 +18,6 @@ import HorizonLine from "components/HorizonLine"
 
 
 const MyPage = () => {
-    const [datas, setDatas] = useState({ email: "1234", nickname: "1234", point: "0" });
-    const [loading, setLoading] = useState(true);
 
     const [checkedDetail, setCheckedDetail] = useState(false);
     const handleChangeDetail = () => {
@@ -41,18 +39,9 @@ const MyPage = () => {
         setCheckedScore((prev) => !prev);
     };
 
+
+
     useEffect(() => {
-        axios
-            .get(`https://football-wellknown.com/api/v1/users`, {
-                headers: {
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb25naGFyMjAwNEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjY4NjQ4MTgzfQ.HOqV8j9U9D3GJMX0eSZtaL-tWffNMCeQNNP6Ei_92WQ`
-                }
-            })
-            .then((response) => {
-                console.log(response.data);
-                setDatas(response.data);
-                setLoading(false);
-            });
     }, []);
 
     // function goTeamDetail(id){

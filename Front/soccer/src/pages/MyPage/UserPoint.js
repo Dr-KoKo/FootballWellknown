@@ -18,6 +18,7 @@ import {
     Grid,
     withStyles,
 } from "@mui/material";
+import { getUserPoint } from "services/userServices";
 
 const MyPage = () => {
     const [datas, setDatas] = useState([]);
@@ -32,19 +33,12 @@ const MyPage = () => {
     };
 
     const createPointList = async (currentPage) => {
-        axios
-            .get(`https://football-wellknown.com/api/v1/users/points/${currentPage}`, {
-                headers: {
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb25naGFyMjAwNEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjY4NjQ4MTgzfQ.HOqV8j9U9D3GJMX0eSZtaL-tWffNMCeQNNP6Ei_92WQ`
-                }
-            })
-            .then((response) => {
-                console.log(response.data);
-                setDatas(response.data.pointList);
-                // response.json()
-                setLastPage(response.data.lastPage);
-                setLoading(false);
-            });
+        const result = await getUserPoint(currentPage);
+        if(result.status == 200){
+            setDatas(result.data.pointList)
+            setLastPage(result.data.lastPage);
+            setLoading(false);
+        }
     };
 
 
