@@ -20,24 +20,38 @@ import {
   withStyles,
 } from "@mui/material";
 import { Margin } from "@mui/icons-material";
+import { getUserInfo, getUserRank } from "services/userServices";
+
 
 const UserDetail = () => {
   const [user, setUser] = useState({ email: "1234", nickname: "1234", point: "0" });
+  const [rank, setRank] = useState({ rank: "1", rankDaily: "1", rankWeekly: "1" });
   const [loadingUser, setLoadingUser] = useState(true);
+  const [loadingRank, setLoadingRank] = useState(true);
+
+  const getMyInfo = async () => {
+    const result = await getUserInfo();
+
+    if (result?.data?.message === "성공") {
+      console.log(result.data)
+      setUser(result.data);
+      setLoadingUser(false);
+    }
+  }
+
+  const getMyRank = async () => {
+    const result = await getUserRank();
+
+    if (result?.data?.message === "성공") {
+      console.log(result.data)
+      setRank(result.data)
+      setLoadingRank(false);
+    }
+  }
 
   useEffect(() => {
-    axios
-      .get(`https://football-wellknown.com/api/v1/users`, {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb25naGFyMjAwNEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjY4NjQ4MTgzfQ.HOqV8j9U9D3GJMX0eSZtaL-tWffNMCeQNNP6Ei_92WQ`
-        }
-      })
-      .then((response) => {
-        console.log(response.data);
-        setUser(response.data);
-        setLoadingUser(false);
-      });
-
+    getMyInfo()
+    getMyRank()
   }, []);
 
   // function goTeamDetail(id){
@@ -45,55 +59,58 @@ const UserDetail = () => {
   // } 
 
   return (
-      <div id="userDiv">
-        {loadingUser ? <Loading /> : <div id="userDet1">
-          <img id="userProfile1" width="40%" height="300px" src={Profile} />
-          <Grid item xs={16} sx={{width:'60%'}} >
-            <TableContainer >
-              <Table>
-                <TableBody>
-                  <TableRow
-                    key={user.email}
-                    hover
-                  >
-                    <TableCell align="center">Email</TableCell>
-                    <TableCell align="center">{user.email}</TableCell>
-                  </TableRow>
-                  <TableRow
-                    key={user.email}
-                    hover
-                  >
-                    <TableCell align="center">Nickname</TableCell>
-                    <TableCell align="center">{user.nickname}</TableCell>
-                  </TableRow>
-                  <TableRow
-                    key={user.email}
-                    hover
-                  >
-                    <TableCell align="center">Point</TableCell>
-                    <TableCell align="center">{user.point}</TableCell>
-                  </TableRow>
-                  <TableRow
-                    key={user.email}
-                    hover
-                  >
-                    <TableCell align="center">주간 랭킹</TableCell>
-                    <TableCell align="center">{user.point}</TableCell>
-                  </TableRow>
-                  <TableRow
-                    key={user.email}
-                    hover
-                  >
-                    <TableCell align="center">전체 랭킹</TableCell>
-                    <TableCell align="center">{user.point}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
+    <div id="userDiv">
+      {loadingUser||loadingRank ? <Loading /> : <div id="userDet1">
+        <img id="userProfile1" width="40%" height="300px" src={Profile} />
+        <div>
+          {rank.rank}
         </div>
-        }
+        <Grid item xs={16} sx={{ width: '60%' }} >
+          <TableContainer >
+            <Table>
+              <TableBody>
+                <TableRow
+                  // key={user.email}
+                  hover
+                >
+                  <TableCell align="center">Email</TableCell>
+                  <TableCell align="center">{user.email}</TableCell>
+                </TableRow>
+                <TableRow
+                  // key={user.email}
+                  hover
+                >
+                  <TableCell align="center">Nickname</TableCell>
+                  <TableCell align="center">{user.nickname}</TableCell>
+                </TableRow>
+                <TableRow
+                  // key={user.email}
+                  hover
+                >
+                  <TableCell align="center">Point</TableCell>
+                  <TableCell align="center">{user.point}</TableCell>
+                </TableRow>
+                <TableRow
+                  // key={user.email}
+                  hover
+                >
+                  <TableCell align="center">일간 랭킹</TableCell>
+                  <TableCell align="center">{rank.rankDaily}</TableCell>
+                </TableRow>
+                <TableRow
+                  // key={user.email}
+                  hover
+                >
+                  <TableCell align="center">주간 랭킹</TableCell>
+                  <TableCell align="center">{rank.rankWeekly}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
       </div>
+      }
+    </div>
   );
 };
 

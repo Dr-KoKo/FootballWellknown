@@ -3,14 +3,18 @@ import { store } from "..";
 import {
     TOKEN_DELETE
   } from "../modules/types.js";
+import axios from 'axios';
 
 
 
 // 요청 URL
 export const USER_URL = "/api/v1/users";
+export const USER_RANKING_URL = "/api/v1/users/ranks";
 export const USER_PREDICT_URL = "/api/v1/users/predicts"
 export const AUTH_URL = "/api/v1/auth";
 export const USER_RANK_URL = "/api/v1/ranking";
+export const USER_BOARD_URL = "/api/v1/users/boards"
+export const USER_POINT_URL = "/api/v1/users/points"
 
 export const getDailyRank = async () => {
   try{
@@ -42,6 +46,24 @@ export const getUserInfo = async () => {
     }
 };
 
+export const getUserRank = async () => {
+  try{
+    const payload = await axiosAuth.get(`${USER_RANKING_URL}`)
+    return payload
+  } catch(err){
+    return err;
+  }
+}
+
+export const getUserBoard = async (currentPage) => {
+  try{
+    const payload = await axiosAuth.get(`${USER_BOARD_URL}/${currentPage}`)
+    return payload
+  } catch(err){
+    return err;
+  }
+}
+
 export const getUserPredict = async () => {
   try{
     const payload = await axiosAuth.get(`${USER_PREDICT_URL}`)
@@ -51,6 +73,14 @@ export const getUserPredict = async () => {
   }
 }
 
+export const getUserPoint = async (currentPage) => {
+  try{
+    const payload = await axiosAuth.get(`${USER_POINT_URL}/${currentPage}`)
+    return payload
+  } catch(err){
+    return err
+  }
+}
 
 // 로그아웃
 export const logoutRequest = async () => {

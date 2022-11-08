@@ -18,23 +18,24 @@ import {
     Grid,
     withStyles,
 } from "@mui/material";
+import { getUserPredict } from "services/userServices";
 
 const MyPage = () => {
     const [datas, setDatas] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const getMyPredict = async () => {
+        const result = await getUserPredict();
+
+        if(result?.data?.message==="성공"){
+            console.log(result.data)
+            setDatas(result.data.userPredictList);
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
-        axios
-            .get(`https://football-wellknown.com/api/v1/users/predicts`, {
-                headers: {
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb25naGFyMjAwNEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjY4NjQ4MTgzfQ.HOqV8j9U9D3GJMX0eSZtaL-tWffNMCeQNNP6Ei_92WQ`
-                }
-            })
-            .then((response) => {
-                console.log(response.data);
-                setDatas(response.data.userPredictList);
-                setLoading(false);
-            });
+        getMyPredict();
     }, []);
 
     // function goTeamDetail(id){

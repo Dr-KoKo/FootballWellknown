@@ -19,15 +19,16 @@ import {
     Grid,
     withStyles,
 } from "@mui/material";
+import { getUserBoard } from "services/userServices";
 
 
 const MyPage = () => {
-    const [boardList, setBoardList] = useState([{ title: "" }]);
+    const [boards, setBoards] = useState(false);
     const [loadingBoard, setLoadingBoard] = useState(true);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [lastPage, setLastPage] = useState(10);
-    const [boards, setBoards] = useState(false);
+
 
     const onChangeHandler = (event, page) => {
         setCurrentPage(page);
@@ -35,20 +36,14 @@ const MyPage = () => {
     };
 
     const createBoardList = async (currentPage) => {
-        axios
-            .get(`https://football-wellknown.com/api/v1/users/boards/${currentPage}`, {
-                headers: {
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb25naGFyMjAwNEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjY4NjQ4MTgzfQ.HOqV8j9U9D3GJMX0eSZtaL-tWffNMCeQNNP6Ei_92WQ`
-                }
-            })
-            .then((response) => {
-                console.log(response.data);
-                setBoardList(response.data.boardList);
-                // response.json()
-                setLastPage(response.data.lastPage);
-                setLoadingBoard(false);
-            });
-    };
+        const result = await getUserBoard(currentPage);
+        if (result.status == 200) {
+          // console.log(result.data)
+          setBoards(result.data.boardList);
+          setLastPage(result.data.lastPage);
+          setLoadingBoard(false);
+        }
+        };
 
     const navigate = useNavigate();
 
@@ -83,11 +78,11 @@ const MyPage = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {boardList.map((board) => (
+                                        {boards.map((board) => (
                                             <TableRow
                                                 id='ubtr1'                                                
-                                                key={board.id}
-                                                onClick={() => navigate(`detail/${board.id}`)}
+                                                key={board.boardId}
+                                                onClick={() => navigate(`/board/${board.boardId}`)}
                                                 hover
                                             >
                                                 <TableCell align="center">{board.boardId}</TableCell>
