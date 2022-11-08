@@ -2,10 +2,7 @@ package com.a203.sixback.board;
 
 
 import com.a203.sixback.auth.UserPrincipal;
-import com.a203.sixback.board.dto.GetBoardDetailResDTO;
-import com.a203.sixback.board.dto.GetBoardResDTO;
-import com.a203.sixback.board.dto.PostBoardReqDTO;
-import com.a203.sixback.board.dto.UpdateBoardReqDTO;
+import com.a203.sixback.board.dto.*;
 import com.a203.sixback.board.res.BoardDetailListRes;
 import com.a203.sixback.board.res.BoardRes;
 import com.a203.sixback.db.entity.*;
@@ -154,6 +151,32 @@ public class BoardService {
         return getBoards;
     }
 
+    public List<GetBoardResDTO> getBoardSearchList(SearchReqDTO searchDTO) {
+        PageRequest pageRequest = PageRequest.of((int) (searchDTO.getCurrentPage()-1), 10, Sort.by("id").descending());
+        List<Board> boards = null;
+        List<GetBoardResDTO> getBoards = new LinkedList<>();
+        if(searchDTO.getType().equals("Title")){
+            boards = boardRepo.findByTitleContains(pageRequest, searchDTO.getKeyword());
+        }
+        else if(searchDTO.getType().equals("Content")){
+            boards = boardRepo.findByContentContains(pageRequest, searchDTO.getKeyword());
+        }
+        else if(searchDTO.getType().equals("All")){
+            boards = boardRepo.findByContentOrTitleContains(pageRequest, searchDTO.getKeyword(), searchDTO.getKeyword());
+        }
+
+
+        for(Board board : boards) {
+            getBoards.add(new GetBoardResDTO().builder()
+                    .id(board.getId())
+                    .title(board.getTitle())
+                    .author(board.getUser().getNickname())
+                    .build()
+            );
+        }
+        return getBoards;
+    }
+
     public ResponseEntity getMatchBoard(Long matchId, int page) {
         PageRequest pageRequest = PageRequest.of(page -1, 10, Sort.by("id").descending());
         List<Board> boards =  boardRepo.findAllByMatchId(pageRequest, matchId);
@@ -228,4 +251,20 @@ public class BoardService {
         long boardSize = boardRepo.count();
         return boardSize / 10 + (boardSize %10 == 0 ? 0 : 1);
     }
+
+    public long getSearchLastPage(SearchReqDTO searchDTO) {
+        long boardSize = -1L;
+        if(searchDTO.getType().equals("Title")){
+            boardSize =  boardRepo.countByTitleKeyword(searchDTO.getKeyword());
+        }
+        else if(searchDTO.getType().equals("Content")){
+            boardSize =  boardRepo.countByContentKeyword(searchDTO.getKeyword());
+        }
+        else if(searchDTO.getType().equals("All")){
+            boardSize =  boardRepo.countByContentOrTitleKeyword(searchDTO.getKeyword());
+        }
+        return boardSize / 10 + (boardSize %10 == 0 ? 0 : 1);
+    }
+
+
 }
