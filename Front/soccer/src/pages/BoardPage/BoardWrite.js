@@ -203,7 +203,7 @@ const BoardWrite = () => {
                 language: "ko",
                 placeholder: "내용!",                      
                 simpleUpload: {
-                  uploadUrl: 'https://football-wellknown.com:8080/api/vi/editor/upload'
+                  uploadUrl: 'https://football-wellknown.com:8080/api/v1/editor/upload'
                 },
               }}
               onChange={(event, editor) => {
