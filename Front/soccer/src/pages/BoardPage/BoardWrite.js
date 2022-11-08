@@ -60,7 +60,6 @@ const BoardWrite = () => {
 
   const onCtgChaged = (event) => {
     setCtgName(event.target.value);
-    console.log();
     if (teams.length === 0 && event.target.value === "팀") {
       createTeamList();
     }

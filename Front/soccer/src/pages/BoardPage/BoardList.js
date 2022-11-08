@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "components/Loading";
-import { getBoardList } from "../../services/boardServices";
+import { getBoardList, getSearchBoardList } from "../../services/boardServices";
 import {
   Button,
   Pagination,
@@ -14,7 +14,10 @@ import {
   Container,
   Box,
   Grid,
-  withStyles,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
 } from "@mui/material";
 import "./BoardList.css";
 
@@ -23,6 +26,32 @@ const BoardList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(10);
   const [boards, setBoards] = useState(false);
+  const [type, setType] = useState("all");
+  const [keyword, setKeyword] = useState();
+
+  const searchBoardList = async () => {
+    const SearchReqDTO = {
+      currentPage : currentPage,
+      type : type, 
+      keyword : keyword,
+    }
+
+    const result = await getSearchBoardList(SearchReqDTO);
+    console.log(result);
+    console.log(result.data);
+    if (result.status == 200) {
+      setBoards(result.data.boardList);
+      setLastPage(result.data.lastPage);
+    }
+  }
+
+  const onTypeChanged = (event) => {
+    setType(event.target.value);
+  } 
+
+  const onKeyChanged = (event) => {
+    setKeyword(event.target.value);
+  }
 
   const createBoardList = async (currentPage) => {
     const result = await getBoardList(currentPage);
@@ -53,18 +82,57 @@ const BoardList = () => {
           margin: "20px 0",
         }}
       >
-        <Grid textAlign={"center"} sx={{ margin: "10px" }}>
-          <h1>게시글 목록</h1>
-          <hr />
+        <Grid container columns={9} textAlign={"center"}>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={3}textAlign={"center"}>
+            <h1>게시글 목록</h1>
+          </Grid>
+          <Grid item xs = {2}
+            textAlign={"right"}
+            margin={"20px"}
+          >
+            <Button variant="contained" onClick={() => navigate(`write`)}>
+              게시글 작성
+            </Button>
+          </Grid>
         </Grid>
-        <Grid
-          textAlign={"right"}
-          sx={{ marginRight: "30px", marginBottom: "10px" }}
-        >
-          <Button variant="contained" onClick={() => navigate(`write`)}>
-            게시글 작성
-          </Button>
-        </Grid>
+        
+        <hr/>
+        <Box className="box-board-search"   
+             
+        sx={{
+          // backgroundColor: "#BFFD9F",
+          opacity: 0.8,
+          margin: "0",
+          p: 1, 
+          border: '1px black' 
+        }}>
+          <Grid
+            container
+            columns={20}
+            sx={{ padding: "5px" }}
+            spacing={2}
+            alignItems="center"
+            textAlign="center"
+          > 
+            <Grid item xs={1}/>
+            <Grid item xs={5}>
+              <Select defaultValue={"title"} label="검색" fullWidth onChange={onTypeChanged}>
+                <MenuItem value="Title">제목</MenuItem>
+                <MenuItem value="Contnet">내용</MenuItem>
+                <MenuItem value="All">제목 + 내용</MenuItem>
+              </Select>
+            </Grid>
+            <Grid item xs={10}>
+              <TextField fullWidth value={keyword} onChange={onKeyChanged}/>
+            </Grid>
+            <Grid item xs={3} >
+              <Button fullWidth variant="contained" onClick={searchBoardList}>검색</Button>  
+            </Grid>
+          </Grid>
+            <Grid item xs={1}/>
+        </Box>
+
         {boards ? (
           <Grid
             display={"flex"}
@@ -127,20 +195,8 @@ const BoardList = () => {
             </Grid>
           </Grid>
         ) : (
-          <div>loading</div>
+          <Loading></Loading>
         )}
-        <div>
-          {boards ? (
-            <div>
-              <div className="board">
-                {/* <Button varient="contained" color="veryperi" onClick={()=> navigate(`write`)}>글 작성</Button> */}
-                {/* <button onClick={() => navigate(`write`)}>글 작성</button> */}
-              </div>
-            </div>
-          ) : (
-            <Loading></Loading>
-          )}
-        </div>
       </Box>
     </Container>
   );
