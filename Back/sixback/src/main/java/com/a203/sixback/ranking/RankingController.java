@@ -1,6 +1,5 @@
 package com.a203.sixback.ranking;
 
-import com.a203.sixback.db.enums.DayType;
 import com.a203.sixback.db.redis.RankingCacheRepository;
 import com.a203.sixback.ranking.res.ResRankingDTO;
 import com.a203.sixback.ranking.res.ResponseRankingDTO;
@@ -20,10 +19,10 @@ public class RankingController {
     private final RankingCacheRepository rankingCacheRepository;
 
     @GetMapping("")
-    public ResponseEntity<? extends BaseResponseBody> getRanking() {
+    public ResponseEntity<? extends BaseResponseBody> getRankingList() {
         List<ResponseRankingDTO> result;
         try {
-            result = rankingCacheRepository.getRankingList(DayType.ALL);
+            result = rankingService.getRankingList();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(BaseResponseBody.of(400, "잘못된 요청입니다."));
@@ -32,10 +31,10 @@ public class RankingController {
     }
 
     @GetMapping("/daily")
-    public ResponseEntity<? extends BaseResponseBody> getDailyRanking() {
+    public ResponseEntity<? extends BaseResponseBody> getDailyRankingList() {
         List<ResponseRankingDTO> result;
         try {
-            result = rankingCacheRepository.getRankingList(DayType.DAILY);
+            result = rankingService.getDailyRankingList();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(BaseResponseBody.of(400, "잘못된 요청입니다."));
         }
@@ -43,10 +42,10 @@ public class RankingController {
     }
 
     @GetMapping("/weekly")
-    public ResponseEntity<? extends BaseResponseBody> getWeeklyRanking() {
+    public ResponseEntity<? extends BaseResponseBody> getWeeklyRankingList() {
         List<ResponseRankingDTO> result;
         try {
-            result = rankingCacheRepository.getRankingList(DayType.WEEKLY);
+            result = rankingService.getWeeklyRankingList();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(BaseResponseBody.of(400, "잘못된 요청입니다."));
         }
@@ -58,6 +57,8 @@ public class RankingController {
         rankingCacheRepository.addScore("GOO3837678538", 10);
         rankingCacheRepository.addScore("GOO8838923192",5);
         rankingCacheRepository.addScore("GOO3285927599",8);
+        rankingCacheRepository.addScore("GOO4685562230",15);
+        rankingCacheRepository.addScore("GOO3285927599",15);
         return ResponseEntity.ok().body(BaseResponseBody.of(200, "성공"));
     }
 

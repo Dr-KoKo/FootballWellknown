@@ -33,13 +33,14 @@ public class RankingCacheRepository {
     public void addScore(String value, double score) {
 
         for (DayType key : DayType.values()) {
-            if (rankingRedisTemplate.opsForZSet().addIfAbsent(key.name(), value, score)) {
+            String _key = getKey(key);
+            if (rankingRedisTemplate.opsForZSet().addIfAbsent(_key, value, score)) {
                 continue;
             }
 
-            rankingRedisTemplate.opsForZSet().incrementScore(key.name(), value, score);
+            rankingRedisTemplate.opsForZSet().incrementScore(_key, value, score);
 
-            log.info("Add score to Redis {}:{}:{}", key.name(), value, score);
+            log.info("Add score to Redis {}:{}:{}", _key, value, score);
         }
 
     }
