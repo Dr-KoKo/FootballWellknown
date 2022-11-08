@@ -49,5 +49,6 @@ public class Matches {
     public void setScore(int homeScore, int awayScore){
         this.homeScore = homeScore;
         this.awayScore = awayScore;
+        this.matchStatus = MatchStatus.FIN;
     }
 }

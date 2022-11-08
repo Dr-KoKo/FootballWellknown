@@ -46,7 +46,6 @@ public class MatchController {
         MatchStatusVO result = matchService.getMatchDetail(id);
         return ResponseEntity.status(200).body(MatchDetailRes.of(200,"Success",result));
     }
-
     @GetMapping("/{matchId}/lineUps")
     public ResponseEntity<BaseResponseBody> getLineUps(@PathVariable("matchId") long matchId){
         List<LineUpVO> result = matchService.getLineUps(matchId);
@@ -54,7 +53,7 @@ public class MatchController {
     }
     @GetMapping("/statistics/{matchId}")
     public ResponseEntity<BaseResponseBody> getPlayerMatches(@PathVariable long matchId){
-        List<PlayerMatchVO> result = matchService.getAllPlayerMatch(matchId);
+        StatisticsVO result = matchService.getAllPlayerMatch(matchId);
         return ResponseEntity.status(200).body(PlayerMatchRes.of(200,"Success",result));
     }
 
@@ -70,6 +69,12 @@ public class MatchController {
         return ResponseEntity.status(200).body(null);
     }
 
+    @GetMapping("/predict/match/my/{userEmail}/{matchId}")
+    public ResponseEntity<BaseResponseBody> myMatchPredict(@PathVariable String userEmail, @PathVariable long matchId){
+        MatchPredictVO result = matchService.getMyMatchPredict(userEmail, matchId);
+        return ResponseEntity.status(200).body(MatchPredictRes.of(200,"Success",result));
+    }
+
     @GetMapping("/predict/match/all/{matchId}")
     public ResponseEntity<BaseResponseBody> getAllMatchPredict(@PathVariable long matchId){
         List<MatchPredictVO> result = matchService.getAllMatchPredict(matchId);
@@ -82,9 +87,29 @@ public class MatchController {
         return ResponseEntity.status(200).body(AllTeamBoardRes.of(200,"Success",result));
     }
 
+    @GetMapping("/boards/teams/{teamId}")
+    public ResponseEntity<BaseResponseBody> getTeamInfo(@PathVariable("teamId") int teamId){
+        TeamBoardVO result = matchService.getTeamInfo(teamId);
+        return ResponseEntity.status(200).body(TeamInfoBoardRes.of(200, "Success", result));
+    }
+
     @GetMapping("/boards/rounds/{roundId}")
     public ResponseEntity<BaseResponseBody> getMatchBoards(@PathVariable("roundId") int roundId){
         List<MatchBoardVO> result = matchService.getMatchBoards(roundId);
         return ResponseEntity.status(200).body(AllMatchBoardRes.of(200,"Success",result));
+    }
+
+    @GetMapping("/history/{matchId}")
+    public ResponseEntity<BaseResponseBody> getMatchHistory(@PathVariable("matchId") long matchId){
+        List<MatchHistoryVO> result = matchService.getMatchHistory(matchId);
+        return ResponseEntity.status(200).body(AllMatchHistoryRes.of(200,"Success",result));
+    }
+
+
+    @GetMapping("/boards/matches/{matchId}")
+    public ResponseEntity<BaseResponseBody> getMatchRound(@PathVariable("matchId") long matchId){
+        int result = matchService.getMatchRound(matchId);
+        return ResponseEntity.status(200).body(MatchRoundRes.of(200,"Success",result));
+
     }
 }

@@ -1,5 +1,6 @@
 package com.a203.sixback.team;
 
+import com.a203.sixback.db.entity.Team;
 import com.a203.sixback.db.repo.CoachRepo;
 import com.a203.sixback.db.repo.PlayerRepo;
 import com.a203.sixback.db.repo.TeamRepo;
@@ -9,10 +10,10 @@ import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +52,12 @@ public class TeamController {
     public ResponseEntity<BaseResponseBody> getPlayerDetails(@PathVariable("playerId") long playerId){
         PlayerDetVO result = teamService.getPlayerDetails(playerId);
         return ResponseEntity.status(200).body(PlayerDetRes.of(200,"Success",result));
+    }
+    // 팀이름으로 팀 id 조회
+    @PostMapping("/name")
+    public ResponseEntity<BaseResponseBody> getTeamId(@RequestBody String name) {
+        TeamInfo teamInfo = teamService.getTeam(name);
+        return ResponseEntity.status(200).body(TeamRes.of(200,"Success",teamInfo));
     }
     @GetMapping("players/ranks")
     public ResponseEntity<BaseResponseBody> getPlayerRanks(){

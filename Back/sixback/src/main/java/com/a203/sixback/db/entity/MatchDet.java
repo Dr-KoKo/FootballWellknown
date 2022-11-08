@@ -1,16 +1,14 @@
 package com.a203.sixback.db.entity;
 
 import com.a203.sixback.db.enums.TeamType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class MatchDet {
@@ -50,4 +48,7 @@ public class MatchDet {
     @JoinColumn(name = "matches_id")
     private Matches matches;
 
+    public void setPassOn(int passOn){
+        this.passOn = passOn;
+    }
 }

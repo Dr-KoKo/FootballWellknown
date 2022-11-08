@@ -177,6 +177,12 @@ public class TeamService {
         return result;
     }
 
+    public TeamInfo getTeam(String name) {
+        Team team = teamRepo.findByName(name);
+        TeamInfo teamInfo = TeamInfo.builder().teamId(team.getId()).build();
+        return teamInfo;
+    }
+
     public PlayerRankVO getPlayerRanks() {
         List<PlayerVO2> scorers = new ArrayList<>();
         List<PlayerVO2> assists = new ArrayList<>();
@@ -189,6 +195,7 @@ public class TeamService {
                     .goals(player.getGoals())
                     .assists(player.getAssists())
                     .image(player.getImage())
+                    .name(player.getName())
                     .teamName(player.getTeam().getName())
                     .joinMatches(player.getJoinMatches())
                     .position(player.getPosition())
@@ -196,6 +203,7 @@ public class TeamService {
         }
         for(Player player : players2){
             assists.add(PlayerVO2.builder()
+                    .name(player.getName())
                     .id(player.getId())
                     .goals(player.getGoals())
                     .assists(player.getAssists())

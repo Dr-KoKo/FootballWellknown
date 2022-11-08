@@ -8,6 +8,7 @@ import com.a203.sixback.db.repo.*;
 import com.a203.sixback.match.vo.*;
 import com.a203.sixback.team.vo.MatchVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MatchService {
@@ -31,6 +33,7 @@ public class MatchService {
     private final PlayerRepo playerRepo;
     private final UserRepo userRepo;
     private final PredictRepo predictRepo;
+    private final MatchPredictRepo matchPredictRepo;
     private final TeamRepo teamRepo;
     public List<MatchStatusVO> getMatchesByRound(int round) {
         List<Matches> matches = matchesRepo.findAllByRound(round);
@@ -71,7 +74,7 @@ public class MatchService {
         return result;
     }
     public List<MatchStatusVO> getMatchesByMonth(int year, int month) {
-        List<Matches> matches = matchesRepo.findAllByYearAndMonth(year,month);
+        List<Matches> matches = matchesRepo.findAllByYearAndMonthOrderByMatch_Date(year,month);
         List<MatchStatusVO> result = new ArrayList<>();
         for(Matches match : matches){
             MatchVO matchVO = MatchVO.builder()
@@ -113,6 +116,9 @@ public class MatchService {
         List<LineUp> homeLineUp = new ArrayList<>();
         List<LineUp> awayLineUp = new ArrayList<>();
         for(int i=0;i<playerMatchList.size();i++){
+            if(playerMatchList.get(i).getPosition()==0){
+                continue;
+            }
             if(playerMatchList.get(i).getTeam().equals("HOME")){
                 homeLineUp.add(new LineUp(playerMatchList.get(i).getPlayer().getName(),
                         playerMatchList.get(i).getPlayer().getNumber(),
@@ -144,7 +150,8 @@ public class MatchService {
         return jsonArray;
     }
 
-    public List<PlayerMatchVO> getAllPlayerMatch(long match_id) {
+    public StatisticsVO getAllPlayerMatch(long match_id) {
+        StatisticsVO result = new StatisticsVO();
         List<PlayerMatch> playerMatchList = playerMatchRepo.findAllByMatches_Id(match_id);
         List<PlayerMatchVO> playerMatchVOList = new ArrayList<>();
         for(PlayerMatch pm : playerMatchList){
@@ -172,7 +179,51 @@ public class MatchService {
                     .build();
             playerMatchVOList.add(vo);
         }
-        return playerMatchVOList;
+        List<MatchDet> list = matchDetRepo.findAllByMatches_Id(match_id);
+        Matches matches = matchesRepo.findById(match_id).get();
+        for(MatchDet matchDet : list){
+
+            if(matchDet.getTeamType().equals(TeamType.HOME)){
+                result.setHomeDet(MatchDetVO.builder()
+                        .name(matches.getHome().getName())
+                        .image(matches.getHome().getImage())
+                        .shot(matchDet.getShot())
+                        .shotOn(matchDet.getShotOn())
+                        .corner(matchDet.getCorner())
+                        .formation(matchDet.getFormation())
+                        .offside(matchDet.getOffside())
+                        .penalty(matchDet.getPenalty())
+                        .pass(matchDet.getPass())
+                        .possession(matchDet.getPossession())
+                        .save(matchDet.getSave())
+                        .foul(matchDet.getFoul())
+                        .red(matchDet.getRed())
+                        .passOn(matchDet.getPassOn())
+                        .yellow(matchDet.getYellow())
+                        .build());
+            } else if (matchDet.getTeamType().equals(TeamType.AWAY)) {
+                result.setAwayDet(MatchDetVO.builder()
+                        .name(matches.getAway().getName())
+                        .image(matches.getAway().getImage())
+                        .shot(matchDet.getShot())
+                        .shotOn(matchDet.getShotOn())
+                        .corner(matchDet.getCorner())
+                        .formation(matchDet.getFormation())
+                        .offside(matchDet.getOffside())
+                        .penalty(matchDet.getPenalty())
+                        .pass(matchDet.getPass())
+                        .possession(matchDet.getPossession())
+                        .save(matchDet.getSave())
+                        .foul(matchDet.getFoul())
+                        .red(matchDet.getRed())
+                        .passOn(matchDet.getPassOn())
+                        .yellow(matchDet.getYellow())
+                        .build());
+
+            }
+        }
+        result.setPlayers(playerMatchVOList);
+        return result;
     }
 
     public void updatePlayerEvaluation(PlayerEvaluateVO playerEvaluateVO) {
@@ -191,15 +242,22 @@ public class MatchService {
 
     public void matchPredict(MatchPredictVO matchPredictVO) {
         Matches matches = matchesRepo.findById(matchPredictVO.getMatchId()).get();
-        User user = userRepo.findById(matchPredictVO.getUserId()).get();
+        User user = userRepo.findByEmail(matchPredictVO.getUserEmail());
 
         String predict = matchPredictVO.getWhereWin();
         MatchResult _predict = "HOME".equals(predict)?
-                MatchResult.HOME_WIN:"DRAW".equals(predict)?
-                MatchResult.DRAW:MatchResult.AWAY_WIN;
+                MatchResult.HOME:"DRAW".equals(predict)?
+                MatchResult.DRAW:MatchResult.AWAY;
 
-        Predict newMatchPredict = new Predict(user, matches, _predict);
-        predictRepo.save(newMatchPredict);
+//        있으면 update 없으면 새거
+        Predict old = predictRepo.findByMatches_IdAndUser_Id(matches.getId(), user.getId());
+        if(old == null){
+            Predict newMatchPredict = new Predict(user, matches, _predict);
+            predictRepo.save(newMatchPredict);
+        }else{
+            old.setMatchResult(_predict);
+            predictRepo.save(old);
+        }
     }
 
     public List<MatchPredictVO> getAllMatchPredict(long matchId) {
@@ -209,7 +267,7 @@ public class MatchService {
             String nickname = userRepo.findById(mp.getUser().getId()).get().getNickname();
 
             String predict = mp.getMatchResult().toString();
-            String _predict = "HOME_WIN".equals(predict)?
+            String _predict = "HOME".equals(predict)?
                     "HOME":"DRAW".equals(predict)?
                     "DRAW":"AWAY";
 
@@ -222,6 +280,15 @@ public class MatchService {
         }
         return result;
     }
+    public MatchPredictVO getMyMatchPredict(String userEmail, long matchId) {
+        Predict matchPredict = predictRepo.findByMatches_IdAndUser_Email(matchId,userEmail);
+
+        MatchPredictVO result = MatchPredictVO.builder()
+                .matchId(matchId)
+                .whereWin(String.valueOf(matchPredict.getMatchResult()))
+                .build();
+        return result;
+    }
 
     public List<TeamBoardVO> getTeams() {
         List<TeamBoardVO> result = new ArrayList<>();
@@ -232,11 +299,18 @@ public class MatchService {
         return result;
     }
 
+    public TeamBoardVO getTeamInfo(int teamId) {
+        TeamBoardVO result = new TeamBoardVO();
+        Team team = teamRepo.findById(teamId).get();
+        result =  new TeamBoardVO(team.getId(), team.getName(), team.getImage());
+        return result;
+    }
+
     public List<MatchBoardVO> getMatchBoards(int roundId) {
         List<MatchBoardVO> result = new ArrayList<>();
         List<Matches> matches = matchesRepo.findAllByRound(roundId);
         for(Matches match : matches){
-            String name = "[" +match.getRound()+"] "+match.getHome().getName()+ " VS " + match.getAway().getName();
+            String name = "[" +match.getRound()+"R] "+match.getHome().getName()+ " VS " + match.getAway().getName();
             result.add(new MatchBoardVO(match.getId(), name));
         }
         return result;
@@ -260,12 +334,12 @@ public class MatchService {
 
     // 라인업 나올시에 저장하는 거
     public void saveLineUps(Long matchId) throws Exception{
-        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject= new JSONObject();
 
-        String str = "https://apiv3.apifootball.com/?action=get_events&match_id="+matchId+"APIkey=" + apiKey;
+        String str = "https://apiv3.apifootball.com/?action=get_events&match_id="+matchId+"&APIkey=" + apiKey;
         URL url = new URL(str);
         InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
-        jsonObject = (JSONObject) JSONValue.parseWithException(isr);
+        jsonObject = (JSONObject) ((JSONArray) JSONValue.parseWithException(isr)).get(0);
         JSONObject lineups = (JSONObject) jsonObject.get("lineup");
         JSONObject homeLineups = (JSONObject) lineups.get("home");
         JSONObject awayLineups = (JSONObject) lineups.get("away");
@@ -357,6 +431,7 @@ public class MatchService {
                 savedPlayer.addPlayerStat(Integer.parseInt(playerStat.get("player_goals").toString()),Integer.parseInt(playerStat.get("player_assists").toString()));
                 playerRepo.save(savedPlayer);
             }
+
             PlayerMatch playerMatch = playerMatchRepo.findByMatches_IdAndPlayer_Id(matchId, player.get().getId());
             playerMatch.setGoal(Integer.parseInt(playerStat.get("player_goals").toString()));
             playerMatch.setAssist(Integer.parseInt(playerStat.get("player_assists").toString()));
@@ -375,6 +450,7 @@ public class MatchService {
             playerMatch.setShotOn(Integer.parseInt(playerStat.get("player_shots_on_goal").toString()));
             playerMatch.setTackle(Integer.parseInt(playerStat.get("player_tackles").toString()));
             playerMatch.setTeam(playerStat.get("team_name").toString().toUpperCase());
+            playerMatch.setExpertRate(Integer.parseInt(playerStat.get("player_rating").toString()));
             playerMatchRepo.save(playerMatch);
         }
     }
@@ -465,25 +541,38 @@ public class MatchService {
             }
 
         }
+        List<MatchDet> matchDetList = matchDetRepo.findAllByMatches_Id(savedMatches.getId());
         for(int t=0;t<=1;t++){
-            String type = t==0? "HOME" : "AWAY";
-            matchDetRepo.save(MatchDet.builder()
-                    .foul(foul[0][t])
-                    .pass(pass[0][t])
-                    .corner(corner[0][t])
-                    .matches(savedMatches)
-                    .offside(offside[0][t])
-                    .penalty(penalty[0][t])
-                    .passOn(suc[0][t])
-                    .possession(poss[0][t])
-                    .formation(formation[0][t])
-                    .red(red[0][t])
-                    .yellow(yellow[0][t])
-                    .shot(shot[0][t])
-                    .shotOn(shotOn[0][t])
-                    .save(save[0][t])
-                    .teamType(TeamType.valueOf(type))
-                    .build());
+            MatchDet savedMatchDet = matchDetList.get(t);
+            if(savedMatchDet.getTeamType().equals(TeamType.HOME)){
+                savedMatchDet.setFoul(foul[0][0]);
+                savedMatchDet.setPass(pass[0][0]);
+                savedMatchDet.setCorner(corner[0][0]);
+                savedMatchDet.setOffside(offside[0][0]);
+                savedMatchDet.setPenalty(penalty[0][0]);
+                savedMatchDet.setPassOn(suc[0][0]);
+                savedMatchDet.setPossession(poss[0][0]);
+                savedMatchDet.setRed(red[0][0]);
+                savedMatchDet.setYellow(yellow[0][0]);
+                savedMatchDet.setShot(shot[0][0]);
+                savedMatchDet.setShotOn(shotOn[0][0]);
+                savedMatchDet.setSave(save[0][0]);
+            }
+            else{
+                savedMatchDet.setFoul(foul[0][1]);
+                savedMatchDet.setPass(pass[0][1]);
+                savedMatchDet.setCorner(corner[0][1]);
+                savedMatchDet.setOffside(offside[0][1]);
+                savedMatchDet.setPenalty(penalty[0][1]);
+                savedMatchDet.setPassOn(suc[0][1]);
+                savedMatchDet.setPossession(poss[0][1]);
+                savedMatchDet.setRed(red[0][1]);
+                savedMatchDet.setYellow(yellow[0][1]);
+                savedMatchDet.setShot(shot[0][1]);
+                savedMatchDet.setShotOn(shotOn[0][1]);
+                savedMatchDet.setSave(save[0][1]);
+            }
+            matchDetRepo.save(savedMatchDet);
         }
     }
 
@@ -561,5 +650,30 @@ public class MatchService {
                 .teamType(TeamType.AWAY)
                 .history(History.SUB)
                 .build());
+    }
+
+
+    public List<MatchHistoryVO> getMatchHistory(long matchId) {
+        List<MatchHistoryVO> result = new ArrayList<>();
+        List<MatchHistory> histories = matchHistoryRepo.findAllByMatches_IdOrderByTime(matchId);
+
+        for(MatchHistory history: histories){
+            MatchHistoryVO vo = MatchHistoryVO.builder()
+                    .time(history.getTime())
+                    .history(history.getHistory().toString())
+                    .teamType(history.getTeamType().toString())
+                    .mainName(history.getMainName())
+                    .subName(history.getSubName())
+                    .info(history.getInfo())
+                    .build();
+            result.add(vo);
+        }
+        return result;
+    }
+
+
+    public int getMatchRound(long matchId) {
+        Matches matches = matchesRepo.findById(matchId).get();
+        return matches.getRound();
     }
 }

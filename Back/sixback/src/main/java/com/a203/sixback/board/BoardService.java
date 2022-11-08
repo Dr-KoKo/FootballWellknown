@@ -1,10 +1,9 @@
 package com.a203.sixback.board;
 
 
-import com.a203.sixback.board.dto.GetBoardDetailResDTO;
-import com.a203.sixback.board.dto.GetBoardResDTO;
-import com.a203.sixback.board.dto.PostBoardReqDTO;
-import com.a203.sixback.board.dto.UpdateBoardReqDTO;
+import com.a203.sixback.auth.UserPrincipal;
+import com.a203.sixback.board.dto.*;
+import com.a203.sixback.board.res.BoardDetailListRes;
 import com.a203.sixback.board.res.BoardRes;
 import com.a203.sixback.db.entity.*;
 import com.a203.sixback.db.repo.*;
@@ -13,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -31,12 +31,12 @@ public class BoardService {
     private final MatchesRepo matchRepo;
     private final TeamRepo teamRepo;
 
-    public ResponseEntity createBoard(PostBoardReqDTO postBoardReqDTO, Long userId) {
+    public ResponseEntity createBoard(PostBoardReqDTO postBoardReqDTO) {
         User user = null;
         Team team = null;
         Matches match = null;
         try {
-            user = userRepo.findById(userId).get();
+            user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No User"));
         }
@@ -73,14 +73,18 @@ public class BoardService {
                 .author(board.getUser().getNickname())
                 .createDate(board.getCreateDate())
                 .build();
+        if(board.getTeam()!=null)
+            getDetail.setTeam(board.getTeam().getId());
+        if(board.getMatch()!=null)
+            getDetail.setMatch(board.getMatch().getId());
     return getDetail;
 
     }
 
-    public ResponseEntity updateBoard(UpdateBoardReqDTO updateBoardReqDTO, Long userId) {
+    public ResponseEntity updateBoard(UpdateBoardReqDTO updateBoardReqDTO) {
         User user = null;
         try {
-            user = userRepo.findById(userId).get();
+            user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No User"));
         }
@@ -106,10 +110,10 @@ public class BoardService {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Update Board Success"));
     }
 
-    public ResponseEntity deleteBoard(Long boardId, Long userId) {
+    public ResponseEntity deleteBoard(Long boardId) {
         User user = null;
         try {
-            user = userRepo.findById(userId).get();
+            user = user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No User"));
         }
@@ -120,7 +124,8 @@ public class BoardService {
         } catch(Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No Board"));
         }
-        if(board.getUser() != user){
+        if(board.getUser().getId() != user.getId()){
+
             return ResponseEntity.status(405).body(BaseResponseBody.of(405,  "No Authorization"));
         }
 
@@ -136,6 +141,32 @@ public class BoardService {
         List<Board> boards =  boardRepo.findAll(pageRequest).stream().collect(Collectors.toList());
         List<GetBoardResDTO> getBoards = new LinkedList<>();
         for(Board board : boards){
+            getBoards.add(new GetBoardResDTO().builder()
+                    .id(board.getId())
+                    .title(board.getTitle())
+                    .author(board.getUser().getNickname())
+                    .build()
+            );
+        }
+        return getBoards;
+    }
+
+    public List<GetBoardResDTO> getBoardSearchList(SearchReqDTO searchDTO) {
+        PageRequest pageRequest = PageRequest.of((int) (searchDTO.getCurrentPage()-1), 10, Sort.by("id").descending());
+        List<Board> boards = null;
+        List<GetBoardResDTO> getBoards = new LinkedList<>();
+        if(searchDTO.getType().equals("Title")){
+            boards = boardRepo.findByTitleContains(pageRequest, searchDTO.getKeyword());
+        }
+        else if(searchDTO.getType().equals("Content")){
+            boards = boardRepo.findByContentContains(pageRequest, searchDTO.getKeyword());
+        }
+        else if(searchDTO.getType().equals("All")){
+            boards = boardRepo.findByContentOrTitleContains(pageRequest, searchDTO.getKeyword(), searchDTO.getKeyword());
+        }
+
+
+        for(Board board : boards) {
             getBoards.add(new GetBoardResDTO().builder()
                     .id(board.getId())
                     .title(board.getTitle())
@@ -181,4 +212,59 @@ public class BoardService {
         }
         return ResponseEntity.status(200).body(BoardRes.of(200, "Get Team Board Success", getBoards, getBoards.size() / 10 + 1));
     }
+
+    public ResponseEntity getTeamTop4Board(int teamId) {
+        List<Board> boards = boardRepo.findTop4ByTeamIdOrderByIdDesc(teamId);
+        List<GetBoardDetailResDTO> getBoards = new LinkedList<>();
+
+        for(Board board : boards) {
+            getBoards.add(new GetBoardDetailResDTO().builder()
+                    .id(board.getId())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .author(board.getUser().getNickname())
+                    .team(board.getTeam().getId())
+                    .build()
+            );
+        }
+        return ResponseEntity.status(200).body(BoardDetailListRes.of(200, "Get Top4 Team Board Success", getBoards));
+    }
+
+    public ResponseEntity getMatchTop4Board(long matchId) {
+        List<Board> boards = boardRepo.findTop4ByMatchIdOrderByIdDesc(matchId);
+        List<GetBoardDetailResDTO> getBoards = new LinkedList<>();
+
+        for(Board board : boards) {
+            getBoards.add(new GetBoardDetailResDTO().builder()
+                    .id(board.getId())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .author(board.getUser().getNickname())
+                    .match(board.getMatch().getId())
+                    .build()
+            );
+        }
+        return ResponseEntity.status(200).body(BoardDetailListRes.of(200, "Get Top4 Match Board Success", getBoards));
+    }
+
+    public long getLastPage(){
+        long boardSize = boardRepo.count();
+        return boardSize / 10 + (boardSize %10 == 0 ? 0 : 1);
+    }
+
+    public long getSearchLastPage(SearchReqDTO searchDTO) {
+        long boardSize = -1L;
+        if(searchDTO.getType().equals("Title")){
+            boardSize =  boardRepo.countByTitleKeyword(searchDTO.getKeyword());
+        }
+        else if(searchDTO.getType().equals("Content")){
+            boardSize =  boardRepo.countByContentKeyword(searchDTO.getKeyword());
+        }
+        else if(searchDTO.getType().equals("All")){
+            boardSize =  boardRepo.countByContentOrTitleKeyword(searchDTO.getKeyword());
+        }
+        return boardSize / 10 + (boardSize %10 == 0 ? 0 : 1);
+    }
+
+
 }
