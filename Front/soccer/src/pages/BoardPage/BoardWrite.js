@@ -13,12 +13,13 @@ import {
 import { useNavigate } from "react-router";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 // import ClassicEditor from "../../util/build/ckeditor";
+import ClassicEditor from 'ckeditor5-custom-build/build/ckeditor';
 import { createBoard } from "services/boardServices";
 import { getTeamList } from "services/matchServices";
 import "./BoardWrite.css";
 
 const BoardWrite = () => {
-  const ClassicEditor = require("../../util/build/ckeditor.js");
+  // const ClassicEditor = require("../../util/build/ckeditor.js");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [ctgName, setCtgName] = useState("자유");
@@ -202,7 +203,7 @@ const BoardWrite = () => {
                 language: "ko",
                 placeholder: "내용!",                      
                 simpleUpload: {
-                  uploadUrl: 'localhost:8080/api/vi/editor/upload'
+                  uploadUrl: 'https://football-wellknown.com:8080/api/vi/editor/upload'
                 },
               }}
               onChange={(event, editor) => {
