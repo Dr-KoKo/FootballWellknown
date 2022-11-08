@@ -6,6 +6,7 @@ import com.a203.sixback.board.res.BoardDetailRes;
 import com.a203.sixback.board.res.BoardRes;
 import com.a203.sixback.board.res.CommentRes;
 import com.a203.sixback.util.model.BaseResponseBody;
+import com.amazonaws.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,13 @@ public class BoardController {
         List<GetBoardResDTO> boards = boardService.getBoardList(pages);
         long lastPage = boardService.getLastPage();
         return ResponseEntity.status(200).body(BoardRes.of(200, "message", boards, (int) lastPage));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<? extends BaseResponseBody> getBardSearchList(@RequestBody SearchReqDTO searchDTO){
+        List<GetBoardResDTO> boards = boardService.getBoardSearchList(searchDTO);
+        long lastPage = boardService.getSearchLastPage(searchDTO);
+        return ResponseEntity.status(200).body(BoardRes.of(200, "searchSuccess", boards, (int) lastPage));
     }
 
     @GetMapping("/matches/{matchId}")

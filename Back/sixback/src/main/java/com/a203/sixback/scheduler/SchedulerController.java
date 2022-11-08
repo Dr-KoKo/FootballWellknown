@@ -6,6 +6,7 @@ import com.a203.sixback.db.repo.PredictRepo;
 import com.a203.sixback.match.MatchService;
 import com.a203.sixback.match.vo.MatchStatusVO;
 //import com.a203.sixback.redis.RedisService;
+import com.a203.sixback.ranking.RankingService;
 import com.a203.sixback.scheduler.task.InitTask;
 import com.a203.sixback.scheduler.task.LineUpTask;
 import com.a203.sixback.socket.MessageService;
@@ -17,6 +18,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,6 +32,9 @@ public class SchedulerController {
 
     @Autowired(required = false)
     private MessageService messageService;
+
+    @Autowired(required = false)
+    private RankingService rankingService;
 
     @Autowired(required = false)
     private MatchCacheRepository matchCacheRepository;
@@ -61,6 +66,18 @@ public class SchedulerController {
             e.printStackTrace();
         }
 
+    }
+
+    @Async
+    @Scheduled(cron = "0 0 0 * * *")
+    public void dailyRankingRefreshSchedule() throws Exception {
+        rankingService.refreshDailyRanking();
+    }
+
+    @Async
+    @Scheduled(cron = "0 0 0 * * 0")
+    public void weeklyRankingRefreshSchedule() throws Exception {
+        rankingService.refreshWeeklyRanking();
     }
 
     private void test(int year, int month, int day) throws Exception {

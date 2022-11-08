@@ -74,7 +74,7 @@ public class MatchService {
         return result;
     }
     public List<MatchStatusVO> getMatchesByMonth(int year, int month) {
-        List<Matches> matches = matchesRepo.findAllByYearAndMonth(year,month);
+        List<Matches> matches = matchesRepo.findAllByYearAndMonthOrderByMatch_Date(year,month);
         List<MatchStatusVO> result = new ArrayList<>();
         for(Matches match : matches){
             MatchVO matchVO = MatchVO.builder()
@@ -116,6 +116,9 @@ public class MatchService {
         List<LineUp> homeLineUp = new ArrayList<>();
         List<LineUp> awayLineUp = new ArrayList<>();
         for(int i=0;i<playerMatchList.size();i++){
+            if(playerMatchList.get(i).getPosition()==0){
+                continue;
+            }
             if(playerMatchList.get(i).getTeam().equals("HOME")){
                 homeLineUp.add(new LineUp(playerMatchList.get(i).getPlayer().getName(),
                         playerMatchList.get(i).getPlayer().getNumber(),
@@ -538,25 +541,38 @@ public class MatchService {
             }
 
         }
+        List<MatchDet> matchDetList = matchDetRepo.findAllByMatches_Id(savedMatches.getId());
         for(int t=0;t<=1;t++){
-            String type = t==0? "HOME" : "AWAY";
-            matchDetRepo.save(MatchDet.builder()
-                    .foul(foul[0][t])
-                    .pass(pass[0][t])
-                    .corner(corner[0][t])
-                    .matches(savedMatches)
-                    .offside(offside[0][t])
-                    .penalty(penalty[0][t])
-                    .passOn(suc[0][t])
-                    .possession(poss[0][t])
-                    .formation(formation[0][t])
-                    .red(red[0][t])
-                    .yellow(yellow[0][t])
-                    .shot(shot[0][t])
-                    .shotOn(shotOn[0][t])
-                    .save(save[0][t])
-                    .teamType(TeamType.valueOf(type))
-                    .build());
+            MatchDet savedMatchDet = matchDetList.get(t);
+            if(savedMatchDet.getTeamType().equals(TeamType.HOME)){
+                savedMatchDet.setFoul(foul[0][0]);
+                savedMatchDet.setPass(pass[0][0]);
+                savedMatchDet.setCorner(corner[0][0]);
+                savedMatchDet.setOffside(offside[0][0]);
+                savedMatchDet.setPenalty(penalty[0][0]);
+                savedMatchDet.setPassOn(suc[0][0]);
+                savedMatchDet.setPossession(poss[0][0]);
+                savedMatchDet.setRed(red[0][0]);
+                savedMatchDet.setYellow(yellow[0][0]);
+                savedMatchDet.setShot(shot[0][0]);
+                savedMatchDet.setShotOn(shotOn[0][0]);
+                savedMatchDet.setSave(save[0][0]);
+            }
+            else{
+                savedMatchDet.setFoul(foul[0][1]);
+                savedMatchDet.setPass(pass[0][1]);
+                savedMatchDet.setCorner(corner[0][1]);
+                savedMatchDet.setOffside(offside[0][1]);
+                savedMatchDet.setPenalty(penalty[0][1]);
+                savedMatchDet.setPassOn(suc[0][1]);
+                savedMatchDet.setPossession(poss[0][1]);
+                savedMatchDet.setRed(red[0][1]);
+                savedMatchDet.setYellow(yellow[0][1]);
+                savedMatchDet.setShot(shot[0][1]);
+                savedMatchDet.setShotOn(shotOn[0][1]);
+                savedMatchDet.setSave(save[0][1]);
+            }
+            matchDetRepo.save(savedMatchDet);
         }
     }
 

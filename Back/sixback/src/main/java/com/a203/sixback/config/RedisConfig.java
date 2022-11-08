@@ -3,6 +3,7 @@ package com.a203.sixback.config;
 import com.a203.sixback.db.entity.User;
 import io.lettuce.core.RedisURI;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +43,7 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    @Bean
+    @Bean(name = "matchRedisTemplate")
     public RedisTemplate<String, String> matchRedisTemplate(RedisConnectionFactory redisConnectionFactory){
         RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
 
@@ -53,18 +54,15 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    @Bean
-    public RedisTemplate<String, Long> chatRedisTemplate(RedisConnectionFactory redisConnectionFactory){
-        RedisTemplate<String, Long> redisTemplate = new RedisTemplate<>();
+    @Bean(name = "rankRedisTemplate")
+    public RedisTemplate<String, String> rankRedisTemplate(RedisConnectionFactory redisConnectionFactory){
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
 
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Long>(Long.class));
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<String>(String.class));
 
         return redisTemplate;
     }
-
-//    @Bean
-//    public RedisTemplate<String, Ranking>
 
 }
