@@ -5,6 +5,7 @@ import './Layout.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutRequest } from 'services/userServices';
 import { LOGOUT } from "../modules/types";
+import swal from 'sweetalert';
 
 const Layout = (props) => {
   const state = useSelector(state => state);
@@ -12,13 +13,28 @@ const Layout = (props) => {
   const dispatch = useDispatch();
 
   const onLogoutHandler = () => {
-    logoutRequest();
-    // 엑세스 토큰 제외하고 로그아웃
-    dispatch({
-      type: LOGOUT,
-    });
-    navigate("/");
+    swal({
+      title: "로그아웃 하시겠습니까?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willLogout) => {
+      if (willLogout) {
+        swal("로그아웃 되었습니다.", {
+          icon: "success",
+        })
+        logoutRequest();
+        // 엑세스 토큰 제외하고 로그아웃
+        dispatch({
+          type: LOGOUT,
+        });
+        navigate("/");
+      }});
+    
   };
+
+  
   return (
     <Fragment>
       <nav className='navbar'>
