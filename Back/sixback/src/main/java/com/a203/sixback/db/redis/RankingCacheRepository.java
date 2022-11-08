@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,11 +48,12 @@ public class RankingCacheRepository {
     public Long getRanking(DayType key, String value) {
         String _key = getKey(key);
 
-        Long rank = rankingRedisTemplate.opsForZSet().reverseRank(_key, value) + 1;
+        Long rank = rankingRedisTemplate.opsForZSet().reverseRank(_key, value);
+        Long _rank = rank==null? 0L:rank;
 
         log.info("Get rank from Redis {}:{}", _key, value, rank);
 
-        return rank;
+        return _rank;
     }
 
     public List<ResponseRankingDTO> getRankingList(DayType key) {
