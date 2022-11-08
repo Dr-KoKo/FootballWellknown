@@ -31,6 +31,10 @@ const Layout = (props) => {
             <li  id='li'><NavLink className='navbar_li' to="match"><div>MATCH</div></NavLink></li>
             <li  id='li'><NavLink className='navbar_li' to="board"><div>COMMUNITY</div></NavLink></li>
             {(state.user.isLogin ? 
+              <li  id='li'><NavLink className='navbar_li' to="userinfo"><div>MYPAGE</div></NavLink></li>
+              : null
+              )}
+            {(state.user.isLogin ? 
               <li  id='li'>
                 <button id='logoutBtn' onClick={onLogoutHandler}>LOGOUT</button></li> 
               : 
