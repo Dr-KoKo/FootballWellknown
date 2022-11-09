@@ -2,7 +2,6 @@ import axios from "axios";
 import { store } from "..";
 import { getToken } from "./userServices";
 import { SET_TOKEN} from "modules/types";
-import { useDispatch } from "react-redux";
 
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -13,7 +12,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
  */
 
 export const request = axios.create({
-  baseURL: process.env.REACT_APP_LOCAL_SERVER_URL,
+  baseURL: process.env.REACT_APP_SERVER_URL,
   // baseURL: process.env.REACT_APP_SERVER_URL,
   withCredentials: true,
 });
@@ -32,7 +31,7 @@ request.interceptors.response.use(
  */
 
 export const axiosAuth = axios.create({
-  baseURL: process.env.REACT_APP_LOCAL_SERVER_URL,
+  baseURL: process.env.REACT_APP_SERVER_URL,
   // baseURL: process.env.REACT_APP_SERVER_URL,
   timeout: 10000,
   withCredentials: true,
@@ -60,16 +59,11 @@ axiosAuth.interceptors.response.use(
   // 에러처리
   async function(error) {
     const result = error.config;
-    console.log(error)
-    console.log(error.response.status)
     if(error.response.status === 401){
       const res = await getToken();
       const accessToken = res.data.body.token;
       store.dispatch({ type: SET_TOKEN, payload:  accessToken  })
       location.reload();
-      
-      
-
     }
     return Promise.reject(error)
 

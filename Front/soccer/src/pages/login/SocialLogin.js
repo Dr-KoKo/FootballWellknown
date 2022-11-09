@@ -5,11 +5,11 @@ import './SocialLogin.css'
 
 
 const SocialLogin = () => {
-  const base_uri = process.env.REACT_APP_LOCAL_SERVER_URL + "/api/v1/oauth2/authorization/"
-  const redirect_uri = "?redirect_uri="+ process.env.REACT_APP_LOCAL_CLIENT_URL +"/oauth/redirect";
+  // const base_uri = process.env.REACT_APP_LOCAL_SERVER_URL + "/api/v1/oauth2/authorization/"
+  // const redirect_uri = "?redirect_uri="+ process.env.REACT_APP_LOCAL_CLIENT_URL +"/oauth/redirect";
 
-  // const base_uri = process.env.REACT_APP_SERVER_URL + "/api/v1/oauth2/authorization/"
-  // const redirect_uri = "?redirect_uri="+ process.env.REACT_APP_CLIENT_URL +"/oauth/redirect";
+  const base_uri = process.env.REACT_APP_SERVER_URL + "/api/v1/oauth2/authorization/"
+  const redirect_uri = "?redirect_uri="+ process.env.REACT_APP_CLIENT_URL +"/oauth/redirect";
   const google_uri = base_uri + 'google' + redirect_uri;
   const kakao_uri = base_uri + "kakao" + redirect_uri;
 

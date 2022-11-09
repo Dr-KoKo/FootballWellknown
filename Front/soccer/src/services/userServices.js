@@ -101,11 +101,8 @@ export const logoutRequest = async () => {
 export const getToken = async () => {
   try {
     const payload = await request.get(`${AUTH_URL}/refresh`);
-    console.log("sdflsdfskfsdf")
-    console.log(payload)
     return payload;
   } catch (err) {
-    // console.log("dfsdf")
     return err;
   }
 };
