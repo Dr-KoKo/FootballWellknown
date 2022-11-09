@@ -3,7 +3,7 @@ FROM node:16.17.0 as build-stage
 WORKDIR /var/jenkins_home/workspace/football-well-known-frontend/Front/soccer
 COPY package*.json ./
 
-RUN npm install 
+RUN npm install --cache
 COPY . .
 RUN npm run build
 FROM nginx:stable-alpine as production-stage
