@@ -5,6 +5,7 @@ import com.a203.sixback.db.entity.User;
 import com.a203.sixback.ranking.RankingService;
 import com.a203.sixback.user.res.*;
 import com.a203.sixback.util.model.BaseResponseBody;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,7 +33,6 @@ public class UserController {
         try{
             responseBody = userService.getUserDetails();
         } catch (Exception e){
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(BaseResponseBody.of(400,"잘못된 요청입니다."));
         }
         return ResponseEntity.ok().body(responseBody);
