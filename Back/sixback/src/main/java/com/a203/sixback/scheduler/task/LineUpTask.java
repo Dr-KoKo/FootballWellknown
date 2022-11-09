@@ -20,6 +20,7 @@ public class LineUpTask implements Runnable{
             matchService.saveLineUps(matchId);
             MainScheduler.getInstance().stop(matchId * 2L);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
