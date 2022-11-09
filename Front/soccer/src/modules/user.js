@@ -23,6 +23,8 @@ export const initState = {
 export default function (state = initState, action) {
   switch (action.type) {
     case SET_TOKEN:
+      console.log("Tlqkf")
+      console.log(action.payload)
       return {
         ...state,
         token: action.payload,
