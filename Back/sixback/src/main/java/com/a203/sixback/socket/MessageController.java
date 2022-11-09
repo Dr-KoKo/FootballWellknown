@@ -1,5 +1,6 @@
 package com.a203.sixback.socket;
 
+import com.a203.sixback.db.redis.RedisPubService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 public class MessageController {
 
     private final MessageService messageService;
+    private final RedisPubService redisPubService;
 
     /*
         /sub/channel/12345      - 구독(channelId:12345)
@@ -17,6 +19,6 @@ public class MessageController {
 
     @MessageMapping("/chat")
     public void chat(ChatMessage message) {
-        messageService.sendMessage(message);
+        redisPubService.sendMessage(message);
     }
 }

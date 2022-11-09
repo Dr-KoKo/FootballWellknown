@@ -77,7 +77,7 @@ public class BoardService {
             getDetail.setTeam(board.getTeam().getId());
         if(board.getMatch()!=null)
             getDetail.setMatch(board.getMatch().getId());
-    return getDetail;
+        return getDetail;
 
     }
 
@@ -151,20 +151,23 @@ public class BoardService {
         return getBoards;
     }
 
-    public List<GetBoardResDTO> getBoardSearchList(SearchReqDTO searchDTO) {
-        PageRequest pageRequest = PageRequest.of((int) (searchDTO.getCurrentPage()-1), 10, Sort.by("id").descending());
+    public List<GetBoardResDTO> getBoardSearchList(Long page, String type, String keyword) {
+        PageRequest pageRequest = PageRequest.of((int) (page-1), 10, Sort.by("id").descending());
         List<Board> boards = null;
         List<GetBoardResDTO> getBoards = new LinkedList<>();
-        if(searchDTO.getType().equals("Title")){
-            boards = boardRepo.findByTitleContains(pageRequest, searchDTO.getKeyword());
+        if(type.equals("Title")){
+            boards = boardRepo.findByTitleContains(pageRequest, keyword);
         }
-        else if(searchDTO.getType().equals("Content")){
-            boards = boardRepo.findByContentContains(pageRequest, searchDTO.getKeyword());
+        else if(type.equals("Content")){
+            boards = boardRepo.findByContentContains(pageRequest, keyword);
         }
-        else if(searchDTO.getType().equals("All")){
-            boards = boardRepo.findByContentOrTitleContains(pageRequest, searchDTO.getKeyword(), searchDTO.getKeyword());
+        else if(type.equals("All")){
+            boards = boardRepo.findByContentOrTitleContains(pageRequest,keyword, keyword);
         }
 
+        if(boards.isEmpty()){
+            return getBoards;
+        }
 
         for(Board board : boards) {
             getBoards.add(new GetBoardResDTO().builder()
@@ -252,16 +255,16 @@ public class BoardService {
         return boardSize / 10 + (boardSize %10 == 0 ? 0 : 1);
     }
 
-    public long getSearchLastPage(SearchReqDTO searchDTO) {
+    public long getSearchLastPage(Long page, String type, String keyword) {
         long boardSize = -1L;
-        if(searchDTO.getType().equals("Title")){
-            boardSize =  boardRepo.countByTitleKeyword(searchDTO.getKeyword());
+        if(type.equals("Title")){
+            boardSize =  boardRepo.countByTitleKeyword(keyword);
         }
-        else if(searchDTO.getType().equals("Content")){
-            boardSize =  boardRepo.countByContentKeyword(searchDTO.getKeyword());
+        else if(type.equals("Content")){
+            boardSize =  boardRepo.countByContentKeyword(keyword);
         }
-        else if(searchDTO.getType().equals("All")){
-            boardSize =  boardRepo.countByContentOrTitleKeyword(searchDTO.getKeyword());
+        else if(type.equals("All")){
+            boardSize =  boardRepo.countByContentOrTitleKeyword(keyword);
         }
         return boardSize / 10 + (boardSize %10 == 0 ? 0 : 1);
     }

@@ -35,4 +35,10 @@ public class SchedulerService {
         log.info(scheduleId+"를 종료합니다.");
         scheduledTasks.get(scheduleId).cancel(true);
     }
+
+    public void async(int id) {
+        for(int i = 0; i < 10000; i++) {
+            log.info("Async Test {} : {}", id, i);
+        }
+    }
 }

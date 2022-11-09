@@ -35,9 +35,10 @@ public class BoardController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<? extends BaseResponseBody> getBardSearchList(@RequestBody SearchReqDTO searchDTO){
-        List<GetBoardResDTO> boards = boardService.getBoardSearchList(searchDTO);
-        long lastPage = boardService.getSearchLastPage(searchDTO);
+    public ResponseEntity<? extends BaseResponseBody> getBardSearchList(@RequestParam(value = "currentPage") Long page, @RequestParam(value = "type") String type, @RequestParam(value = "keyword") String keyword){
+        List<GetBoardResDTO> boards = boardService.getBoardSearchList(page, type, keyword);
+        long lastPage = boardService.getSearchLastPage(page, type, keyword);
+
         return ResponseEntity.status(200).body(BoardRes.of(200, "searchSuccess", boards, (int) lastPage));
     }
 
