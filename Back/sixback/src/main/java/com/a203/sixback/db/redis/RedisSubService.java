@@ -15,7 +15,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RedisSubService implements MessageListener {
-    public static List<String> messageList = new ArrayList<>();
     private final ObjectMapper mapper = new ObjectMapper();
 
     private final MessageService messageService;
@@ -24,7 +23,6 @@ public class RedisSubService implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         try {
             ChatMessage chatMessage = mapper.readValue(message.getBody(), ChatMessage.class);
-            messageList.add(message.toString());
             messageService.sendMessage(chatMessage);
         } catch (IOException e) {
             e.printStackTrace();
