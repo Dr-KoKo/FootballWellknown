@@ -3,7 +3,6 @@ import { store } from "..";
 import {
     TOKEN_DELETE
   } from "../modules/types.js";
-import axios from 'axios';
 
 
 
