@@ -5,6 +5,7 @@ import com.a203.sixback.board.dto.*;
 import com.a203.sixback.board.res.BoardDetailRes;
 import com.a203.sixback.board.res.BoardRes;
 import com.a203.sixback.board.res.CommentRes;
+import com.a203.sixback.db.entity.BoardComment;
 import com.a203.sixback.util.model.BaseResponseBody;
 import com.amazonaws.Response;
 import lombok.RequiredArgsConstructor;
@@ -73,17 +74,21 @@ public class BoardController {
 
     @GetMapping("/{boardId}")
     public ResponseEntity getBoardDetail(@PathVariable(value ="boardId") long boardId){
-
         GetBoardDetailResDTO board = boardService.getBoardDetail(boardId);
-//        List<GetCommentResDTO> list = commentService.findComments(boardId);
-        List<GetCommentResDTO> list = commentService.findCommentsMongo(boardId);
+        List<GetCommentResDTO> list = boardService.findComments(boardId);
         board.setComments(list);
         return  ResponseEntity.status(200).body(BoardDetailRes.of(200, "GET DETAIL", board));
     }
 
+    @GetMapping("/comments/{boardId}")
+    public ResponseEntity getComments(@PathVariable(value ="boardId") long boardId){
+
+        List<GetCommentResDTO> list = boardService.findComments(boardId);
+        return  ResponseEntity.status(200).body(list);
+    }
+
     @PostMapping("")
     public ResponseEntity createBoard(@RequestBody PostBoardReqDTO postBoardReqDTO) {
-        System.out.println(postBoardReqDTO.getCtgName());
         return boardService.createBoard(postBoardReqDTO);
     }
 
@@ -103,14 +108,8 @@ public class BoardController {
 
     @PostMapping("/comment")
     public ResponseEntity postComment(@RequestBody PostCommentDTO postCommentDTO) {
-        return commentService.postComment(postCommentDTO);
-    }
-
-    // 시험용
-    @GetMapping("/comment/{boardId}")
-    public ResponseEntity getComments(@PathVariable(value = "boardId") Long boardId) {
-        List<GetCommentResDTO> list = commentService.findComments(boardId);
-        return ResponseEntity.ok(CommentRes.of(200,"GET Comment SUCCESS", list));
+        return boardService.postComment(postCommentDTO);
+//        return commentService.postComment(postCommentDTO);
     }
 
     @PostMapping("/commentMongo")

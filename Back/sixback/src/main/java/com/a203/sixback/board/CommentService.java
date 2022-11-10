@@ -10,7 +10,6 @@ import com.a203.sixback.db.entity.CommentMongo;
 import com.a203.sixback.db.entity.User;
 import com.a203.sixback.db.mongo.CommentRepoMongoDB;
 import com.a203.sixback.db.repo.BoardRepo;
-import com.a203.sixback.db.repo.CommentRepoMySQL;
 import com.a203.sixback.db.repo.UserRepo;
 import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
@@ -28,47 +27,46 @@ import java.util.List;
 public class CommentService {
     private final UserRepo userRepo;
     private final BoardRepo boardRepo;
-    private final CommentRepoMySQL commentRepo;
 
     private final CommentRepoMongoDB commentRepoMongo;
 
-    public ResponseEntity postComment(PostCommentDTO postCommentDTO) {
-        User user = null;
-        try {
-            user = user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-        } catch (Exception e) {
-            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No User"));
-        }
-        Board board = null;
-        try {
-            board = boardRepo.findById(postCommentDTO.getBoardId()).get();
-        } catch(Exception e) {
-            return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No Board"));
-        }
+//    public ResponseEntity postComment(PostCommentDTO postCommentDTO) {
+//        User user = null;
+//        try {
+//            user = user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+//        } catch (Exception e) {
+//            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No User"));
+//        }
+//        Board board = null;
+//        try {
+//            board = boardRepo.findById(postCommentDTO.getBoardId()).get();
+//        } catch(Exception e) {
+//            return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No Board"));
+//        }
+//
+//        Comment comment = Comment.builder()
+//                .comment(postCommentDTO.getComment())
+//                .user(user)
+//                .board(board)
+//                .build();
+//        commentRepo.save(comment);
+//        return ResponseEntity.ok(BaseResponseBody.of(200, "Post Comment Success"));
+//    }
 
-        Comment comment = Comment.builder()
-                .comment(postCommentDTO.getComment())
-                .user(user)
-                .board(board)
-                .build();
-        commentRepo.save(comment);
-        return ResponseEntity.ok(BaseResponseBody.of(200, "Post Comment Success"));
-    }
 
-
-    public List<GetCommentResDTO> findComments(Long boardId) {
-        List<Comment> comments = commentRepo.findAllByBoardId(boardId);
-        List<GetCommentResDTO> getComments = new LinkedList<>();
-
-        for(Comment comment : comments){
-            getComments.add(new GetCommentResDTO().builder()
-                    .author(comment.getUser().getNickname())
-                    .comment(comment.getComment())
-                    .build()
-            );
-        }
-        return getComments;
-    }
+//    public List<GetCommentResDTO> findComments(Long boardId) {
+//        List<Comment> comments = commentRepo.findAllByBoardId(boardId);
+//        List<GetCommentResDTO> getComments = new LinkedList<>();
+//
+//        for(Comment comment : comments){
+//            getComments.add(new GetCommentResDTO().builder()
+//                    .author(comment.getUser().getNickname())
+//                    .comment(comment.getComment())
+//                    .build()
+//            );
+//        }
+//        return getComments;
+//    }
 
     public ResponseEntity postCommentMongo(PostCommentDTO postCommentDTO) {
         User user = null;
@@ -101,7 +99,7 @@ public class CommentService {
 
         for(CommentMongo comment : comments){
             getComments.add(new GetCommentResDTO().builder()
-                    .commentId(comment.getId())
+                    .commentId(1)
                     .author(comment.getAuthor())
                     .comment(comment.getComment())
                     .createDate(comment.getCreateDate())

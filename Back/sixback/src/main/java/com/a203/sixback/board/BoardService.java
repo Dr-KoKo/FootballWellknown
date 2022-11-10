@@ -6,6 +6,7 @@ import com.a203.sixback.board.dto.*;
 import com.a203.sixback.board.res.BoardDetailListRes;
 import com.a203.sixback.board.res.BoardRes;
 import com.a203.sixback.db.entity.*;
+import com.a203.sixback.db.mongo.BoardCommentRepo;
 import com.a203.sixback.db.repo.*;
 import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +28,7 @@ public class BoardService {
 
     private final BoardRepo boardRepo;
     private final UserRepo userRepo;
+    private final BoardCommentRepo boardCommentRepo;
 
     private final CtgRepo ctgRepo;
 
@@ -37,6 +41,7 @@ public class BoardService {
         Matches match = null;
         try {
             user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+//            user = userRepo.findByEmail("pcm0720@gmail.com");
         } catch (Exception e) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No User"));
         }
@@ -60,6 +65,12 @@ public class BoardService {
                 .build();
         boardRepo.save(board);
 
+        BoardComment boardComment = BoardComment
+                .builder()
+                .boardId(board.getId())
+                .comments(new ArrayList<Comment>())
+                .build();
+        boardCommentRepo.save(boardComment);
         return ResponseEntity.ok(BaseResponseBody.of(200, "Post Board Success"));
     }
 
@@ -267,4 +278,46 @@ public class BoardService {
     }
 
 
+    public ResponseEntity postComment(PostCommentDTO postCommentDTO) {
+        User user = null;
+
+        try {
+            user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No User"));
+        }
+
+        BoardComment boardComment = null;
+        try {
+            boardComment = boardCommentRepo.findByBoardId(postCommentDTO.getBoardId());
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No Board"));
+        }
+
+        Comment comment = Comment.builder()
+                .id(boardComment.getComments().size() + 1)
+                .comment(postCommentDTO.getComment())
+                .author(user.getNickname())
+                .authorId(user.getId())
+                .createDate(LocalDateTime.now())
+                .build();
+
+        boardComment.getComments().add(comment);
+        boardCommentRepo.save(boardComment);
+        return ResponseEntity.ok(BaseResponseBody.of(200, "Post Comment Success"));
+    }
+
+    public List<GetCommentResDTO> findComments(long boardId) {
+        List<Comment> comments = boardCommentRepo.findByBoardId(boardId).getComments();
+        List<GetCommentResDTO> getComments = new LinkedList<>();
+        for(Comment comment : comments){
+            getComments.add(new GetCommentResDTO().builder()
+                    .commentId(comment.getId())
+                    .author(comment.getAuthor())
+                    .comment(comment.getComment())
+                    .createDate(comment.getCreateDate())
+                    .build());
+        }
+        return getComments;
+    }
 }
