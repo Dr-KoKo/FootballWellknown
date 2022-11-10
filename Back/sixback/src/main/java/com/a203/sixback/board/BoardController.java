@@ -4,12 +4,8 @@ package com.a203.sixback.board;
 import com.a203.sixback.board.dto.*;
 import com.a203.sixback.board.res.BoardDetailRes;
 import com.a203.sixback.board.res.BoardRes;
-import com.a203.sixback.board.res.CommentRes;
-import com.a203.sixback.db.entity.BoardComment;
 import com.a203.sixback.util.model.BaseResponseBody;
-import com.amazonaws.Response;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +18,6 @@ public class BoardController {
 
     final BoardService boardService;
 
-    final CommentService commentService;
     @GetMapping("")
     public ResponseEntity<? extends BaseResponseBody> getBoardList(@RequestParam(value = "page", required = false) Integer page) {
         int pages = 1;
@@ -112,26 +107,26 @@ public class BoardController {
 //        return commentService.postComment(postCommentDTO);
     }
 
-    @PostMapping("/commentMongo")
-    public ResponseEntity postCommentMongo(@RequestBody PostCommentDTO postCommentDTO) {
-        return commentService.postCommentMongo(postCommentDTO);
-    }
+//    @PostMapping("/commentMongo")
+//    public ResponseEntity postCommentMongo(@RequestBody PostCommentDTO postCommentDTO) {
+//        return commentService.postCommentMongo(postCommentDTO);
+//    }
 
-    @GetMapping("/commentMongo/{boardId}")
-    public ResponseEntity getCommentsMongo(@PathVariable(value = "boardId") Long boardId) {
-        List<GetCommentResDTO> list = commentService.findCommentsMongo(boardId);
-        return ResponseEntity.ok(CommentRes.of(200,"GET Comment SUCCESS", list));
-    }
+//    @GetMapping("/commentMongo/{boardId}")
+//    public ResponseEntity getCommentsMongo(@PathVariable(value = "boardId") Long boardId) {
+//        List<GetCommentResDTO> list = commentService.findCommentsMongo(boardId);
+//        return ResponseEntity.ok(CommentRes.of(200,"GET Comment SUCCESS", list));
+//    }
 
-    @PostMapping("/comment/update")
-    public ResponseEntity updateComment(@RequestBody UpdateCommentDTO updateCommentDTO) {
+//    @PostMapping("/comment/update")
+//    public ResponseEntity updateComment(@RequestBody UpdateCommentDTO updateCommentDTO) {
+//
+//        return commentService.updateComment(updateCommentDTO);
+//    }
 
-        return commentService.updateComment(updateCommentDTO);
-    }
-
-    @PostMapping("/comment/delete")
-    public ResponseEntity deleteComment(@RequestBody DeleteCommentDTO deleteCommentDTO) {
-        return commentService.deleteComment(deleteCommentDTO.getCommentId());
-    }
+//    @PostMapping("/comment/delete")
+//    public ResponseEntity deleteComment(@RequestBody DeleteCommentDTO deleteCommentDTO) {
+//        return commentService.deleteComment(deleteCommentDTO.getCommentId());
+//    }
 
 }
