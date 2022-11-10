@@ -99,34 +99,9 @@ public class BoardController {
         return boardService.deleteBoard(boardId);
     }
 
-
-
     @PostMapping("/comment")
     public ResponseEntity postComment(@RequestBody PostCommentDTO postCommentDTO) {
         return boardService.postComment(postCommentDTO);
-//        return commentService.postComment(postCommentDTO);
     }
-
-//    @PostMapping("/commentMongo")
-//    public ResponseEntity postCommentMongo(@RequestBody PostCommentDTO postCommentDTO) {
-//        return commentService.postCommentMongo(postCommentDTO);
-//    }
-
-//    @GetMapping("/commentMongo/{boardId}")
-//    public ResponseEntity getCommentsMongo(@PathVariable(value = "boardId") Long boardId) {
-//        List<GetCommentResDTO> list = commentService.findCommentsMongo(boardId);
-//        return ResponseEntity.ok(CommentRes.of(200,"GET Comment SUCCESS", list));
-//    }
-
-//    @PostMapping("/comment/update")
-//    public ResponseEntity updateComment(@RequestBody UpdateCommentDTO updateCommentDTO) {
-//
-//        return commentService.updateComment(updateCommentDTO);
-//    }
-
-//    @PostMapping("/comment/delete")
-//    public ResponseEntity deleteComment(@RequestBody DeleteCommentDTO deleteCommentDTO) {
-//        return commentService.deleteComment(deleteCommentDTO.getCommentId());
-//    }
 
 }
