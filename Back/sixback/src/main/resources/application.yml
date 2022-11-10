@@ -3,10 +3,6 @@ spring:
     generate-ddl: 'true'
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: 'true'
-        show_sql: 'true'
     show-sql: 'false'
   profiles:
     include: key
@@ -16,7 +12,7 @@ spring:
     hikari:
       data-source-properties:
         rewriteBatchedStatements: 'true'
-      maximum-pool-size: '5'
+      maximum-pool-size: '20'
       password: ${spring.datasource.password}
       username: ${spring.datasource.username}
       driver-class-name: ${spring.datasource.driver-class-name}
@@ -49,7 +45,7 @@ spring:
             scope: account_email, profile_nickname, profile_image
             client-authentication-method: post
             # redirect-uri: http://localhost:8080/api/v1/login/oauth2/code/kakao
-            redirect-uri: https://football-wellknown.com:8080/api/v1/login/oauth2/code/kakao
+            redirect-uri: https://football-wellknown.com/api/v1/login/oauth2/code/kakao
             client-name: Kakao
         provider:
           kakao:
@@ -106,6 +102,8 @@ server:
     key-store-password: Y1Ya6uu54UwkgwVAX6wV15iYfmvnk2mM
 jwt:
   secret: adbonFDsgdGawfsdfWERPwasbdfbo342ruusdhvsdSGUIdsaff
+  
+SCHEDULER-SERVER: ${SCHEDULER_SERVER}
 
 
-API-KEY: d50740680465e56a0f41a6ecaa61f064b45b3ee257df4c7f7cb107b5e58e8d82
+API-KEY: a67cd14e35bc9fe57a5134c095bc959c2b89956fc3c50d323b020ccef8a5bd05
