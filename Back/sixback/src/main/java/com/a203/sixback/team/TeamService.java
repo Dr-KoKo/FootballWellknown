@@ -43,7 +43,9 @@ public class TeamService {
             }
         });
         int i = 1;
+        List<String> coachNames = new ArrayList<>();
         for(Team team : list){
+            coachNames.add(team.getCoach().getName());
             result.add(new TeamInfo(
                     team.getId(),team.getName(), team.getImage(), team.getWin(), team.getDraw(),
                     team.getLose(), team.getGoals(), team.getLoseGoals(), i, team.getWin()*3+ team.getDraw()));
