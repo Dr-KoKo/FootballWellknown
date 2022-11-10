@@ -22,9 +22,6 @@ public class QTeam extends EntityPathBase<Team> {
 
     public static final QTeam team = new QTeam("team");
 
-    public static final QTeam hometeam = new QTeam("home");
-    public static final QTeam awayteam = new QTeam("away");
-
     public final QCoach coach;
 
     public final NumberPath<Integer> draw = createNumber("draw", Integer.class);
