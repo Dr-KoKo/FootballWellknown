@@ -291,11 +291,15 @@ public class BoardService {
         }
 
         BoardComment boardComment = null;
-        try {
-            boardComment = boardCommentRepo.findByBoardId(postCommentDTO.getBoardId());
-        } catch (Exception e) {
-            return ResponseEntity.status(400).body(BaseResponseBody.of(400,  "No Board"));
-        }
+
+        boardComment = boardCommentRepo.findByBoardId(postCommentDTO.getBoardId());
+        if(boardComment == null)
+            boardComment= BoardComment
+                .builder()
+                .boardId(postCommentDTO.getBoardId())
+                .comments(new ArrayList<Comment>())
+                .build();
+        boardCommentRepo.save(boardComment);
 
         Comment comment = Comment.builder()
                 .id(boardComment.getComments().size() + 1)
@@ -311,7 +315,18 @@ public class BoardService {
     }
 
     public List<GetCommentResDTO> findComments(long boardId) {
-        List<Comment> comments = boardCommentRepo.findByBoardId(boardId).getComments();
+        List<Comment> comments = null;
+        try {
+            comments = boardCommentRepo.findByBoardId(boardId).getComments();
+        } catch (Exception e) {
+            BoardComment boardComment = BoardComment
+                    .builder()
+                    .boardId(boardId)
+                    .comments(new ArrayList<Comment>())
+                    .build();
+            boardCommentRepo.save(boardComment);
+            comments = new ArrayList<>();
+        }
         List<GetCommentResDTO> getComments = new LinkedList<>();
         for(Comment comment : comments){
             getComments.add(new GetCommentResDTO().builder()
