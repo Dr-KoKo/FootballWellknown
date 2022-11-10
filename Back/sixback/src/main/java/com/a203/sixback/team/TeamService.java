@@ -4,10 +4,7 @@ import com.a203.sixback.db.entity.Coach;
 import com.a203.sixback.db.entity.Matches;
 import com.a203.sixback.db.entity.Player;
 import com.a203.sixback.db.entity.Team;
-import com.a203.sixback.db.repo.CoachRepo;
-import com.a203.sixback.db.repo.MatchesRepo;
-import com.a203.sixback.db.repo.PlayerRepo;
-import com.a203.sixback.db.repo.TeamRepo;
+import com.a203.sixback.db.repo.*;
 import com.a203.sixback.team.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -27,9 +24,13 @@ public class TeamService {
     private final CoachRepo coachRepo;
     private final PlayerRepo playerRepo;
     private final MatchesRepo matchesRepo;
+    private final TeamCustomRepoImpl teamCustomRepo;
     public ArrayList<TeamInfo> getTeamRanks() {
         ArrayList<TeamInfo> result = new ArrayList<>();
-        List<Team> list = teamRepo.findAll();
+        System.out.println("QueryDSL 적용전");
+        List<Team> list2 = teamRepo.findAll();
+        System.out.println("QueryDSL 적용후");
+        List<Team> list = teamCustomRepo.findAll();
         Collections.sort(list,new Comparator<Team>() {
             @Override
             public int compare(Team o1, Team o2) {
