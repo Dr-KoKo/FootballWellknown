@@ -9,6 +9,7 @@ import com.a203.sixback.scheduler.task.LineUpTask;
 import com.a203.sixback.team.vo.MatchVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,9 +30,12 @@ public class SchedulerController {
     @Autowired(required = false)
     private RankingService rankingService;
 
+    @Value("${SCHEDULER-SERVER}")
+    private boolean isSchedulerServer;
+
     @Async
     @Scheduled(cron = "0 0 23 * * *")
-//    @Scheduled(cron = "0 31 9 * * *")
+//    @Scheduled(cron = "0 58 8 * * *")
     public void mainSchedule() throws Exception {
         log.info("SchedulerController Cron 실행");
 
@@ -44,8 +48,9 @@ public class SchedulerController {
         log.info("{}-{}-{}", year, month, day);
 
         try {
-//            test(2022, 11, 6);
-            registerMatchSchedule(year, month, day);
+            if (isSchedulerServer) {
+                registerMatchSchedule(year, month, day);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,44 +60,15 @@ public class SchedulerController {
     @Async
     @Scheduled(cron = "0 0 0 * * *")
     public void dailyRankingRefreshSchedule() throws Exception {
-        rankingService.refreshDailyRanking();
+        if (isSchedulerServer)
+            rankingService.refreshDailyRanking();
     }
 
     @Async
     @Scheduled(cron = "0 0 0 * * 0")
     public void weeklyRankingRefreshSchedule() throws Exception {
-        rankingService.refreshWeeklyRanking();
-    }
-
-    private void test(int year, int month, int day) throws Exception {
-        List<MatchStatusVO> list = matchService.getMatchesByDate(year, month, day);
-
-        log.info("{}-{}-{}의 경기 수: {}", year, month, day, list.size());
-
-        for (MatchStatusVO matchStatusVo : list) {
-            MatchVO matchVO = matchStatusVo.getMatchVO();
-            long matchId = matchVO.getMatchId();
-            String date = matchVO.getDate();
-
-            log.info("MatchId : {}, MatchDate : {}", matchId, date);
-
-            int minute = Integer.parseInt(date.substring(14, 16));
-            int hour = Integer.parseInt(date.substring(11, 13));
-
-            String cronTrigger = "30 17 10 * * *";
-
-            Runnable task = new InitTask(matchId,schedulerService);
-
-            log.info("Cron Trigger : {}", cronTrigger);
-
-            MainScheduler.getInstance().start(task, cronTrigger, matchId);
-
-            task = new LineUpTask(matchId, matchService);
-
-            cronTrigger = "10 17 10 * * *";
-
-            MainScheduler.getInstance().start(task, cronTrigger, matchId * 2L);
-        }
+        if (isSchedulerServer)
+            rankingService.refreshWeeklyRanking();
     }
 
     private void registerMatchSchedule(int year, int month, int day) throws Exception {
