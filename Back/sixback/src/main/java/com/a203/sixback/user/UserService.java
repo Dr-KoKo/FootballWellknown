@@ -4,7 +4,6 @@ import com.a203.sixback.auth.UserPrincipal;
 import com.a203.sixback.db.entity.*;
 //import com.a203.sixback.db.mongo.CommentRepoMongoDB;
 import com.a203.sixback.db.enums.DayType;
-import com.a203.sixback.db.mongo.CommentRepoMongoDB;
 import com.a203.sixback.db.redis.RankingCacheRepository;
 import com.a203.sixback.db.repo.BoardRepo;
 import com.a203.sixback.db.repo.PointLogRepo;
@@ -25,15 +24,15 @@ import java.util.stream.Collectors;
 public class UserService {
     private final BoardRepo boardRepo;
     private final PointLogRepo pointLogRepo;
-    private final CommentRepoMongoDB commentRepoMongoDB;
+//    private final CommentRepoMongoDB commentRepoMongoDB;
     private final PredictRepo predictRepo;
     private final RankingCacheRepository rankingCacheRepository;
 
     @Autowired
-    public UserService(BoardRepo boardRepo, PointLogRepo pointLogRepo, CommentRepoMongoDB commentRepoMongoDB, PredictRepo predictRepo, RankingCacheRepository rankingCacheRepository) {
+    public UserService(BoardRepo boardRepo, PointLogRepo pointLogRepo, PredictRepo predictRepo, RankingCacheRepository rankingCacheRepository) {
         this.boardRepo = boardRepo;
         this.pointLogRepo = pointLogRepo;
-        this.commentRepoMongoDB = commentRepoMongoDB;
+//        this.commentRepoMongoDB = commentRepoMongoDB;
         this.predictRepo = predictRepo;
         this.rankingCacheRepository = rankingCacheRepository;
     }
@@ -57,14 +56,14 @@ public class UserService {
         return ResGetUserBoardsDTO.of(200, "성공", userBoardList);
     }
 
-    public ResGetUserCommentsDTO getUserComments() {
-
-        User user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-
-        List<CommentMongo> commentMongoList = commentRepoMongoDB.findAllByAuthorId(user.getId());
-
-        return ResGetUserCommentsDTO.of(200, "성공", commentMongoList);
-    }
+//    public ResGetUserCommentsDTO getUserComments() {
+//
+//        User user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+//
+//        List<CommentMongo> commentMongoList = commentRepoMongoDB.findAllByAuthorId(user.getId());
+//
+//        return ResGetUserCommentsDTO.of(200, "성공", commentMongoList);
+//    }
 
     public ResGetUserPredictsDTO getUserPredicts() {
 

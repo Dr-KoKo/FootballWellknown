@@ -57,16 +57,16 @@ public class UserController {
 
     }
 
-    @GetMapping("/comments")
-    public ResponseEntity<? extends BaseResponseBody> getUserComments(){
-        ResGetUserCommentsDTO responseBody;
-        try{
-            responseBody = userService.getUserComments();
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(BaseResponseBody.of(400,"잘못된 요청입니다."));
-        }
-        return ResponseEntity.ok().body(responseBody);
-    }
+//    @GetMapping("/comments")
+//    public ResponseEntity<? extends BaseResponseBody> getUserComments(){
+//        ResGetUserCommentsDTO responseBody;
+//        try{
+//            responseBody = userService.getUserComments();
+//        } catch (Exception e){
+//            return ResponseEntity.badRequest().body(BaseResponseBody.of(400,"잘못된 요청입니다."));
+//        }
+//        return ResponseEntity.ok().body(responseBody);
+//    }
 
     @GetMapping("/predicts")
     public ResponseEntity<? extends BaseResponseBody> getUserPredicts(){

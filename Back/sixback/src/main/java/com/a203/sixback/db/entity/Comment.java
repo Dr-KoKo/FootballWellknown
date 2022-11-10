@@ -2,29 +2,19 @@ package com.a203.sixback.db.entity;
 
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "COMENT")
-@NoArgsConstructor
-@AllArgsConstructor
+
+@Document(collection = "comment")
 @Builder
-@ToString
 @Data
-@EntityListeners(AuditingEntityListener.class)
 public class Comment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne(fetch =  FetchType.LAZY)
-    @JoinColumn(name = "autor")
-    private User user;
-
-    @ManyToOne(fetch =  FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
-
+    private Integer id;
     private String comment;
+    private String author;
+    private Long authorId;
+    private LocalDateTime createDate;
 }

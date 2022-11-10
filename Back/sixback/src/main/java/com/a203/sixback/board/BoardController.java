@@ -4,11 +4,8 @@ package com.a203.sixback.board;
 import com.a203.sixback.board.dto.*;
 import com.a203.sixback.board.res.BoardDetailRes;
 import com.a203.sixback.board.res.BoardRes;
-import com.a203.sixback.board.res.CommentRes;
 import com.a203.sixback.util.model.BaseResponseBody;
-import com.amazonaws.Response;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +18,6 @@ public class BoardController {
 
     final BoardService boardService;
 
-    final CommentService commentService;
     @GetMapping("")
     public ResponseEntity<? extends BaseResponseBody> getBoardList(@RequestParam(value = "page", required = false) Integer page) {
         int pages = 1;
@@ -74,17 +70,21 @@ public class BoardController {
 
     @GetMapping("/{boardId}")
     public ResponseEntity getBoardDetail(@PathVariable(value ="boardId") long boardId){
-
         GetBoardDetailResDTO board = boardService.getBoardDetail(boardId);
-//        List<GetCommentResDTO> list = commentService.findComments(boardId);
-        List<GetCommentResDTO> list = commentService.findCommentsMongo(boardId);
+        List<GetCommentResDTO> list = boardService.findComments(boardId);
         board.setComments(list);
         return  ResponseEntity.status(200).body(BoardDetailRes.of(200, "GET DETAIL", board));
     }
 
+    @GetMapping("/comments/{boardId}")
+    public ResponseEntity getComments(@PathVariable(value ="boardId") long boardId){
+
+        List<GetCommentResDTO> list = boardService.findComments(boardId);
+        return  ResponseEntity.status(200).body(list);
+    }
+
     @PostMapping("")
     public ResponseEntity createBoard(@RequestBody PostBoardReqDTO postBoardReqDTO) {
-        System.out.println(postBoardReqDTO.getCtgName());
         return boardService.createBoard(postBoardReqDTO);
     }
 
@@ -100,40 +100,9 @@ public class BoardController {
         return boardService.deleteBoard(boardId);
     }
 
-
-
     @PostMapping("/comment")
     public ResponseEntity postComment(@RequestBody PostCommentDTO postCommentDTO) {
-        return commentService.postComment(postCommentDTO);
-    }
-
-    // 시험용
-    @GetMapping("/comment/{boardId}")
-    public ResponseEntity getComments(@PathVariable(value = "boardId") Long boardId) {
-        List<GetCommentResDTO> list = commentService.findComments(boardId);
-        return ResponseEntity.ok(CommentRes.of(200,"GET Comment SUCCESS", list));
-    }
-
-    @PostMapping("/commentMongo")
-    public ResponseEntity postCommentMongo(@RequestBody PostCommentDTO postCommentDTO) {
-        return commentService.postCommentMongo(postCommentDTO);
-    }
-
-    @GetMapping("/commentMongo/{boardId}")
-    public ResponseEntity getCommentsMongo(@PathVariable(value = "boardId") Long boardId) {
-        List<GetCommentResDTO> list = commentService.findCommentsMongo(boardId);
-        return ResponseEntity.ok(CommentRes.of(200,"GET Comment SUCCESS", list));
-    }
-
-    @PostMapping("/comment/update")
-    public ResponseEntity updateComment(@RequestBody UpdateCommentDTO updateCommentDTO) {
-
-        return commentService.updateComment(updateCommentDTO);
-    }
-
-    @PostMapping("/comment/delete")
-    public ResponseEntity deleteComment(@RequestBody DeleteCommentDTO deleteCommentDTO) {
-        return commentService.deleteComment(deleteCommentDTO.getCommentId());
+        return boardService.postComment(postCommentDTO);
     }
 
 }
