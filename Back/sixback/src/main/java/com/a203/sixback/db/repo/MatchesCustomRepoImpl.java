@@ -57,9 +57,9 @@ public class MatchesCustomRepoImpl implements MatchesCustomRepo{
         QTeam away = new QTeam("away");
         return jpaQueryFactory.select(matches).from(matches)
 
-                .leftJoin(matches.home,team).fetchJoin()
+                .leftJoin(matches.home,home).fetchJoin()
                 .innerJoin(home.coach,coach).fetchJoin()
-                .leftJoin(matches.away,team).fetchJoin()
+                .leftJoin(matches.away,away).fetchJoin()
                 .innerJoin(away.coach,coach).fetchJoin()
                 .where(matches.id.eq(id))
                 .orderBy(matches.matchDate.asc())
