@@ -8,6 +8,7 @@ import ClassicEditor from 'ckeditor5-custom-build/build/ckeditor';
 import dateFormat from "dateformat";
 import "./BoardDetail.css";
 import Loading from "components/Loading";
+import LikeButton from "components/LikeButton";
 import {
   FormControl,
   Button,
@@ -21,13 +22,16 @@ import {
   TableCell,
   TableBody,
   TableRow,
+  IconButton,
 } from "@mui/material";
 import { store } from "../../index";
+import { useSelector } from "react-redux";
 
 const BoardDetail = () => {
   // const ClassicEditor = require("../../util/build/ckeditor.js");
   const navigate = useNavigate();
   const { id } = useParams();
+  const state = useSelector(state => state);
   const [board, setBoard] = useState(null);
   const [commentlist, setCommentlist] = useState(null);
   const [comment, setComment] = useState(null);
@@ -189,6 +193,14 @@ const BoardDetail = () => {
                 }}
               />
             </Grid>
+
+            {(state.user.isLongin ? 
+            <Grid sx={{textAlign:"center"}}>
+              <LikeButton boardId={id} />
+            </Grid>
+          : <Grid/>
+            )}
+            
             <hr></hr>
             <Grid
               className="comment"
@@ -238,6 +250,7 @@ const BoardDetail = () => {
               </TableContainer>
             </Grid>
             <hr></hr>
+
             <Grid container columns={16} sx={{ marginTop: "10px" }}>
               <Grid item xs="14">
                 <TextField
