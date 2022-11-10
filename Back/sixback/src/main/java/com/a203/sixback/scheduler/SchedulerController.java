@@ -30,8 +30,8 @@ public class SchedulerController {
     @Autowired(required = false)
     private RankingService rankingService;
 
-    @Value("${MAIN-SERVER}")
-    private boolean isMainServer;
+    @Value("${SCHEDULER-SERVER}")
+    private boolean isSchedulerServer;
 
     @Async
     @Scheduled(cron = "0 0 23 * * *")
@@ -48,7 +48,7 @@ public class SchedulerController {
         log.info("{}-{}-{}", year, month, day);
 
         try {
-            if (isMainServer) {
+            if (isSchedulerServer) {
                 registerMatchSchedule(year, month, day);
             }
         } catch (Exception e) {
@@ -60,14 +60,14 @@ public class SchedulerController {
     @Async
     @Scheduled(cron = "0 0 0 * * *")
     public void dailyRankingRefreshSchedule() throws Exception {
-        if (isMainServer)
+        if (isSchedulerServer)
             rankingService.refreshDailyRanking();
     }
 
     @Async
     @Scheduled(cron = "0 0 0 * * 0")
     public void weeklyRankingRefreshSchedule() throws Exception {
-        if (isMainServer)
+        if (isSchedulerServer)
             rankingService.refreshWeeklyRanking();
     }
 
