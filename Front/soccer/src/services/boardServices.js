@@ -75,15 +75,6 @@ export const updateBoard = async (dataToSubmit) => {
 
 export const checkBoardLike = async(boardId) => {
   try {
-    // const result = await fetch(
-    // `http://localhost:8080/api/v1/boards/likes/${boardId}`,
-    //   {}
-    // )
-    // .then((res) => res.json())
-    // .then((json) => json)
-    // console.log(result);
-    // return result;
-
     const payload = await axiosAuth.get(`${BOARD_LIKE_URL}/${boardId}`)
     console.log(payload);
     return payload;
@@ -103,16 +94,6 @@ export const getHowLiked = async(boardId) => {
 
 export const postBoardLike = async(dataToSubmit) => {
  try {
-  // const payload = await fetch(`http://localhost:8080/api/v1/boards/likes`, {
-  //               method: 'POST',
-  //               Headers: {
-  //                   'Content-Type': 'application/json'
-  //               },
-  //               body: dataToSubmit
-  //           }
-  //       )            
-  //           .then((res) => res.json())
-  //           .then((json) => json)
   const payload = await axiosAuth.post(`${BOARD_LIKE_URL}`, dataToSubmit)
   console.log(payload);
   return payload;

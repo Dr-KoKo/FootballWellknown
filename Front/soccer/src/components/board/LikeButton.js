@@ -15,15 +15,16 @@ const LikeButton = (props) => {
     const state = useSelector(state => state);
 
     const getIsLiked = async () => {
-        const result = null;
         
         if(state.user.isLongin){
-            result = await checkBoardLike(props.boardId);
-            setLike(result.data.checkLiked.liked);
+            const result = await checkBoardLike(props.boardId);
+            console.log(result);
+            setLike(result.data.checkLiked);
         }
         
-        result = await getHowLiked(props.boardId);
-        setNumsLike(result.data.checkLiked.numLiked);
+        const result = await getHowLiked(props.boardId);
+        console.log(result);
+        setNumsLike(result.data.count);
     }
 
     const changeState = async () => {
