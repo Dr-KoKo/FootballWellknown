@@ -8,7 +8,7 @@ import ClassicEditor from 'ckeditor5-custom-build/build/ckeditor';
 import dateFormat from "dateformat";
 import "./BoardDetail.css";
 import Loading from "components/Loading";
-import LikeButton from "components/LikeButton";
+import LikeButton from "components/LikeButton.js";
 import {
   FormControl,
   Button,
@@ -193,13 +193,14 @@ const BoardDetail = () => {
                 }}
               />
             </Grid>
+            <hr></hr>
 
-            {(state.user.isLongin ? 
+            {/* {(state.user.isLongin ?  */}
             <Grid sx={{textAlign:"center"}}>
               <LikeButton boardId={id} />
             </Grid>
-          : <Grid/>
-            )}
+          {/* : <Grid/>
+            )} */}
             
             <hr></hr>
             <Grid
