@@ -2,7 +2,7 @@ import axios from "axios";
 import { request, axiosAuth } from "./axios.js";
 
 const BOARD_URL = "api/v1/boards";
-const BOARD_LIKE_URL = "api/v1/boards/likes/"
+const BOARD_LIKE_URL = "api/v1/boards/likes"
 const COMMENT_URL = "api/v1/boards/comment";
 
 
