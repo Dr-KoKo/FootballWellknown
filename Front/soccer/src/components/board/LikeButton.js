@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import {
+    Grid,
     IconButton,
   } from "@mui/material";
 import { checkBoardLike, getHowLiked, postBoardLike } from 'services/boardServices';
@@ -18,8 +19,8 @@ const LikeButton = (props) => {
         
         if(state.user.isLongin){
             const result = await checkBoardLike(props.boardId);
-            // console.log(result);
             setLike(result.data.checkLiked);
+            console.log(result);
         }
         
         const result = await getHowLiked(props.boardId);
@@ -27,10 +28,10 @@ const LikeButton = (props) => {
         setNumsLike(result.data.count);
     }
 
-    const changeState = async () => {
+    const changeLike = async () => {
         const body = {
             "boardId": props.boardId,
-            "checkLiked": !state
+            "checkLiked": !like
         }
         const result = await postBoardLike(body);
         // console.log(result);
@@ -48,13 +49,13 @@ const LikeButton = (props) => {
 
     return (
         <div>
-            {/* {(state.user.isLongin ?  */}
-            <IconButton onClick={changeState}>
+            {(state.user.isLongin ? 
+            <IconButton onClick={changeLike}>
                 {like ? (<FavoriteIcon  color="error" />) 
                 :(<FavoriteBorderIcon sx={{color:"black"}}/>)}
             </IconButton>
-            {/* : <Grid/>
-            )} */}
+             : <Grid/>
+            )}
             <p>{numsLike}</p>
         </div>
     );
