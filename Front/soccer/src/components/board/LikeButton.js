@@ -16,8 +16,8 @@ const LikeButton = (props) => {
     const state = useSelector(state => state);
 
     const getIsLiked = async () => {
-        console.log(state);
-        if(state.user.isLongin){
+        if(state.user.isLogin){
+            
             const result = await checkBoardLike(props.boardId);
             setLike(result.data.checkLiked);
             console.log(result);
@@ -49,7 +49,7 @@ const LikeButton = (props) => {
 
     return (
         <div>
-            {(state.user.isLongin ? 
+            {(state.user.isLogin ? 
             <IconButton onClick={changeLike}>
                 {like ? (<FavoriteIcon  color="error" />) 
                 :(<FavoriteBorderIcon sx={{color:"black"}}/>)}
