@@ -329,9 +329,8 @@ public class BoardService {
         return getComments;
     }
 
-    public CheckLikedRes getLike(Long boardId) {
+    public Boolean getLike(Long boardId) {
         long userId = -1L;
-
         try {
             userId = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getId();
         } catch (Exception e) {
@@ -345,12 +344,25 @@ public class BoardService {
                     .build();
             boardLikeRepo.save(boardLike);
         }
+        return boardLike.getPeople().contains(userId);
+    }
 
-        CheckLikedRes checkLiked = CheckLikedRes.builder()
-                .isLiked(boardLike.getPeople().contains(userId))
-                .numLiked(boardLike.getPeople().size())
-                .build();
-        return checkLiked;
+    public int getLikeCount(Long boardId) {
+        long userId = -1L;
+        try {
+            userId = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getId();
+        } catch (Exception e) {
+            userId = -1L;
+        }
+        BoardLike boardLike = boardLikeRepo.findByBoardId(boardId);
+        if(boardLike == null){
+            boardLike = BoardLike.builder()
+                    .boardId(boardId)
+                    .people(new ArrayList<Long>())
+                    .build();
+            boardLikeRepo.save(boardLike);
+        }
+        return boardLike.getPeople().size();
     }
 
     public ResponseEntity postBoardLike(PostBoardLikeReq postBoardLikeReq) {
@@ -388,4 +400,6 @@ public class BoardService {
         boardLikeRepo.save(boardLike);
         return ResponseEntity.ok(BaseResponseBody.of(200, "Post Board Like Success"));
     }
+
+
 }
