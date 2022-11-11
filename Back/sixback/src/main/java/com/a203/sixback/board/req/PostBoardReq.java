@@ -1,11 +1,11 @@
-package com.a203.sixback.board.dto;
+package com.a203.sixback.board.req;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class PostBoardReqDTO {
+public class PostBoardReq {
     private String title;
     private String ctgName;
     private String content;

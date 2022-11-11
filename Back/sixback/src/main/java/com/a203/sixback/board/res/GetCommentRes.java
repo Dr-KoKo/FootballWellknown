@@ -1,4 +1,4 @@
-package com.a203.sixback.board.dto;
+package com.a203.sixback.board.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetCommentResDTO {
+public class GetCommentRes {
     int commentId;
     String author;
     String comment;

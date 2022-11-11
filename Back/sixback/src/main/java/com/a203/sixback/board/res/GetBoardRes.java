@@ -1,4 +1,4 @@
-package com.a203.sixback.board.dto;
+package com.a203.sixback.board.res;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetBoardResDTO {
+public class GetBoardRes {
     long id;
     String title;
     String author;

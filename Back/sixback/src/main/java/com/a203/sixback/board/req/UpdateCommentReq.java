@@ -1,9 +1,9 @@
-package com.a203.sixback.board.dto;
+package com.a203.sixback.board.req;
 
 import lombok.Data;
 
 @Data
-public class UpdateCommentDTO {
+public class UpdateCommentReq {
     String commentId;
     String comment;
 }
