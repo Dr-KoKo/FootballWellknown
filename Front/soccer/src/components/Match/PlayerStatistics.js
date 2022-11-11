@@ -173,6 +173,7 @@ const PlayerStatistics = (props) => {
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
   const match = useSelector((state)=>state.match);
+  const user = useSelector((state)=>state.user);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState('');
@@ -193,24 +194,28 @@ const PlayerStatistics = (props) => {
   }
 
   const submit = () => {
-    if(selected === ''){
-      alert('선수를 선택하세요');
-    }
-    else if(Number(score) < 0 || Number(score) > 10){
-      alert('0.0 ~ 10.0 사이의 숫자를 입력하세요');
-    }
-    else{
-      axios.post(`${SERVER_URL}/api/v1/matches/predict/player`,{
-        matchId: match.matchId,
-        userEmail: 'test@test.com',
-        playerId: selected,
-        score: Number(score),
-      })
-      .then(()=>{
-        setScore(-1);
-        setSelected('');
-        alert('평가가 완료되었습니다');
-      })
+    if(user.isLogin){
+      if(selected === ''){
+        alert('선수를 선택하세요');
+      }
+      else if(Number(score) < 0 || Number(score) > 10){
+        alert('0.0 ~ 10.0 사이의 숫자를 입력하세요');
+      }
+      else{
+        axios.post(`${SERVER_URL}/api/v1/matches/predict/player`,{
+          matchId: match.matchId,
+          userEmail: 'test@test.com',
+          playerId: selected,
+          score: Number(score),
+        })
+        .then(()=>{
+          setScore(-1);
+          setSelected('');
+          alert('평가가 완료되었습니다');
+        })
+      }
+    }else{
+      alert('로그인이 필요한 서비스입니다');
     }
   }
 

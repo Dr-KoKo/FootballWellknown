@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useParams } from 'react-router';
 import NoImage from '../../components/assets/noimage.jpg';
 import "./Padlet.css";
+import { Box } from '@mui/material';
 const Padlet = () => {
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
     
@@ -35,7 +36,7 @@ const Padlet = () => {
     const {matchId} = useParams();
     const [datas, setDatas] = useState([
         {
-            id : 3,
+            id : -1,
             title : "",
             ctgName : "",
             content : "",
@@ -49,15 +50,17 @@ const Padlet = () => {
         axios
           .get(`${SERVER_URL}/api/v1/boards/matches/main/${matchId}`)
           .then((response) => {
-            setDatas(response.data.boardList);
+            setDatas(response.data.boardList.length === 0 ? datas : response.data.boardList);
             console.log(response.data.boardList);
-            console.log(response.data.boardList[0].title);
             
           });
       }, []);
     return (
         <div id='mainFrame22'>
-            {datas.map((data) => (
+            {
+            datas[0].id === -1 ?
+            <Box>작성된 패들릿이 없습니다</Box>:
+            datas.map((data) => (
                 <div id='frame22'>                
                     <img className='thuimg' src = {strParsing(data.content)} alt=""></img>
                     <div id='content'>
