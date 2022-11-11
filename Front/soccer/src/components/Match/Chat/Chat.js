@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import * as Stomp from "@stomp/stompjs";
 import { useSelector } from "react-redux";
@@ -15,8 +15,14 @@ function Chatting() {
   const user = useSelector((state) => state.user);
   const match = useSelector((state) => state.match);
   const name = user.nickname === "" ? "익명" : user.nickname;
+  const connectMessage = {
+    type: "Connect",
+    data: "연결중입니다...",
+    sender: "System",
+  };
 
   useEffect(() => {
+    setMessages((_messages) => [..._messages, connectMessage]);
     connect();
     if (name !== "익명") {
       axios
@@ -34,6 +40,7 @@ function Chatting() {
 
   const connect = () => {
     client.current = new Stomp.Client({
+      //      brokerURL: "ws://localhost:8080/api/v1/ws",
       brokerURL: process.env.REACT_APP_WEBSOCKET_URL,
       reconnectDelay: 1000,
       heartbeatIncoming: 1000,
@@ -43,6 +50,7 @@ function Chatting() {
         // console.log(err);
       },
       webSocketFactory: () => {
+        // return new WebSocket("ws://localhost:8080/api/v1/ws");
         return new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
       },
       onConnect: () => {
@@ -59,6 +67,8 @@ function Chatting() {
     );
 
     setConnected(true);
+
+    connectMessage.data = "연결되었습니다.";
   };
 
   const onMessage = (message) => {

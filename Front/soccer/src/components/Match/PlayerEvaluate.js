@@ -5,7 +5,6 @@ import PlayerStatistics from "./PlayerStatistics";
 import { useSelector } from "react-redux";
 import Loading from "components/Loading";
 import "../Match/PlayerEvaluate.css";
-import { width } from "@mui/system";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
   
@@ -87,8 +86,8 @@ const PlayerEvaluate = () => {
         let data = res.data.result;
         let h = [];
         let a = [];
-        setHomeStat(data.homeDet);
-        setAwayStat(data.awayDet);
+        setHomeStat(data.homeDet !== null ? data.homeDet : homeStat);
+        setAwayStat(data.awayDet !== null ? data.awayDet : awayStat);
         data.players.map((players) => {
           if (players.team === "HOME" && players.pass > 0) {
             h.push(players);

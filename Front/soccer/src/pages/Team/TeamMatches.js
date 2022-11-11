@@ -12,10 +12,35 @@ const TeamMatches = () => {
     const [loading, setLoading] = useState(true);
     const [recent, setRecent] = useState(true);
     const dispatch = useDispatch();
+
+    const setHomeId = async(home) => {
+      console.log(home);
+      await axios.post(`${SERVER_URL}/api/v1/teams/name`,home)
+      .then((res)=>{
+        console.log(res.data.result.teamId);
+        dispatch({
+          type: "SET_HOME_ID",
+          payload: res.data.result.teamId
+        });
+      });
+    };
+    const setAwayId = async(away) => {
+      console.log(away);
+      await axios.post(`${SERVER_URL}/api/v1/teams/name`,away)
+      .then((res)=>{
+        console.log(res.data.result.teamId);
+        dispatch({
+          type: "SET_AWAY_ID",
+          payload: res.data.result.teamId
+        });
+      });
+    };
+
     async function goMatchDetail(matchId) {
+      let homeId = 0;
+      let awayId = 0;
       await axios.get(`${SERVER_URL}/api/v1/matches/match/${matchId}`)
       .then((res) => {
-        console.log(res.data.result);
         const payload = res.data.result.matchVO;
         let matchStatus = "";
         if(res.data.result.matchStatus === "FIN"){
@@ -31,8 +56,12 @@ const TeamMatches = () => {
           type: "SET_MATCH",
           payload,
           matchStatus,
-        })
+        });
+        homeId = payload.home;
+        awayId = payload.away;
       });
+      await setHomeId(homeId);
+      await setAwayId(awayId);
       window.location.href = `/match/${matchId}/MatchPredict`;
     }
     const [datas, setDatas] = useState({
