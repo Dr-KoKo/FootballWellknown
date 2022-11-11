@@ -1,9 +1,9 @@
-package com.a203.sixback.board.dto;
+package com.a203.sixback.board.req;
 
 import lombok.Data;
 
 @Data
-public class SearchReqDTO {
+public class SearchReq {
     Long currentPage;
     String type;
     String keyword;

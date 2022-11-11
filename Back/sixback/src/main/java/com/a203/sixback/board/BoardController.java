@@ -1,9 +1,11 @@
 package com.a203.sixback.board;
 
 
-import com.a203.sixback.board.dto.*;
-import com.a203.sixback.board.res.BoardDetailRes;
-import com.a203.sixback.board.res.BoardRes;
+import com.a203.sixback.board.req.PostBoardLikeReq;
+import com.a203.sixback.board.req.PostBoardReq;
+import com.a203.sixback.board.req.PostCommentReq;
+import com.a203.sixback.board.req.UpdateBoardReq;
+import com.a203.sixback.board.res.*;
 import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +27,14 @@ public class BoardController {
         if(page != null) {
             pages = page;
         }
-        List<GetBoardResDTO> boards = boardService.getBoardList(pages);
+        List<GetBoardRes> boards = boardService.getBoardList(pages);
         long lastPage = boardService.getLastPage();
         return ResponseEntity.status(200).body(BoardRes.of(200, "message", boards, (int) lastPage));
     }
 
     @GetMapping("/search")
     public ResponseEntity<? extends BaseResponseBody> getBardSearchList(@RequestParam(value = "currentPage") Long page, @RequestParam(value = "type") String type, @RequestParam(value = "keyword") String keyword){
-        List<GetBoardResDTO> boards = boardService.getBoardSearchList(page, type, keyword);
+        List<GetBoardRes> boards = boardService.getBoardSearchList(page, type, keyword);
         long lastPage = boardService.getSearchLastPage(page, type, keyword);
 
         return ResponseEntity.status(200).body(BoardRes.of(200, "searchSuccess", boards, (int) lastPage));
@@ -70,8 +72,8 @@ public class BoardController {
 
     @GetMapping("/{boardId}")
     public ResponseEntity getBoardDetail(@PathVariable(value ="boardId") long boardId){
-        GetBoardDetailResDTO board = boardService.getBoardDetail(boardId);
-        List<GetCommentResDTO> list = boardService.findComments(boardId);
+        GetBoardDetailRes board = boardService.getBoardDetail(boardId);
+        List<GetCommentRes> list = boardService.findComments(boardId);
         board.setComments(list);
         return  ResponseEntity.status(200).body(BoardDetailRes.of(200, "GET DETAIL", board));
     }
@@ -79,17 +81,17 @@ public class BoardController {
     @GetMapping("/comments/{boardId}")
     public ResponseEntity getComments(@PathVariable(value ="boardId") long boardId){
 
-        List<GetCommentResDTO> list = boardService.findComments(boardId);
+        List<GetCommentRes> list = boardService.findComments(boardId);
         return  ResponseEntity.status(200).body(list);
     }
 
     @PostMapping("")
-    public ResponseEntity createBoard(@RequestBody PostBoardReqDTO postBoardReqDTO) {
+    public ResponseEntity createBoard(@RequestBody PostBoardReq postBoardReqDTO) {
         return boardService.createBoard(postBoardReqDTO);
     }
 
     @PostMapping("/update")
-    public ResponseEntity updateBoard(@RequestBody UpdateBoardReqDTO updateBoardReqDTO) {
+    public ResponseEntity updateBoard(@RequestBody UpdateBoardReq updateBoardReqDTO) {
 
 
         return boardService.updateBoard(updateBoardReqDTO);
@@ -101,8 +103,18 @@ public class BoardController {
     }
 
     @PostMapping("/comment")
-    public ResponseEntity postComment(@RequestBody PostCommentDTO postCommentDTO) {
+    public ResponseEntity postComment(@RequestBody PostCommentReq postCommentDTO) {
         return boardService.postComment(postCommentDTO);
     }
 
+    @GetMapping("/likes/{boardId}")
+    public ResponseEntity getBoardLike(@PathVariable(value ="boardId") Long boardId) {
+        CheckLikedRes checkLiked = boardService.getLike(boardId);
+        return  ResponseEntity.status(200).body(BoardLikeRes.of(200, "GET IsLiked", checkLiked ));
+    }
+
+    @PostMapping("/likes")
+    public ResponseEntity postBoardLike(@RequestBody PostBoardLikeReq postBoardLikeReq) {
+        return boardService.postBoardLike(postBoardLikeReq);
+    }
 }

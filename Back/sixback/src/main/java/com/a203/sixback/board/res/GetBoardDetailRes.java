@@ -1,4 +1,4 @@
-package com.a203.sixback.board.dto;
+package com.a203.sixback.board.res;
 
 import lombok.*;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetBoardDetailResDTO {
+public class GetBoardDetailRes {
     private long id;
     private String title;
     private String ctgName;
@@ -19,6 +19,6 @@ public class GetBoardDetailResDTO {
     private Integer team;
     private Long match;
     private LocalDateTime createDate;
-    private List<GetCommentResDTO> comments;
+    private List<GetCommentRes> comments;
 
 }
