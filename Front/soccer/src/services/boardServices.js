@@ -2,8 +2,10 @@ import axios from "axios";
 import { request, axiosAuth } from "./axios.js";
 
 const BOARD_URL = "api/v1/boards";
+
 const COMMENT_URL = "api/v1/boards/commentMongo";
 const BOARD_LIKE_URL = "api/v1/boards/likes/"
+
 
 export const getBoardList = async (currentPage) => {
   try {
@@ -81,13 +83,24 @@ export const checkBoardLike = async(boardId) => {
     // .then((res) => res.json())
     // .then((json) => json)
     // console.log(result);
-    const payload = await request.get(`${BOARD_LIKE_URL}${boardId}`)
-    // console.log(payload);
+    // return result;
+
+    const payload = await axiosAuth.get(`${BOARD_LIKE_URL}/${boardId}`)
+    console.log(payload);
     return payload;
   } catch (err) {
     return err;
   }
 };
+
+export const getHowLiked = async(boardId) => {
+  try {
+    const payload = await request.get(`${BOARD_LIKE_URL}/counts/${boardId}`)
+    return payload;
+  } catch(err) {
+    return err;
+  }
+}
 
 export const postBoardLike = async(dataToSubmit) => {
  try {

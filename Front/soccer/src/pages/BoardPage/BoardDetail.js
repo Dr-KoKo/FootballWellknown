@@ -3,12 +3,12 @@ import { useNavigate, useParams } from "react-router";
 import { detailBoard, deleteBoard, postComment } from "services/boardServices";
 import { getTeam, getMatch } from "services/matchServices";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-// import ClassicEditor from "../../util/build/ckeditor";
+
 import ClassicEditor from 'ckeditor5-custom-build/build/ckeditor';
 import dateFormat from "dateformat";
 import "./BoardDetail.css";
 import Loading from "components/Loading";
-import LikeButton from "components/LikeButton.js";
+import LikeButton from "components/board/LikeButton.js";
 import {
   FormControl,
   Button,
@@ -195,12 +195,10 @@ const BoardDetail = () => {
             </Grid>
             <hr></hr>
 
-            {/* {(state.user.isLongin ?  */}
+
             <Grid sx={{textAlign:"center"}}>
               <LikeButton boardId={id} />
             </Grid>
-          {/* : <Grid/>
-            )} */}
             
             <hr></hr>
             <Grid
