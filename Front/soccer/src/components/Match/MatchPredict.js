@@ -32,17 +32,21 @@ const MatchPredict = () => {
   }
 
   const submit = () => {
-    if (predictMatch === ""){
-      alert("팀을 선택하세요");
+    if(user.isLogin){
+      if (predictMatch === ""){
+        alert("팀을 선택하세요");
+      }else{
+        axios.post(`${SERVER_URL}/api/v1/matches/predict/match`,{
+          matchId: match.matchId,
+          userEmail: user.email,
+          userNickname: user.nickname,
+          whereWin: predictMatch,
+        });
+        alert('예측 완료!');
+        window.location.reload();
+      }
     }else{
-      axios.post(`${SERVER_URL}/api/v1/matches/predict/match`,{
-        matchId: match.matchId,
-        userEmail: user.email,
-        userNickname: user.nickname,
-        whereWin: predictMatch,
-      });
-      alert('예측 완료!');
-      window.location.reload();
+      alert("로그인이 필요한 서비스입니다");
     }
   };
 
@@ -63,10 +67,12 @@ const MatchPredict = () => {
       setDraw(drawCnt);
       setAwayWin(awayCnt);
     });
-    axios.get(`${SERVER_URL}/api/v1/matches/predict/match/my/${user.email}/${match.matchId}`)
-    .then(res => {
-      setPredictMatch(res.data.result.whereWin);
-    });
+    if(user.isLogin){
+      axios.get(`${SERVER_URL}/api/v1/matches/predict/match/my/${user.email}/${match.matchId}`)
+      .then(res => {
+        setPredictMatch(res.data.result.whereWin);
+      });
+    }
     setLoading(false);
   }, []);
 
