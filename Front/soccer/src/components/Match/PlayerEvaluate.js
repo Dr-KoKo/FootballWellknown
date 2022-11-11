@@ -163,12 +163,20 @@ const PlayerEvaluate = () => {
       <Box className="stat">
         <Box className="stat-left">
           <Box className="statColorLeft" sx={{ width: `${homeStat.passOn/homeStat.pass*100}%` }}></Box>
-          <Box className="valLeft">{Math.round(homeStat.passOn/homeStat.pass*100)}%</Box>
+          <Box className="valLeft">
+            { homeStat.pass === 0 ?
+            0 :
+            Math.round(homeStat.passOn/homeStat.pass*100)}%
+          </Box>
         </Box>
         <Box className="txt">패스성공률</Box>
         <Box className="stat-right">
           <Box className="statColorRight" sx={{ width: `${awayStat.passOn/awayStat.pass*100}%` }}></Box>
-          <Box className="valRight">{Math.round(awayStat.passOn/awayStat.pass*100)}%</Box>
+          <Box className="valRight">
+            { awayStat.pass === 0 ?
+            0 :
+            Math.round(awayStat.passOn/awayStat.pass*100)}%
+          </Box>
         </Box>
       </Box>
       <Box className="stat">
