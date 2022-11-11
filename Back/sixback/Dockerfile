@@ -8,7 +8,7 @@ RUN gradle clean build --no-daemon --stacktrace
 EXPOSE 8080
 
 # CMD와 유사하나, 디폴트로 수행될 명령은 ENTRYPOINT를 사용해 지정
-CMD java -jar build/libs/*.jar
+CMD java -javaagent:whatap.agent-2.2.0.jar -jar build/libs/*.jar
 
 # 도커 timezone 변경
 ENV TZ=Asia/Seoul
