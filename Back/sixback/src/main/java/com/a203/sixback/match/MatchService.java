@@ -25,6 +25,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MatchService {
+    private final MatchesCustomRepo matchesCustomRepo;
     private final MatchesRepo matchesRepo;
     private final MatchDetRepo matchDetRepo;
     private final MatchHistoryRepo matchHistoryRepo;
@@ -36,7 +37,7 @@ public class MatchService {
     private final MatchPredictRepo matchPredictRepo;
     private final TeamRepo teamRepo;
     public List<MatchStatusVO> getMatchesByRound(int round) {
-        List<Matches> matches = matchesRepo.findAllByRound(round);
+        List<Matches> matches = matchesCustomRepo.findAllByRound(round);
         List<MatchStatusVO> result = new ArrayList<>();
         for(Matches match : matches){
             MatchVO matchVO = MatchVO.builder()
@@ -74,7 +75,8 @@ public class MatchService {
         return result;
     }
     public List<MatchStatusVO> getMatchesByMonth(int year, int month) {
-        List<Matches> matches = matchesRepo.findAllByYearAndMonthOrderByMatch_Date(year,month);
+//        List<Matches> matches = matchesRepo.findAllByYearAndMonthOrderByMatch_Date(year,month);
+        List<Matches> matches = matchesCustomRepo.findAllByYearAndMonthOrderByMatch_Date(year,month);
         List<MatchStatusVO> result = new ArrayList<>();
         for(Matches match : matches){
             MatchVO matchVO = MatchVO.builder()
@@ -180,7 +182,7 @@ public class MatchService {
             playerMatchVOList.add(vo);
         }
         List<MatchDet> list = matchDetRepo.findAllByMatches_Id(match_id);
-        Matches matches = matchesRepo.findById(match_id).get();
+        Matches matches = matchesCustomRepo.findById(match_id);
         for(MatchDet matchDet : list){
 
             if(matchDet.getTeamType().equals(TeamType.HOME)){
@@ -227,7 +229,7 @@ public class MatchService {
     }
 
     public void updatePlayerEvaluation(PlayerEvaluateVO playerEvaluateVO) {
-        Matches matches = matchesRepo.findById(playerEvaluateVO.getMatchId()).get();
+        Matches matches = matchesCustomRepo.findById(playerEvaluateVO.getMatchId());
         Player player = playerRepo.findById(playerEvaluateVO.getPlayerId()).get();
         User user = userRepo.findByEmail(playerEvaluateVO.getUserEmail());
         PlayerEvaluate pe = playerEvaluateRepo.findByMatches_IdAndUser_IdAndPlayer_Id(matches.getId(), user.getId(), player.getId());
@@ -241,7 +243,7 @@ public class MatchService {
 
 
     public void matchPredict(MatchPredictVO matchPredictVO) {
-        Matches matches = matchesRepo.findById(matchPredictVO.getMatchId()).get();
+        Matches matches = matchesCustomRepo.findById(matchPredictVO.getMatchId());
         User user = userRepo.findByEmail(matchPredictVO.getUserEmail());
 
         String predict = matchPredictVO.getWhereWin();
@@ -308,7 +310,7 @@ public class MatchService {
 
     public List<MatchBoardVO> getMatchBoards(int roundId) {
         List<MatchBoardVO> result = new ArrayList<>();
-        List<Matches> matches = matchesRepo.findAllByRound(roundId);
+        List<Matches> matches = matchesCustomRepo.findAllByRound(roundId);
         for(Matches match : matches){
             String name = "[" +match.getRound()+"R] "+match.getHome().getName()+ " VS " + match.getAway().getName();
             result.add(new MatchBoardVO(match.getId(), name));
@@ -316,7 +318,7 @@ public class MatchService {
         return result;
     }
     public MatchStatusVO getMatchDetail(long id) {
-        Matches match = matchesRepo.findById(id).get();
+        Matches match = matchesCustomRepo.findById(id);
         MatchVO matchVO = MatchVO.builder()
                 .matchId(match.getId())
                 .home(match.getHome().getName())
@@ -351,7 +353,7 @@ public class MatchService {
         String awayFormation = jsonObject.get("match_awayteam_system").toString();
 
 
-        Matches savedMatches = matchesRepo.findById(matchId).get();
+        Matches savedMatches = matchesCustomRepo.findById(matchId);
         // 라인업 포메이션 저장
         matchDetRepo.save(MatchDet.builder()
                 .matches(savedMatches)
@@ -456,7 +458,7 @@ public class MatchService {
     }
     public void saveTeamMatch(long matchId) throws Exception{
         JSONObject jsonObject = new JSONObject();
-        Matches savedMatches = matchesRepo.findById(matchId).get();
+        Matches savedMatches = matchesCustomRepo.findById(matchId);
         String str = "https://apiv3.apifootball.com/?action=get_events&match_id="+matchId+"&APIkey=" + apiKey;
         URL url = new URL(str);
         InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
@@ -577,7 +579,7 @@ public class MatchService {
     }
 
     public void saveGoals(JSONObject jsonObject, long matchId){
-        Matches savedMatches = matchesRepo.findById(matchId).get();
+        Matches savedMatches = matchesCustomRepo.findById(matchId);
         String time =jsonObject.get("time").toString();
         String man = "";
         String man2 = "";
@@ -603,7 +605,7 @@ public class MatchService {
                         .build());
     }
     public void saveCards(JSONObject card, long matchId){
-        Matches savedMatches = matchesRepo.findById(matchId).get();
+        Matches savedMatches = matchesCustomRepo.findById(matchId);
         String time = card.get("time").toString();
         String man = "";
         String type;
@@ -627,7 +629,7 @@ public class MatchService {
     }
     public void saveHomeSub(JSONObject sub, long matchId){
         String time = sub.get("time").toString();
-        Matches savedMatches = matchesRepo.findById(matchId).get();
+        Matches savedMatches = matchesCustomRepo.findById(matchId);
         String subMans[] =  sub.get("substitution").toString().split("\\|");
         matchHistoryRepo.save(MatchHistory.builder()
                 .matches(savedMatches)
@@ -640,7 +642,7 @@ public class MatchService {
     }
     public void saveAwaySub(JSONObject sub, long matchId){
         String time = sub.get("time").toString();
-        Matches savedMatches = matchesRepo.findById(matchId).get();
+        Matches savedMatches = matchesCustomRepo.findById(matchId);
         String subMans[] =  sub.get("substitution").toString().split("\\|");
         matchHistoryRepo.save(MatchHistory.builder()
                 .matches(savedMatches)
@@ -673,7 +675,7 @@ public class MatchService {
 
 
     public int getMatchRound(long matchId) {
-        Matches matches = matchesRepo.findById(matchId).get();
+        Matches matches = matchesCustomRepo.findById(matchId);
         return matches.getRound();
     }
 }

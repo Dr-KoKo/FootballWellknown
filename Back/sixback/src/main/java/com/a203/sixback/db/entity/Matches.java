@@ -33,7 +33,7 @@ public class Matches {
     private String referee;
     @Column
     private int round;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "home")
     private Team home;
     @OneToMany(mappedBy = "matches")
@@ -42,7 +42,7 @@ public class Matches {
     private List<PlayerMatch> playerMatchList;
     @OneToMany(mappedBy = "matches")
     private List<MatchDet> matchDetList;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "away")
     private Team away;
 

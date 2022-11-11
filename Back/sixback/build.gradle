@@ -1,7 +1,13 @@
+buildscript { //queryDSL
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
 plugins {
 	id 'org.springframework.boot' version '2.7.4'
 	id 'io.spring.dependency-management' version '1.0.14.RELEASE'
 	id 'java'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 jar {
 	enabled = false
@@ -74,8 +80,48 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-aws-context:2.2.6.RELEASE'
 	implementation 'org.springframework.cloud:spring-cloud-aws-autoconfigure:2.2.6.RELEASE'
 
+	// queryDSL
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+/*
+QueryDSL 설정
+ */
+// queryDSL에서 사용할 경로
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	// JPA를 사용여부, 사용경로
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main.java.srcDir querydslDir
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+compileQuerydsl.doFirst {
+    if(file(querydslDir).exists() )
+        delete(file(querydslDir))
+}
+
+/*
+QueryDSL 설정 끝
+ */
