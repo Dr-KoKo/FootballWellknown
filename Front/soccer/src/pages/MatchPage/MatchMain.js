@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
-import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Container, Tab, Tabs } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { TabContext, TabList } from "@mui/lab";
+import { TabContext } from "@mui/lab";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,7 +11,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { display, width } from "@mui/system";
 import "../MatchPage/MatchMain.css";
 
 const day = ['(일)','(월)','(화)','(수)','(목)','(금)','(토)']
@@ -147,7 +146,7 @@ const MatchMain = () => {
                     hover
                     key={index}
                     onClick={() => moveToDetail(data.matchVO.matchId)}
-                    sx={{ '&:last-child TableCell, &:last-child th': { border: 0 } }}
+                    sx={{ '&:last-child TableCell, &:last-child th': { border: 0 }, cursor: 'pointer' }}
                   >
                       {/* 날짜 */}
                       <TableCell> 
