@@ -35,12 +35,11 @@ const LikeButton = (props) => {
         const result = await postBoardLike(body);
         // console.log(result);
 
-        if(state)
+        if(like)
             setNumsLike(numsLike-1);
         else 
            setNumsLike(numsLike+1);
-        
-        setLike(!state);
+        setLike(!like);
     }
 
     useEffect(() => {
