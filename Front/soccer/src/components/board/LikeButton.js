@@ -18,7 +18,7 @@ const LikeButton = (props) => {
         
         if(state.user.isLongin){
             const result = await checkBoardLike(props.boardId);
-            console.log(result);
+            // console.log(result);
             setLike(result.data.checkLiked);
         }
         
@@ -33,15 +33,14 @@ const LikeButton = (props) => {
             "checkLiked": !state
         }
         const result = await postBoardLike(body);
-        console.log(result);
+        // console.log(result);
 
         if(state)
             setNumsLike(numsLike-1);
         else 
            setNumsLike(numsLike+1);
         
-        setState(!state);
-        
+        setLike(!state);
     }
 
     useEffect(() => {
