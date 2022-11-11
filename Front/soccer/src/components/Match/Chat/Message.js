@@ -43,7 +43,6 @@ const Message = ({ message: { type, data, sender, predict }, match }) => {
     </div>
   ) : (
     <div className="messageContainer justifyEnd">
-      <p className="sentText pr-10">{type}</p>
       <div className="messageBox backgroundBlue">
         <p className="messageText colorWhite">{ReactEmoji.emojify(data)}</p>
       </div>

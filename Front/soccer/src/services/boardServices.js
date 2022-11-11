@@ -2,8 +2,8 @@ import axios from "axios";
 import { request, axiosAuth } from "./axios.js";
 
 const BOARD_URL = "api/v1/boards";
-const COMMENT_URL = "api/v1/boards/commentMongo";
 const BOARD_LIKE_URL = "api/v1/boards/likes/"
+const COMMENT_URL = "api/v1/boards/comment";
 
 export const getBoardList = async (currentPage) => {
   try {
