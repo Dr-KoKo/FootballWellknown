@@ -16,7 +16,7 @@ const LikeButton = (props) => {
     const state = useSelector(state => state);
 
     const getIsLiked = async () => {
-        
+        console.log(state);
         if(state.user.isLongin){
             const result = await checkBoardLike(props.boardId);
             setLike(result.data.checkLiked);
