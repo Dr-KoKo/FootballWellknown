@@ -31,8 +31,8 @@ const BoardList = () => {
 
   const board = {
     ctgName : "자유",
-    teamId : null,
-    matchId : null,
+    team : null,
+    match : null,
   }
 
   const searchBoardList = async () => {
