@@ -1,4 +1,3 @@
-import axios from "axios";
 import { request, axiosAuth } from "./axios.js";
 
 const BOARD_URL = "api/v1/boards";
