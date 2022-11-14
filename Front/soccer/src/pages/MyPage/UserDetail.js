@@ -76,6 +76,7 @@ const UserDetail = () => {
     await updateNickname(user)
     .then(()=>{
       alert('변경되었습니다');
+      handleClose();
     })
     .catch((err)=>{
       alert('변경에 실패했습니다');
