@@ -4,27 +4,19 @@ import com.a203.sixback.db.entity.Predict;
 import com.a203.sixback.db.enums.MatchResult;
 import com.a203.sixback.db.enums.MessageType;
 import com.a203.sixback.db.redis.MatchCacheRepository;
+import com.a203.sixback.db.redis.RedisPubService;
 import com.a203.sixback.db.repo.PointLogRepo;
 import com.a203.sixback.db.repo.PredictRepo;
 import com.a203.sixback.match.MatchService;
 import com.a203.sixback.ranking.RankingService;
 import com.a203.sixback.socket.BaseMessage;
+import com.a203.sixback.socket.ChatMessage;
 import com.a203.sixback.socket.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.scheduling.support.CronTrigger;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,20 +29,25 @@ import java.util.stream.Collectors;
 @Service
 public class SchedulerService {
 
-    @Autowired
-    private MatchService matchService;
-    @Autowired
-    private MessageService messageService;
-    @Autowired
-    private RankingService rankingService;
-    @Autowired
-    private MatchCacheRepository matchCacheRepository;
-    @Autowired
-    private PointLogRepo pointLogRepo;
-    @Autowired
-    private PredictRepo predictRepo;
 
-    private Map<Long, ScheduledFuture<?>> scheduledTasks = new ConcurrentHashMap<>();
+    private MatchService matchService;
+    private RankingService rankingService;
+    private MatchCacheRepository matchCacheRepository;
+    private PointLogRepo pointLogRepo;
+    private PredictRepo predictRepo;
+    private RedisPubService redisPubService;
+
+    private final Map<Long, ScheduledFuture<?>> scheduledTasks = new ConcurrentHashMap<>();
+
+    @Autowired
+    public SchedulerService(MatchService matchService, MatchCacheRepository matchCacheRepository, PointLogRepo pointLogRepo, PredictRepo predictRepo, RankingService rankingService, RedisPubService redisPubService) {
+        this.matchService = matchService;
+        this.matchCacheRepository = matchCacheRepository;
+        this.pointLogRepo = pointLogRepo;
+        this.predictRepo = predictRepo;
+        this.rankingService = rankingService;
+        this.redisPubService = redisPubService;
+    }
 
 
     public void register(Long scheduleId, ScheduledFuture<?> task) {
@@ -97,7 +94,7 @@ public class SchedulerService {
         JSONObject jsonObject = (JSONObject) jsonArray.get(value);
         matchCacheRepository.setMatch(key, value + 1);
 
-        String data = "";
+        String data;
 
         if ("Goal_".equals(prefix)) {
             data = jsonObject.get("score").toString();
@@ -125,9 +122,6 @@ public class SchedulerService {
     private boolean checkStatus(JSONObject jsonObject, long matchId) throws Exception {
         String matchStatus = jsonObject.get("match_status").toString();
 
-        if ("".equals(matchStatus)) {
-
-        }
 
         if ("Finished".equals(matchStatus)) {
             log.info("경기가 끝났습니다.");
@@ -138,8 +132,8 @@ public class SchedulerService {
             sendMessage("경기가 종료되었습니다.", matchId);
             MainScheduler.getInstance().stop(matchId);
 
-            Integer homeTeamScore = Integer.parseInt(jsonObject.get("match_hometeam_score").toString());
-            Integer awayTeamScore = Integer.parseInt(jsonObject.get("match_awayteam_score").toString());
+            int homeTeamScore = Integer.parseInt(jsonObject.get("match_hometeam_score").toString());
+            int awayTeamScore = Integer.parseInt(jsonObject.get("match_awayteam_score").toString());
 
             try {
                 matchService.savePlayerMatch(matchId);
@@ -182,8 +176,8 @@ public class SchedulerService {
     }
 
     private void sendMessage(String data, long matchId) {
-        BaseMessage message = BaseMessage.builder().type(MessageType.NOTICE).sender("System").channelId(String.valueOf(matchId)).data(data).build();
+        ChatMessage message =  (ChatMessage) BaseMessage.builder().type(MessageType.NOTICE).sender("System").channelId(String.valueOf(matchId)).data(data).build();
         log.info("message: {}", data);
-        //      messageService.sendMessage(message);
+        redisPubService.sendMessage(message);
     }
 }

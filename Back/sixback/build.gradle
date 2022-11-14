@@ -93,17 +93,21 @@ tasks.named('test') {
 /*
 QueryDSL 설정
  */
-// queryDSL에서 사용할 경로
+// queryDSL 에서 사용할 경로
 def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {
-	// JPA를 사용여부, 사용경로
+	// JPA 를 사용여부, 사용경로
 	jpa = true
 	querydslSourcesDir = querydslDir
 }
 
 sourceSets {
-	main.java.srcDir querydslDir
+	main {
+		java {
+			srcDirs = ['src/main/java', querydslDir]
+		}
+	}
 }
 
 configurations {
