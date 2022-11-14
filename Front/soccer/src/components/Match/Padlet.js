@@ -1,13 +1,21 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import NoImage from '../../components/assets/noimage.jpg';
 import "./Padlet.css";
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 const Padlet = () => {
     const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-    
+    const navigate = useNavigate();
+    const {matchId} = useParams();
+    const [board, setBoard]= useState({
+        ctgName:"경기", team:null, match:matchId
+    });
+
+    const onClickBtn = (matchId) =>{
+        navigate("../../board/write", {state : board});
+    };
     function strParsing(str){
         var idx = str.search("<img");
         if(idx===-1){
@@ -33,7 +41,7 @@ const Padlet = () => {
         }
         return str;
     }
-    const {matchId} = useParams();
+    
     const [datas, setDatas] = useState([
         {
             id : -1,
@@ -54,7 +62,7 @@ const Padlet = () => {
             console.log(response.data.boardList);
             
           });
-      }, []);
+      },[] );
     return (
         <div id='mainFrame22'>
             {
@@ -71,6 +79,7 @@ const Padlet = () => {
                 
                 </div>
             ))}
+            <Button id='writeBtn' onClick={()=>onClickBtn(datas.id)}>글쓰기</Button>
         </div>    
         
     );

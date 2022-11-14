@@ -5,6 +5,27 @@
     width: 100%;
     font-size: larger;
     font-weight: bold;
+    align-items: center;
+}
+#writeBtn{
+    margin-top: 5%;
+    color: black;
+    font-weight: bold;
+    font-size: large;
+    width: 15%;
+    position: relative;
+}
+#writeBtn::after{
+    position: absolute;
+    background-color: white;
+    border-radius: 5px;
+    content: "";
+    z-index: -1;
+    opacity: 0.7;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 #frame22{
     display: flex;
