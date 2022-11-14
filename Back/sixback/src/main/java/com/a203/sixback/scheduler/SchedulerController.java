@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,8 +33,8 @@ public class SchedulerController {
     private boolean isSchedulerServer;
 
     @Async
-//    @Scheduled(cron = "0 0 23 * * *")
-    @Scheduled(cron = "0 37 10 * * *")
+    @Scheduled(cron = "0 0 23 * * *")
+//    @Scheduled(cron = "0 37 10 * * *")
     public void mainSchedule() throws Exception {
         log.info("SchedulerController Cron 실행");
 
@@ -49,9 +48,8 @@ public class SchedulerController {
 
         try {
             if (isSchedulerServer) {
-//                registerMatchSchedule(year, month, day);
-                schedulerTest(2022, 11, 12, "0 37 10 * * *");
-                schedulerTest(2022, 11, 13, "0 37 10 * * *");
+                registerMatchSchedule(year, month, day);
+//                schedulerTest(2022, 11, 12, "0 37 10 * * *");
             }
         } catch (Exception e) {
             e.printStackTrace();
