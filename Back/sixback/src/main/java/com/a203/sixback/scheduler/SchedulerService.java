@@ -1,9 +1,11 @@
 package com.a203.sixback.scheduler;
 
+import com.a203.sixback.db.entity.PlayerEvaluate;
 import com.a203.sixback.db.entity.Predict;
 import com.a203.sixback.db.enums.MatchResult;
 import com.a203.sixback.db.enums.MessageType;
 import com.a203.sixback.db.redis.MatchCacheRepository;
+import com.a203.sixback.db.repo.PlayerEvaluateRepo;
 import com.a203.sixback.db.repo.PointLogRepo;
 import com.a203.sixback.db.repo.PredictRepo;
 import com.a203.sixback.match.MatchService;
@@ -27,6 +29,7 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,6 +52,8 @@ public class SchedulerService {
     private PointLogRepo pointLogRepo;
     @Autowired
     private PredictRepo predictRepo;
+    @Autowired
+    private PlayerEvaluateRepo playerEvaluateRepo;
 
     private Map<Long, ScheduledFuture<?>> scheduledTasks = new ConcurrentHashMap<>();
 
@@ -154,6 +159,16 @@ public class SchedulerService {
             log.info("배점을 시작합니다.");
             givePoint(matchId, result);
 
+            JSONArray statisticsObject = (JSONArray) ((JSONObject) matchService.getStatistics(matchId).get(matchId)).get("player_statistics");
+
+            Map<String, Integer> statisticsMap = new HashMap<>();
+            for (Object o : statisticsObject) {
+                JSONObject object = (JSONObject) o;
+                statisticsMap.put(object.get("player_key").toString(), Integer.parseInt(object.get("player_rating").toString()));
+            }
+
+            givePlayerPoint(matchId, statisticsMap);
+
             return true;
         }
         return false;
@@ -165,6 +180,18 @@ public class SchedulerService {
         log.info("총 {}개의 데이터 저장 시작합니다.", correctPredictList.size());
 
         rankingService.addAllScore(correctPredictList, 10);
+    }
+
+    private void givePlayerPoint(Long matchId, Map<String, Integer> statisticsObject) {
+        List<PlayerEvaluate> correctPredictList = playerEvaluateRepo.findByMatches_Id(matchId)
+                .stream()
+                .filter(x -> x.getScore() == statisticsObject.get(x.getPlayer().getId()))
+                .collect(Collectors.toList());
+
+        log.info("총 {}개의 데이터 저장 시작합니다.", correctPredictList.size());
+
+        rankingService.addAllPlayerScore(correctPredictList, 10);
+
     }
 
     private int getRedis(String key) {
