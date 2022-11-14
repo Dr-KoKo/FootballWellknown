@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -30,8 +31,8 @@ public class SchedulerController {
     @Autowired(required = false)
     private RankingService rankingService;
 
-    @Value("${SCHEDULER-SERVER}")
-    private boolean isSchedulerServer;
+//    @Value("${SCHEDULER-SERVER}")
+    private boolean isSchedulerServer = false;
 
     @Async
     @Scheduled(cron = "0 0 23 * * *")
@@ -60,15 +61,19 @@ public class SchedulerController {
     @Async
     @Scheduled(cron = "0 0 0 * * *")
     public void dailyRankingRefreshSchedule() throws Exception {
-        if (isSchedulerServer)
+        if (isSchedulerServer){
             rankingService.refreshDailyRanking();
+            rankingService.resetRanking();
+        }
     }
 
     @Async
     @Scheduled(cron = "0 0 0 * * 0")
     public void weeklyRankingRefreshSchedule() throws Exception {
-        if (isSchedulerServer)
+        if (isSchedulerServer){
             rankingService.refreshWeeklyRanking();
+            rankingService.resetRanking();
+        }
     }
 
     private void registerMatchSchedule(int year, int month, int day) throws Exception {
