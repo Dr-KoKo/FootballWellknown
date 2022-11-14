@@ -158,6 +158,8 @@ const BoardWrite = () => {
                 <Select value={team}>
                   {teams.map((team) => (
                     <MenuItem
+                      sx = {{display: team.id===0 ? 'none' : false}}
+                      disabled = {team.id===0 ? true : false}
                       key={team.id}
                       value={team.id}
                       onClick={() => setTeam(team.id)}
