@@ -105,3 +105,11 @@ export const getToken = async () => {
     return err;
   }
 };
+
+export const updateNickname = async (user) => {
+  try{
+    await request.post(`${USER_URL}/nickname`, user);
+  } catch(err) {
+    return err;
+  }
+}

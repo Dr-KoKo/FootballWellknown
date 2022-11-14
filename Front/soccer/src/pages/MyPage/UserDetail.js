@@ -23,7 +23,7 @@ import {
   withStyles,
 } from "@mui/material";
 import { Margin } from "@mui/icons-material";
-import { getUserInfo, getUserRank } from "services/userServices";
+import { getUserInfo, getUserRank, updateNickname } from "services/userServices";
 
 
 const UserDetail = () => {
@@ -50,6 +50,16 @@ const UserDetail = () => {
       setRank(result.data)
       setLoadingRank(false);
     }
+  }
+
+  const updateNick = async () => {
+    await updateNickname(user)
+    .then(()=>{
+      alert('변경되었습니다');
+    })
+    .catch((err)=>{
+      alert('변경에 실패했습니다');
+    })
   }
 
   useEffect(() => {
@@ -94,6 +104,9 @@ const UserDetail = () => {
                 >
                   <TableCell align="center">Nickname</TableCell>
                   <TableCell align="center">{user.nickname}</TableCell>
+                  <TableCell align="center">
+                    <Button onClick={()=>updateNick()}>변경</Button>
+                  </TableCell>
                 </TableRow>
                 <TableRow
                   // key={user.email}
