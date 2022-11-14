@@ -5,6 +5,9 @@ import axios from "axios";
 import Loading from "components/Loading";
 import "./UserDetail.css";
 import Profile from "components/assets/epl.png"
+import Gold from "components/assets/gold.png"
+import Silver from "components/assets/silver.png"
+import Bronze from "components/assets/bronze.png"
 import {
   Button,
   Pagination,
@@ -60,9 +63,16 @@ const UserDetail = () => {
 
   return (
     <div id="userDiv">
-      {loadingUser||loadingRank ? <Loading /> : <div id="userDet1">
-        <img id="userProfile1" width="40%" height="300px" src={Profile} />
+      {loadingUser || loadingRank ? <Loading /> : <div id="userDet1">
         <div>
+          {rank.rank < 10 ?
+            <img id="userProfile1" width="40%" height="300px" src={Gold} />
+            :
+            rank.rank < 20 ?
+              <img id="userProfile1" width="40%" height="300px" src={Silver} />
+              :
+              <img id="userProfile1" width="40%" height="300px" src={Bronze} />
+          }
           {rank.rank}
         </div>
         <Grid item xs={16} sx={{ width: '60%' }} >
