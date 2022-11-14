@@ -64,14 +64,14 @@ const UserDetail = () => {
   return (
     <div id="userDiv">
       {loadingUser || loadingRank ? <Loading /> : <div id="userDet1">
-        <div>
+        <div id="ff">
           {rank.rank < 10 ?
-            <img id="userProfile1" width="40%" height="300px" src={Gold} />
+            <img id="medal" width="400px" height="300px" src={Gold} />
             :
             rank.rank < 20 ?
-              <img id="userProfile1" width="40%" height="300px" src={Silver} />
+              <img id="medal" width="400px" height="300px" src={Silver} />
               :
-              <img id="userProfile1" width="40%" height="300px" src={Bronze} />
+              <img id="medal" width="400px" height="300px" src={Bronze} />
           }
           {rank.rank}
         </div>
