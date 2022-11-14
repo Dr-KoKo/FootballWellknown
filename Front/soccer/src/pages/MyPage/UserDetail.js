@@ -66,14 +66,16 @@ const UserDetail = () => {
       {loadingUser || loadingRank ? <Loading /> : <div id="userDet1">
         <div id="ff">
           {rank.rank < 10 ?
-            <img id="medal" width="400px" height="300px" src={Gold} />
+            <img id="medal" width="300px" height="300px" src={Gold} />
             :
             rank.rank < 20 ?
-              <img id="medal" width="400px" height="300px" src={Silver} />
+              <img id="medal" width="300px" height="300px" src={Silver} />
               :
-              <img id="medal" width="400px" height="300px" src={Bronze} />
+              <img id="medal" width="300px" height="300px" src={Bronze} />
           }
+          <div id="rankFont">
           {rank.rank}
+          </div>
         </div>
         <Grid item xs={16} sx={{ width: '60%' }} >
           <TableContainer >

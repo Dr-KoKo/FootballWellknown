@@ -5,13 +5,17 @@
     width: 80%;
     margin-left: 10%;
 } */
-#userProfile1{
+#medal{
     margin-right: 10%;
 }
 #table{
     margin-top: 5%;
     width: 80%;
     font-size: larger;
+}
+#ff{
+    display: flex;
+    flex-direction: column;
 }
 #image{
     width: 40%;
@@ -47,6 +51,10 @@
     border-radius: 4px;
 }
 .rank{
+    text-align: center;
+    width: 8%;
+}
+#rankFont{
     text-align: center;
     width: 8%;
 }
