@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
-import { getTeam, getMatch } from "services/matchServices";
+import { getTeamList, getMatchList, getRound } from "services/matchServices";
 import dateFormat from "dateformat";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 // import ClassicEditor from "../../util/build/ckeditor";
@@ -17,8 +17,6 @@ import {
   MenuItem,
 } from "@mui/material";
 import Loading from "components/Loading";
-
-const boardUrl = "http://localhost:8080/api/v1/boards/";
 
 const BoardModify = () => {
   // const ClassicEditor = require("../../util/build/ckeditor.js");
@@ -50,6 +48,7 @@ const BoardModify = () => {
       matchId: sendMatch,
       content: content,
     });
+    
     const result = updateBoard(body);
     console.log(result);
     if (result.status == 200) {
@@ -65,48 +64,34 @@ const BoardModify = () => {
   };
 
   const createTeamList = async () => {
+    console.log("createTeamList")
     // const result = await request.get("/api/v1/matches/boards/teams");
-    const result = await fetch(
-      "http://localhost:8080/api/v1/matches/boards/teams",
-      {}
-    )
-      .then((res) => res.json())
-      .then((json) => json);
-    if (result.statusCode === 200) {
-      setTeams(result.result);
+    const result = await getTeamList();
+    if (result.status === 200) {
+      setTeams(result.data.result);
     }
   };
 
-  const createMatchList = async (event) => {
-    const result = await fetch(
-      "http://localhost:8080/api/v1/matches/boards/rounds/" + event,
-      {}
-    )
-      .then((res) => res.json())
-      .then((json) => json);
-    console.log(result);
-    if (result.statusCode === 200) {
-      setMatches(result.result);
+  const createMatchList = async (round) => {
+    const result = await getMatchList(round);
+    if (result.status == 200) {
+      setMatches(result.data.result);
     }
   };
 
   const getMatch = async () => {
-    const result = await fetch(
-      "http://localhost:8080/api/v1/matches/boards/matches/" + state.match,
-      {}
-    )
-      .then((res) => res.json())
-      .then((json) => json);
-    console.log(result);
-    if (result.statusCode === 200) {
-      setRound(result.result);
-      createMatchList(result.result);
+    const result = await getRound(state.match);
+    if (result.status === 200) {
+      setRound(result.data.result);
+      createMatchList(result.data.result);
     }
   };
 
   useEffect(() => {
-    if ((state.ctgName = "팀")) createTeamList();
-    if ((state.ctgName = "경기")) getMatch();
+    console.log(state);
+    console.log(state.ctgName)
+    if ((state.ctgName == "팀")) createTeamList();
+    if ((state.ctgName == "경기")) getMatch();
   }, []);
 
   return (

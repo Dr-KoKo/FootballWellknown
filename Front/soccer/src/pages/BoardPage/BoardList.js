@@ -29,6 +29,12 @@ const BoardList = () => {
   const [type, setType] = useState("all");
   const [keyword, setKeyword] = useState();
 
+  const board = {
+    ctgName : "자유",
+    team : null,
+    match : null,
+  }
+
   const searchBoardList = async () => {
     const SearchReqDTO = {
       currentPage : currentPage,
@@ -91,7 +97,7 @@ const BoardList = () => {
             textAlign={"right"}
             margin={"20px"}
           >
-            <Button variant="contained" onClick={() => navigate(`write`)}>
+            <Button variant="contained" onClick={() => navigate(`write`, {state: board})}>
               게시글 작성
             </Button>
           </Grid>

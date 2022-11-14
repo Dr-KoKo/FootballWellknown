@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { detailBoard, deleteBoard, postComment } from "services/boardServices";
 import { getTeam, getMatch } from "services/matchServices";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -30,6 +30,7 @@ import { useSelector } from "react-redux";
 const BoardDetail = () => {
   // const ClassicEditor = require("../../util/build/ckeditor.js");
   const navigate = useNavigate();
+  const { props } = useLocation();
   const { id } = useParams();
   const state = useSelector(state => state);
   const [board, setBoard] = useState(null);
