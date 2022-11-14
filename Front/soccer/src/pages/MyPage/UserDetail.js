@@ -10,13 +10,18 @@ import Silver from "components/assets/silver.png"
 import Bronze from "components/assets/bronze.png"
 import {
   Button,
-  Pagination,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Container,
   Box,
   Grid,
@@ -31,6 +36,8 @@ const UserDetail = () => {
   const [rank, setRank] = useState({ rank: "1", rankDaily: "1", rankWeekly: "1" });
   const [loadingUser, setLoadingUser] = useState(true);
   const [loadingRank, setLoadingRank] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [newNickname, setNewNickname] = useState('');
 
   const getMyInfo = async () => {
     const result = await getUserInfo();
@@ -52,7 +59,20 @@ const UserDetail = () => {
     }
   }
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleChange = (event) => {
+    setNewNickname(event.target.value);
+  }
+
   const updateNick = async () => {
+    user.nickname = newNickname;
     await updateNickname(user)
     .then(()=>{
       alert('변경되었습니다');
@@ -105,8 +125,30 @@ const UserDetail = () => {
                   <TableCell align="center">Nickname</TableCell>
                   <TableCell align="center">{user.nickname}</TableCell>
                   <TableCell align="center">
-                    <Button onClick={()=>updateNick()}>변경</Button>
+                    <Button onClick={()=>handleClickOpen()}>변경</Button>
                   </TableCell>
+                  <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>Subscribe</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText>
+                        변경할 닉네임을 입력하세요
+                      </DialogContentText>
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="새로운 닉네임"
+                        type="email"
+                        fullWidth
+                        variant="standard"
+                        onChange={handleChange}
+                      />
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={()=>updateNick()}>확인</Button>
+                      <Button onClick={handleClose}>취소</Button>
+                    </DialogActions>
+                  </Dialog>
                 </TableRow>
                 <TableRow
                   // key={user.email}
