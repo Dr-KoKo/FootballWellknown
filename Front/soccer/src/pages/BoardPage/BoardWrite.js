@@ -27,9 +27,9 @@ const BoardWrite = () => {
   const [ctgName, setCtgName] = useState(state.ctgName);
   const [teams, setTeams] = useState([]);
   const [matches, setMatches] = useState([]);
-  const [team, setTeam] = useState(state.teamId);
+  const [team, setTeam] = useState(state.team);
   const [round, setRound] = useState(13);
-  const [match, setMatch] = useState(state.matchId);
+  const [match, setMatch] = useState(state.match);
 
   
   const navigate = useNavigate();
@@ -89,8 +89,8 @@ const BoardWrite = () => {
 
   const getMatch = async () => {
     console.log("AAAA");
-    console.log(state.matchId)
-    const result = await getRound(state.matchId);
+    console.log(state.match)
+    const result = await getRound(state.match);
     if (result.status === 200) {
       setRound(result.data.result);
       createMatchList(result.data.result);

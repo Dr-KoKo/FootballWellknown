@@ -72,15 +72,15 @@ const BoardModify = () => {
     }
   };
 
-  const createMatchList = async (event) => {
-    const result = await getMatchList(event);
-    if (result.statusCode === 200) {
+  const createMatchList = async (round) => {
+    const result = await getMatchList(round);
+    if (result.status == 200) {
       setMatches(result.data.result);
     }
   };
 
   const getMatch = async () => {
-    const result = await getRound(state.matchId);
+    const result = await getRound(state.match);
     if (result.status === 200) {
       setRound(result.data.result);
       createMatchList(result.data.result);
@@ -88,6 +88,7 @@ const BoardModify = () => {
   };
 
   useEffect(() => {
+    console.log(state);
     console.log(state.ctgName)
     if ((state.ctgName == "팀")) createTeamList();
     if ((state.ctgName == "경기")) getMatch();

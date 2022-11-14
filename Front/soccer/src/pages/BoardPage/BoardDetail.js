@@ -152,7 +152,7 @@ const BoardDetail = () => {
                 <p>작성자: {board.author}</p>
               </Grid>
 
-              {/* {board.author == store.getState().user.nickname && ( */}
+              {board.author == store.getState().user.nickname && (
                 <Grid item xs="1">
                   <Button
                     variant="contained"
@@ -162,7 +162,7 @@ const BoardDetail = () => {
                     글 수정
                   </Button>
                 </Grid>
-              {/* )} */}
+              )}
               {(board.author == store.getState().user.nickname ||
                 store.getState().auth == "ADMIN") && (
                 <Grid item xs="1">
