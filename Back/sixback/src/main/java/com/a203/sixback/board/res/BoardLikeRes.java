@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 public class BoardLikeRes extends BaseResponseBody {
-    CheckLikedRes checkLiked;
+    Boolean checkLiked;
 
-    public static BoardLikeRes of(Integer statusCode, String message, CheckLikedRes checkLiked) {
+    public static BoardLikeRes of(Integer statusCode, String message, Boolean checkLiked) {
         BoardLikeRes res = new BoardLikeRes();
         res.setStatusCode(statusCode);
         res.setMessage(message);

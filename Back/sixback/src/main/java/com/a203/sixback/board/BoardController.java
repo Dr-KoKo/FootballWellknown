@@ -109,8 +109,14 @@ public class BoardController {
 
     @GetMapping("/likes/{boardId}")
     public ResponseEntity getBoardLike(@PathVariable(value ="boardId") Long boardId) {
-        CheckLikedRes checkLiked = boardService.getLike(boardId);
-        return  ResponseEntity.status(200).body(BoardLikeRes.of(200, "GET IsLiked", checkLiked ));
+        boolean userLiked = boardService.getLike(boardId);
+        return  ResponseEntity.status(200).body(BoardLikeRes.of(200, "GET IsLiked", userLiked ));
+    }
+
+    @GetMapping("/likes/counts/{boardId}")
+    public ResponseEntity getBoardLikeCount(@PathVariable(value ="boardId") Long boardId) {
+        int count = boardService.getLikeCount(boardId);
+        return  ResponseEntity.status(200).body(BoardLikeCountRes.of(200, "GET LikeCount", count ));
     }
 
     @PostMapping("/likes")
