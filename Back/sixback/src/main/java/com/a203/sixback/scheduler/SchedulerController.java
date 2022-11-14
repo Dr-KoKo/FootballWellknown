@@ -50,6 +50,7 @@ public class SchedulerController {
         try {
             if (isSchedulerServer) {
                 registerMatchSchedule(year, month, day);
+//                schedulerTest(2022, 11, 14, "0 30 9 * * *");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,7 +71,6 @@ public class SchedulerController {
         if (isSchedulerServer)
             rankingService.refreshWeeklyRanking();
     }
-
     private void registerMatchSchedule(int year, int month, int day) throws Exception {
         StringBuilder sb = new StringBuilder();
 
@@ -114,6 +114,24 @@ public class SchedulerController {
             task = new LineUpTask(matchId, matchService);
 
             MainScheduler.getInstance().start(task, sb.toString(), matchId * 2L);
+        }
+    }
+
+    private void schedulerTest(int year, int month, int day, String cronTrigger) throws Exception {
+        List<MatchStatusVO> list = matchService.getMatchesByDate(year, month, day);
+
+        for (MatchStatusVO matchStatusVo : list) {
+            MatchVO matchVO = matchStatusVo.getMatchVO();
+            long matchId = matchVO.getMatchId();
+            String date = matchVO.getDate();
+
+            Runnable task = new InitTask(matchId, schedulerService);
+
+            MainScheduler.getInstance().start(task, 3 + cronTrigger, matchId);
+
+            task = new LineUpTask(matchId, matchService);
+
+            MainScheduler.getInstance().start(task, 1 + cronTrigger, matchId * 2L);
         }
     }
 }
