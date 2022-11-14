@@ -13,4 +13,5 @@ public interface PlayerEvaluateRepo extends JpaRepository<PlayerEvaluate, Long> 
     PlayerEvaluate findById(long id);
 
     PlayerEvaluate findByMatches_IdAndUser_IdAndPlayer_Id(long id, Long id1, long id2);
+    List<PlayerEvaluate> findByMatches_Id(long id);
 }
