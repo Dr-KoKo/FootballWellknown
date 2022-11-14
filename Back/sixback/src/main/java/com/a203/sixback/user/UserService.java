@@ -95,6 +95,8 @@ public class UserService {
 
         Long rankWeekly = rankingCacheRepository.getRanking(DayType.WEEKLY, user.getNickname());
 
-        return ResGetUserRankDTO.of(200, "성공", rank, rankDaily, rankWeekly);
+        Long userNum = rankingCacheRepository.getUserNum(DayType.ALL);
+
+        return ResGetUserRankDTO.of(200, "성공", rank, rankDaily, rankWeekly, userNum);
     }
 }

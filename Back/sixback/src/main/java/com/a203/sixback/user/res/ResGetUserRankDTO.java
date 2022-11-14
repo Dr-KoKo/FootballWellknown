@@ -11,8 +11,9 @@ public class ResGetUserRankDTO extends BaseResponseBody {
     private Long rank;
     private Long rankDaily;
     private Long rankWeekly;
+    private Long userNum;
 
-    public static ResGetUserRankDTO of(Integer status, String message, Long rank, Long rankDaily, Long rankWeekly){
+    public static ResGetUserRankDTO of(Integer status, String message, Long rank, Long rankDaily, Long rankWeekly, Long userNum){
         ResGetUserRankDTO body = new ResGetUserRankDTO();
 
         body.setStatusCode(status);
@@ -20,6 +21,7 @@ public class ResGetUserRankDTO extends BaseResponseBody {
         body.setRank(rank);
         body.setRankDaily(rankDaily);
         body.setRankWeekly(rankWeekly);
+        body.setUserNum(userNum);
 
         return body;
     }
