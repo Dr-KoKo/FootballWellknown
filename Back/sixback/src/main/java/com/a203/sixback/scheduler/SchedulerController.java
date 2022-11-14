@@ -14,15 +14,15 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
-@Component
 @EnableAsync
+@Component
 public class SchedulerController {
-
     @Autowired
     private SchedulerService schedulerService;
     @Autowired(required = false)
@@ -34,8 +34,8 @@ public class SchedulerController {
     private boolean isSchedulerServer;
 
     @Async
-    @Scheduled(cron = "0 0 23 * * *")
-//    @Scheduled(cron = "0 58 8 * * *")
+//    @Scheduled(cron = "0 0 23 * * *")
+    @Scheduled(cron = "0 37 10 * * *")
     public void mainSchedule() throws Exception {
         log.info("SchedulerController Cron 실행");
 
@@ -49,8 +49,9 @@ public class SchedulerController {
 
         try {
             if (isSchedulerServer) {
-                registerMatchSchedule(year, month, day);
-//                schedulerTest(2022, 11, 14, "0 30 9 * * *");
+//                registerMatchSchedule(year, month, day);
+                schedulerTest(2022, 11, 12, "0 37 10 * * *");
+                schedulerTest(2022, 11, 13, "0 37 10 * * *");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,7 +112,7 @@ public class SchedulerController {
                     .append("*").append(" ").append("*");
 
 
-            task = new LineUpTask(matchId, matchService);
+            task = new LineUpTask(matchId, schedulerService);
 
             MainScheduler.getInstance().start(task, sb.toString(), matchId * 2L);
         }
@@ -129,7 +130,7 @@ public class SchedulerController {
 
             MainScheduler.getInstance().start(task, 3 + cronTrigger, matchId);
 
-            task = new LineUpTask(matchId, matchService);
+            task = new LineUpTask(matchId, schedulerService);
 
             MainScheduler.getInstance().start(task, 1 + cronTrigger, matchId * 2L);
         }

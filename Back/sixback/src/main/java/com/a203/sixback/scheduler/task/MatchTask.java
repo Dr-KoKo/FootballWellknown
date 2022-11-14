@@ -39,8 +39,7 @@ public class MatchTask implements Runnable {
         log.info("MatchTask  실행");
         // TODO: APIfootball에서 event api를 불러온다.
         try {
-            if (schedulerService.match(matchId))
-                MainScheduler.getInstance().stop(matchId);
+            schedulerService.match(matchId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);

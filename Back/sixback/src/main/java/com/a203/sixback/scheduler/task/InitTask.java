@@ -28,7 +28,7 @@ public class InitTask implements Runnable{
         Runnable task = new MatchTask(matchId, schedulerService);
 
         try {
-            MainScheduler.getInstance().start(task, "*/1 * * * * *", matchId);
+            MainScheduler.getInstance().start(task, "*/10 * * * * *", matchId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
