@@ -74,7 +74,7 @@ const UserDetail = () => {
               <img id="medal" width="300px" height="300px" src={Bronze} />
           }
           <div id="rankFont">
-          {rank.rank}
+          {rank.rank}위/{rank.userNum}명
           </div>
         </div>
         <Grid item xs={16} sx={{ width: '60%' }} >
@@ -100,21 +100,21 @@ const UserDetail = () => {
                   hover
                 >
                   <TableCell align="center">Point</TableCell>
-                  <TableCell align="center">{user.point}</TableCell>
+                  <TableCell align="center">{user.point}점</TableCell>
                 </TableRow>
                 <TableRow
                   // key={user.email}
                   hover
                 >
                   <TableCell align="center">일간 랭킹</TableCell>
-                  <TableCell align="center">{rank.rankDaily}</TableCell>
+                  <TableCell align="center">{rank.rankDaily}위/{rank.userNum}명</TableCell>
                 </TableRow>
                 <TableRow
                   // key={user.email}
                   hover
                 >
                   <TableCell align="center">주간 랭킹</TableCell>
-                  <TableCell align="center">{rank.rankWeekly}</TableCell>
+                  <TableCell align="center">{rank.rankWeekly}위/{rank.userNum}명</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
