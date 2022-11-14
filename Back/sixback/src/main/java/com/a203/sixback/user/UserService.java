@@ -8,6 +8,7 @@ import com.a203.sixback.db.redis.RankingCacheRepository;
 import com.a203.sixback.db.repo.BoardRepo;
 import com.a203.sixback.db.repo.PointLogRepo;
 import com.a203.sixback.db.repo.PredictRepo;
+import com.a203.sixback.db.repo.UserRepo;
 import com.a203.sixback.user.res.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +28,17 @@ public class UserService {
 //    private final CommentRepoMongoDB commentRepoMongoDB;
     private final PredictRepo predictRepo;
     private final RankingCacheRepository rankingCacheRepository;
+    private final UserRepo userRepo;
 
     @Autowired
-    public UserService(BoardRepo boardRepo, PointLogRepo pointLogRepo, PredictRepo predictRepo, RankingCacheRepository rankingCacheRepository) {
+    public UserService(BoardRepo boardRepo, PointLogRepo pointLogRepo, PredictRepo predictRepo,
+                       RankingCacheRepository rankingCacheRepository, UserRepo userRepo) {
         this.boardRepo = boardRepo;
         this.pointLogRepo = pointLogRepo;
 //        this.commentRepoMongoDB = commentRepoMongoDB;
         this.predictRepo = predictRepo;
         this.rankingCacheRepository = rankingCacheRepository;
+        this.userRepo = userRepo;
     }
 
     public ResGetUserDetailsDTO getUserDetails() {
@@ -98,5 +102,9 @@ public class UserService {
         Long userNum = rankingCacheRepository.getUserNum(DayType.ALL);
 
         return ResGetUserRankDTO.of(200, "성공", rank, rankDaily, rankWeekly, userNum);
+    }
+
+    public void updateNickname(User user) {
+        userRepo.updateNickname(user.getNickname(), user.getEmail());
     }
 }

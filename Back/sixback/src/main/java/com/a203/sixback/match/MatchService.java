@@ -34,7 +34,6 @@ public class MatchService {
     private final PlayerRepo playerRepo;
     private final UserRepo userRepo;
     private final PredictRepo predictRepo;
-    private final MatchPredictRepo matchPredictRepo;
     private final TeamRepo teamRepo;
     public List<MatchStatusVO> getMatchesByRound(int round) {
         List<Matches> matches = matchesCustomRepo.findAllByRound(round);
