@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FormControl,
   Button,
@@ -10,24 +10,28 @@ import {
   Box,
   Grid,
 } from "@mui/material";
-import { useNavigate } from "react-router";
+
+import { useLocation, useNavigate } from "react-router";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 // import ClassicEditor from "../../util/build/ckeditor";
 import ClassicEditor from 'ckeditor5-custom-build/build/ckeditor';
 import { createBoard } from "services/boardServices";
-import { getTeamList } from "services/matchServices";
+import { getTeamList, getMatchList, getRound } from "services/matchServices";
 import "./BoardWrite.css";
 
 const BoardWrite = () => {
   // const ClassicEditor = require("../../util/build/ckeditor.js");
+  const { state } = useLocation();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [ctgName, setCtgName] = useState("자유");
+  const [ctgName, setCtgName] = useState(state.ctgName);
   const [teams, setTeams] = useState([]);
   const [matches, setMatches] = useState([]);
-  const [team, setTeam] = useState(null);
-  const [match, setMatch] = useState(null);
+  const [team, setTeam] = useState(state.teamId);
+  const [round, setRound] = useState(13);
+  const [match, setMatch] = useState(state.matchId);
 
+  
   const navigate = useNavigate();
 
   const createTeamList = async () => {
@@ -38,15 +42,9 @@ const BoardWrite = () => {
   };
 
   const createMatchList = async (round) => {
-    const result = await fetch(
-      "http://localhost:8080/api/v1/matches/boards/rounds/" + round,
-      {}
-    )
-      .then((res) => res.json())
-      .then((json) => json);
-    console.log(result);
-    if (result.statusCode === 200) {
-      setMatches(result.result);
+    const result = await getMatchList(round);
+    if (result.status === 200) {
+      setMatches(result.data.result);
     }
   };
 
@@ -89,11 +87,27 @@ const BoardWrite = () => {
     }
   };
 
+  const getMatch = async () => {
+    console.log("AAAA");
+    console.log(state.matchId)
+    const result = await getRound(state.matchId);
+    if (result.status === 200) {
+      setRound(result.data.result);
+      createMatchList(result.data.result);
+    }
+  };
+
   const isValid =
     title.trim().length >= 2 &&
     content.trimEnd().length >= 2 &&
     ctgName.trim().length >= 1;
 
+    useEffect(() => {
+      console.log(state.ctgName)
+      if ((state.ctgName == "팀")) createTeamList();
+      if ((state.ctgName == "경기")) getMatch();
+    }, []);
+  
   return (
     <Container>
       <Box
@@ -128,7 +142,7 @@ const BoardWrite = () => {
           <Grid item xs={3} sx={{marginRight: "1%"}}>
             <FormControl fullWidth>
               <InputLabel>Select Category</InputLabel>
-              <Select label="카테고리" onChange={onCtgChaged}>
+              <Select value={ctgName} label="카테고리" onChange={onCtgChaged}>
                 <MenuItem value="자유">자유</MenuItem>
                 <MenuItem value="공지사항">공지사항</MenuItem>
                 <MenuItem value="팀">팀</MenuItem>
@@ -141,7 +155,7 @@ const BoardWrite = () => {
             <Grid item xs={5}>
               <FormControl fullWidth>
                 <InputLabel>Select Team</InputLabel>
-                <Select>
+                <Select value={team}>
                   {teams.map((team) => (
                     <MenuItem
                       key={team.id}
@@ -159,7 +173,7 @@ const BoardWrite = () => {
           {ctgName === "경기" && (
             <Grid item xs={3} sx={{marginRight: "1%"}}>
               <FormControl fullWidth>
-                <Select id="select-round">
+                <Select value={round} id="select-round">
                   {Array(38)
                     .fill()
                     .map((round, i) => (
@@ -178,7 +192,7 @@ const BoardWrite = () => {
           {ctgName === "경기" && (
             <Grid item xs={8}>
               <FormControl fullWidth>
-                <Select>
+                <Select value={match}>
                   {matches.map((match) => (
                     <MenuItem
                       key={match.matchId}

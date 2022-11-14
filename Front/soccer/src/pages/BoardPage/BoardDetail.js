@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { detailBoard, deleteBoard, postComment } from "services/boardServices";
 import { getTeam, getMatch } from "services/matchServices";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -30,6 +30,7 @@ import { useSelector } from "react-redux";
 const BoardDetail = () => {
   // const ClassicEditor = require("../../util/build/ckeditor.js");
   const navigate = useNavigate();
+  const { props } = useLocation();
   const { id } = useParams();
   const state = useSelector(state => state);
   const [board, setBoard] = useState(null);
@@ -151,7 +152,7 @@ const BoardDetail = () => {
                 <p>작성자: {board.author}</p>
               </Grid>
 
-              {board.author == store.getState().user.nickname && (
+              {/* {board.author == store.getState().user.nickname && ( */}
                 <Grid item xs="1">
                   <Button
                     variant="contained"
@@ -161,7 +162,7 @@ const BoardDetail = () => {
                     글 수정
                   </Button>
                 </Grid>
-              )}
+              {/* )} */}
               {(board.author == store.getState().user.nickname ||
                 store.getState().auth == "ADMIN") && (
                 <Grid item xs="1">
