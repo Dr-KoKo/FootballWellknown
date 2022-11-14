@@ -52,7 +52,7 @@ const MyPage = () => {
                         <tr id="userPTR">
                             {/* <th id="rank">away</th> */}
                             <th>매치</th>
-                            <th id="rank">myPredict</th>
+                            <th id="rank">내 예측</th>
                             <th id="rank">결과</th>
                         </tr>
                     </thead>
@@ -62,7 +62,7 @@ const MyPage = () => {
                                 {/* <td id="rank">{data.away}</td> */}
                                 <td id="td1">
                                     <div id="tdContent">
-                                        <div id="tdRound">[15R]</div>
+                                        <div id="tdRound">[{data.round}R]</div>
                                         <div id="tdName">{data.home}</div>
                                     <img id="imglogo" src={data.homeImg}/>
                                     <div id="blank">vs</div>
@@ -72,7 +72,24 @@ const MyPage = () => {
                                     
                                     </div></td>
                                 {/* <td id="rank">{data.home}</td> */}
-                                <td id="rank">{data.myPredict}</td>
+                                <td id="rank">
+                                    {data.myPredict === "HOME" ?
+                                        data.home + " 승" :
+                                        (
+                                            data.myPredict === "AWAY" ?
+                                            data.away + " 승" :
+                                            "무승부"
+                                        )
+                                    }
+                                </td>
+                                <td>
+                                    {data.mathResult.length === 0 ?
+                                        "시작 전" :
+                                        data.myPredict === data.matchResult ?
+                                        '적중' :
+                                        '미적중'
+                                    }
+                                </td>
                             </tr>
                         ))}
                     </tbody>
