@@ -83,7 +83,7 @@ const MyPage = () => {
                                     }
                                 </td>
                                 <td>
-                                    {data.mathResult.length === 0 ?
+                                    {data.matchResult.length == null ?
                                         "시작 전" :
                                         data.myPredict === data.matchResult ?
                                         '적중' :
