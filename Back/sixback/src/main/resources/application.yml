@@ -96,10 +96,10 @@ server:
   port: '8080'
   servlet:
     context-path: /api/v1
-  ssl:
-    key-store: classpath:keystore.p12
-    key-store-type: PKCS12
-    key-store-password: Y1Ya6uu54UwkgwVAX6wV15iYfmvnk2mM
+#  ssl:
+#    key-store: classpath:keystore.p12
+#    key-store-type: PKCS12
+#    key-store-password: Y1Ya6uu54UwkgwVAX6wV15iYfmvnk2mM
 jwt:
   secret: adbonFDsgdGawfsdfWERPwasbdfbo342ruusdhvsdSGUIdsaff
   
