@@ -70,6 +70,12 @@ public class RankingCacheRepository {
         return collect;
     }
 
+    public Long getUserNum(DayType key){
+        String _key = getKey(key);
+
+        return rankingRedisTemplate.opsForZSet().zCard(_key);
+    }
+
     public void refreshDailyRanking(){
         String key = getKey(DayType.DAILY);
         rankingRedisTemplate.delete(key);
