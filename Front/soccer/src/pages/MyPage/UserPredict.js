@@ -82,7 +82,7 @@ const MyPage = () => {
                                         )
                                     }
                                 </td>
-                                <td>
+                                <td id="rank">
                                     {data.matchResult == null ?
                                         "시작 전" :
                                         data.myPredict === data.matchResult ?
