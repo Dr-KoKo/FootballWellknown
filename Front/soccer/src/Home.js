@@ -25,7 +25,7 @@ import { getDailyRank, getWeeklyRank } from 'services/userServices';
 const Home = () => {
   const [teamToggle, setTeamToggle] = useState(true);
   const [matchInfo, setMatchInfo] = useState([]);
-  const [round, setRound] = useState(15);
+  const [round, setRound] = useState(10);
   const [loading, setLoading] = useState(true)
   const dispatch = useDispatch();
   const [carousel, setCarousel] = useState([]);
