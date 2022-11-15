@@ -204,7 +204,7 @@ const PlayerStatistics = (props) => {
       else{
         axios.post(`${SERVER_URL}/api/v1/matches/predict/player`,{
           matchId: match.matchId,
-          userEmail: 'test@test.com',
+          userEmail: user.email,
           playerId: selected,
           score: Number(score),
         })
