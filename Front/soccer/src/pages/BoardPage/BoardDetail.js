@@ -30,7 +30,6 @@ import { useSelector } from "react-redux";
 const BoardDetail = () => {
   // const ClassicEditor = require("../../util/build/ckeditor.js");
   const navigate = useNavigate();
-  const { props } = useLocation();
   const { id } = useParams();
   const state = useSelector(state => state);
   const [board, setBoard] = useState(null);
