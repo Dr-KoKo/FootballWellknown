@@ -72,6 +72,36 @@ public class RankingService {
 
     }
 
+    @Transactional
+    public void addAllPlayerScore(List<PlayerEvaluate> correctPredictList, int point) {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        List<PointLog> pointLogList = new ArrayList<>(correctPredictList.size());
+        List<User> userList = new ArrayList<>(correctPredictList.size());
+
+        for (PlayerEvaluate predict : correctPredictList) {
+            User user = predict.getUser();
+            user.setPoint(user.getPoint() + point);
+            userList.add(user);
+
+            PointLog log = PointLog.builder()
+                    .user(user)
+                    .pe(predict)
+                    .point(point)
+                    .distribute_time(now)
+                    .build();
+            pointLogList.add(log);
+
+            rankingCacheRepository.addScore(user.getNickname(), user.getPoint());
+        }
+
+        pointLogRepo.saveAll(pointLogList);
+
+        userRepo.saveAll(userList);
+
+    }
+
     public Long getRanking(User user){
         return rankingCacheRepository.getRanking(DayType.ALL, user.getEmail());
     }
