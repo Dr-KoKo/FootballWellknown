@@ -123,4 +123,14 @@ public class BoardController {
     public ResponseEntity postBoardLike(@RequestBody PostBoardLikeReq postBoardLikeReq) {
         return boardService.postBoardLike(postBoardLikeReq);
     }
+
+    @PostMapping("/test/mysql")
+    public ResponseEntity postCommentMySql(@RequestBody PostCommentReq postCommentReq) {
+        return boardService.postCommentMySql(postCommentReq);
+    }
+
+    @PostMapping("/test/mongo")
+    public ResponseEntity postCommentMongo(@RequestBody PostCommentReq postCommentReq) {
+        return boardService.postCommentMongo(postCommentReq);
+    }
 }
