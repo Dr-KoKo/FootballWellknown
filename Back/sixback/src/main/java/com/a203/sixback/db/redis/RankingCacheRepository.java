@@ -36,6 +36,7 @@ public class RankingCacheRepository {
         for (DayType key : DayType.values()) {
             String _key = getKey(key);
             if (rankingRedisTemplate.opsForZSet().addIfAbsent(_key, value, score)) {
+                log.info("Add score to Redis {}:{}:{}", _key, value, score);
                 continue;
             }
 
@@ -78,11 +79,13 @@ public class RankingCacheRepository {
 
     public void refreshDailyRanking(){
         String key = getKey(DayType.DAILY);
+        log.info("Delete rank from Redis {}", key);
         rankingRedisTemplate.delete(key);
     }
 
     public void refreshWeeklyRanking(){
         String key = getKey(DayType.WEEKLY);
+        log.info("Delete rank from Redis {}", key);
         rankingRedisTemplate.delete(key);
     }
 
