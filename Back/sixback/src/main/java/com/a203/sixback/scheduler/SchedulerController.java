@@ -30,8 +30,8 @@ public class SchedulerController {
     @Autowired(required = false)
     private RankingService rankingService;
 
-//    @Value("${SCHEDULER-SERVER}")
-    private boolean isSchedulerServer = false;
+    @Value("${SCHEDULER-SERVER}")
+    private boolean isSchedulerServer;
 
     @Async
     @Scheduled(cron = "0 0 23 * * *")
@@ -62,6 +62,7 @@ public class SchedulerController {
     @Scheduled(cron = "0 0 0 * * *")
     public void dailyRankingRefreshSchedule() throws Exception {
         if (isSchedulerServer){
+            log.info("Initiate Delete Daily Ranking");
             rankingService.refreshDailyRanking();
             rankingService.resetRanking();
         }
@@ -71,6 +72,7 @@ public class SchedulerController {
     @Scheduled(cron = "0 0 0 * * 0")
     public void weeklyRankingRefreshSchedule() throws Exception {
         if (isSchedulerServer){
+            log.info("Initiate Delete Weekly Ranking");
             rankingService.refreshWeeklyRanking();
             rankingService.resetRanking();
         }

@@ -10,6 +10,7 @@ import com.a203.sixback.board.res.*;
 import com.a203.sixback.db.entity.*;
 import com.a203.sixback.db.mongo.BoardCommentRepo;
 import com.a203.sixback.db.mongo.BoardLikeRepo;
+import com.a203.sixback.db.mongo.CommentMongolRepo;
 import com.a203.sixback.db.repo.*;
 import com.a203.sixback.util.model.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,8 @@ public class BoardService {
     private final BoardRepo boardRepo;
     private final BoardLikeRepo boardLikeRepo;
     private final BoardCommentRepo boardCommentRepo;
+    private final CommentMySqlRepo commentMySqlRepo;
+    private final CommentMongolRepo commentMongolRepo;
     private final CtgRepo ctgRepo;
 
     private final MatchesRepo matchRepo;
@@ -286,6 +289,62 @@ public class BoardService {
         return boardSize / 10 + (boardSize %10 == 0 ? 0 : 1);
     }
 
+    public ResponseEntity postCommentMySql(PostCommentReq postCommentReq) {
+        User user = null;
+
+        try {
+            user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No User"));
+        }
+
+        Board board = null;
+
+        try {
+            board = boardRepo.findById(postCommentReq.getBoardId()).get();
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "Np Board"));
+        }
+
+        CommentMySql commentMySql = CommentMySql.builder()
+                .board(board)
+                .user(user)
+                .comment(postCommentReq.getComment())
+                .createDate(LocalDateTime.now())
+                .build();
+
+        commentMySqlRepo.save(commentMySql);
+        return ResponseEntity.ok(BaseResponseBody.of(200, "Post Comment Success"));
+    }
+
+    public ResponseEntity postCommentMongo(PostCommentReq postCommentReq) {
+        User user = null;
+
+        try {
+            user = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No User"));
+        }
+
+        Board board = null;
+
+        try {
+            board = boardRepo.findById(postCommentReq.getBoardId()).get();
+        } catch(Exception e) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No Board"));
+        }
+
+        CommentMongo commentMongo = CommentMongo.builder()
+                .author(user.getNickname())
+                .authorId(user.getId())
+                .boardId(board.getId())
+                .comment(postCommentReq.getComment())
+                .createDate(LocalDateTime.now())
+                .build();
+
+        commentMongolRepo.save(commentMongo);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Post Comment Mongo Success"));
+    }
 
     public ResponseEntity postComment(PostCommentReq postCommentDTO) {
         User user = null;

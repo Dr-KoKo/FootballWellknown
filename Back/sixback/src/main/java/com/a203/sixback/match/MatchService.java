@@ -169,6 +169,15 @@ public class MatchService {
         return jsonArray;
     }
 
+    public JSONObject getStatistics(long matchId) throws Exception{
+        JSONObject jsonObject = new JSONObject();
+        String str = "https://apiv3.apifootball.com/?action=get_statistics&match_id="+matchId+"&APIkey=" + apiKey;
+        URL url = new URL(str);
+        InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
+        jsonObject = (JSONObject) JSONValue.parseWithException(isr);
+        return jsonObject;
+    }
+
     public StatisticsVO getAllPlayerMatch(long match_id) {
         StatisticsVO result = new StatisticsVO();
         List<PlayerMatch> playerMatchList = playerMatchRepo.findAllByMatches_Id(match_id);
