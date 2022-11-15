@@ -74,8 +74,26 @@ public class MatchService {
         return result;
     }
     public List<MatchStatusVO> getMatchesByMonth(int year, int month) {
+        List<Matches> matches = matchesCustomRepo.findAllByYearAndMonthOrderByMatch_Date(year,month);
+        List<MatchStatusVO> result = new ArrayList<>();
+        for(Matches match : matches){
+            MatchVO matchVO = MatchVO.builder()
+                    .matchId(match.getId())
+                    .home(match.getHome().getName())
+                    .homeImage(match.getHome().getImage())
+                    .away(match.getAway().getName())
+                    .awayImage(match.getAway().getImage())
+                    .homeScore(match.getHomeScore())
+                    .date(match.getMatchDate().toString())
+                    .awayScore(match.getAwayScore())
+                    .stadium(match.getStadium())
+                    .build();
+            result.add(new MatchStatusVO(matchVO, match.getMatchStatus()));
+        }
+        return result;
+    }
+    public List<MatchStatusVO> getMatchesByMonthBefore(int year, int month) {
         List<Matches> matches = matchesRepo.findAllByYearAndMonthOrderByMatch_Date(year,month);
-//        List<Matches> matches = matchesCustomRepo.findAllByYearAndMonthOrderByMatch_Date(year,month);
         List<MatchStatusVO> result = new ArrayList<>();
         for(Matches match : matches){
             MatchVO matchVO = MatchVO.builder()

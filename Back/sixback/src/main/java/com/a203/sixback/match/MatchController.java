@@ -41,6 +41,11 @@ public class MatchController {
         List<MatchStatusVO> result = matchService.getMatchesByMonth(year,month);
         return ResponseEntity.status(200).body(AllMatchRes.of(200,"Success",result));
     }
+    @GetMapping("/dates/before")
+    public ResponseEntity<BaseResponseBody> getMatchesByMonthBefore(@RequestParam int year, @RequestParam int month){
+        List<MatchStatusVO> result = matchService.getMatchesByMonthBefore(year,month);
+        return ResponseEntity.status(200).body(AllMatchRes.of(200,"Success",result));
+    }
     @GetMapping("/match/{id}")
     public ResponseEntity<BaseResponseBody> getMatchDetail(@PathVariable long id){
         MatchStatusVO result = matchService.getMatchDetail(id);
