@@ -61,9 +61,10 @@ public class AuthTokenProvider {
 
             System.out.println(claims.getSubject());
 
-            User user = userCacheRepository.getUser(claims.getSubject()).orElseGet(
-                    ()->userRepo.findByEmail(claims.getSubject())
-            );
+            User user = userRepo.findByEmail(claims.getSubject());
+//            User user = userCacheRepository.getUser(claims.getSubject()).orElseGet(
+//                    ()->userRepo.findByEmail(claims.getSubject())
+//            );
 //
             UserPrincipal principal = UserPrincipal.create(user);
 
