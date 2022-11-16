@@ -71,6 +71,7 @@ public class UserController {
         try{
             responseBody = userService.getUserPredicts();
         } catch (Exception e){
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BaseResponseBody.of(400,"잘못된 요청입니다."));
         }
         return ResponseEntity.ok().body(responseBody);

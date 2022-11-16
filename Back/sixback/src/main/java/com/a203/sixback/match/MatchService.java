@@ -414,17 +414,15 @@ public class MatchService {
 
 
         Matches savedMatches = matchesCustomRepo.findById(matchId);
+        List<MatchDet> matchDetList = matchDetRepo.findAllByMatches_Id(matchId);
         // 라인업 포메이션 저장
-        matchDetRepo.save(MatchDet.builder()
-                .matches(savedMatches)
-                .teamType(TeamType.HOME)
-                .formation(homeFormation)
-                .build());
-        matchDetRepo.save(MatchDet.builder()
-                .matches(savedMatches)
-                .teamType(TeamType.AWAY)
-                .formation(awayFormation)
-                .build());
+        MatchDet homeMatchDet = matchDetList.get(0);
+        MatchDet awayMatchDet = matchDetList.get(1);
+
+        homeMatchDet.setFormation(homeFormation, TeamType.HOME);
+        awayMatchDet.setFormation(awayFormation, TeamType.AWAY);
+        matchDetRepo.save(homeMatchDet);
+        matchDetRepo.save(awayMatchDet);
 
         for(int t=0;t<homeStarts.size();t++){
             JSONObject start = (JSONObject) homeStarts.get(t);

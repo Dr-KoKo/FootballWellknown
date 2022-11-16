@@ -51,4 +51,8 @@ public class MatchDet {
     public void setPassOn(int passOn){
         this.passOn = passOn;
     }
+    public void setFormation(String formation, TeamType teamType){
+        this.formation = formation;
+        this.teamType = teamType;
+    }
 }
