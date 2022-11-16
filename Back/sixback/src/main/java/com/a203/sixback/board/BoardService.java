@@ -306,15 +306,15 @@ public class BoardService {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "Np Board"));
         }
 
-        for(int i=0; i<100; i++){
-            CommentMySql commentMySql = CommentMySql.builder()
-                    .board(board)
-                    .user(user)
-                    .comment(postCommentReq.getComment())
-                    .createDate(LocalDateTime.now())
-                    .build();
-            commentMySqlRepo.save(commentMySql);
-        }
+
+        CommentMySql commentMySql = CommentMySql.builder()
+                .board(board)
+                .user(user)
+                .comment(postCommentReq.getComment())
+                .createDate(LocalDateTime.now())
+                .build();
+        commentMySqlRepo.save(commentMySql);
+
         return ResponseEntity.ok(BaseResponseBody.of(200, "Post Comment Success"));
     }
 
@@ -335,17 +335,17 @@ public class BoardService {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No Board"));
         }
 
-        for(int i=0; i<100; i++) {
-            CommentMongo commentMongo = CommentMongo.builder()
-                    .author(user.getNickname())
-                    .authorId(user.getId())
-                    .boardId(board.getId())
-                    .comment(postCommentReq.getComment())
-                    .createDate(LocalDateTime.now())
-                    .build();
 
-            commentMongolRepo.save(commentMongo);
-        }
+        CommentMongo commentMongo = CommentMongo.builder()
+                .author(user.getNickname())
+                .authorId(user.getId())
+                .boardId(board.getId())
+                .comment(postCommentReq.getComment())
+                .createDate(LocalDateTime.now())
+                .build();
+
+        commentMongolRepo.save(commentMongo);
+
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Post Comment Mongo Success"));
     }
 
@@ -463,7 +463,6 @@ public class BoardService {
         // 좋아요
 
         if(postBoardLikeReq.isCheckLiked()) {
-            System.out.println("AAA");
             hs.add(user.getId());
         }
 
