@@ -28,7 +28,7 @@ public class CommentMySql {
     private String comment;
 
     @ManyToOne(fetch =  FetchType.LAZY)
-    @JoinColumn(name = "autor")
+    @JoinColumn(name = "author")
     private User user;
 
     private LocalDateTime createDate;
