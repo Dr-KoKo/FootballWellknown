@@ -306,14 +306,15 @@ public class BoardService {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "Np Board"));
         }
 
+
         CommentMySql commentMySql = CommentMySql.builder()
                 .board(board)
                 .user(user)
                 .comment(postCommentReq.getComment())
                 .createDate(LocalDateTime.now())
                 .build();
-
         commentMySqlRepo.save(commentMySql);
+
         return ResponseEntity.ok(BaseResponseBody.of(200, "Post Comment Success"));
     }
 
@@ -334,6 +335,7 @@ public class BoardService {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "No Board"));
         }
 
+
         CommentMongo commentMongo = CommentMongo.builder()
                 .author(user.getNickname())
                 .authorId(user.getId())
@@ -343,6 +345,7 @@ public class BoardService {
                 .build();
 
         commentMongolRepo.save(commentMongo);
+
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Post Comment Mongo Success"));
     }
 
@@ -395,7 +398,7 @@ public class BoardService {
 
         for(Comment comment : comments){
             getComments.add(new GetCommentRes().builder()
-                    .commentId(comment.getId())
+                    .commentId("" + comment.getId())
                     .author(comment.getAuthor())
                     .comment(comment.getComment())
                     .createDate(comment.getCreateDate())
@@ -460,7 +463,6 @@ public class BoardService {
         // 좋아요
 
         if(postBoardLikeReq.isCheckLiked()) {
-            System.out.println("AAA");
             hs.add(user.getId());
         }
 
@@ -477,4 +479,45 @@ public class BoardService {
     }
 
 
+    public List<GetCommentRes> findCommentsMySql(long boardId) {
+        List<CommentMySql> comments = null;
+        try {
+            comments = commentMySqlRepo.findAllByBoardId(boardId);
+        } catch(Exception e) {
+            return new ArrayList<>();
+        }
+        List<GetCommentRes> getComments = new LinkedList<>();
+
+        for(CommentMySql commentMySql : comments){
+            getComments.add(new GetCommentRes().builder()
+                    .commentId("" + commentMySql.getId())
+                    .author(commentMySql.getUser().getNickname())
+                    .comment(commentMySql.getComment())
+                    .createDate(commentMySql.getCreateDate())
+                    .build()
+            );
+        }
+        return getComments;
+    }
+
+    public List<GetCommentRes> findCommentsMongo(long boardId) {
+        List<CommentMongo> comments = null;
+        try {
+            comments = commentMongolRepo.findAllByBoardId(boardId);
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+        List<GetCommentRes> getComments = new LinkedList<>();
+
+        for(CommentMongo commentMongo : comments){
+            getComments.add(new GetCommentRes().builder()
+                    .commentId(commentMongo.getId())
+                    .author(commentMongo.getAuthor())
+                    .comment(commentMongo.getComment())
+                    .createDate(commentMongo.getCreateDate())
+                    .build()
+            );
+        }
+        return getComments;
+    }
 }

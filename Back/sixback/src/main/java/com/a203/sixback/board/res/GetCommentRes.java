@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetCommentRes {
-    int commentId;
+    String commentId;
     String author;
     String comment;
     LocalDateTime createDate;
