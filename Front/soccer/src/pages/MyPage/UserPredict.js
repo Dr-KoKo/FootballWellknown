@@ -27,7 +27,7 @@ const MyPage = () => {
     const getMyPredict = async () => {
         const result = await getUserPredict();
 
-        if(result?.data?.message==="성공"){
+        if (result?.data?.message === "성공") {
             console.log(result.data)
             setDatas(result.data.userPredictList);
             setLoading(false);
@@ -43,7 +43,7 @@ const MyPage = () => {
     // } 
 
     return (
-        
+
         <div id="hhhh">
 
             {loading ? <Loading /> : <div id="hhhh">
@@ -57,19 +57,19 @@ const MyPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {datas.map((data) => (
+                        {datas.size > 0 ? null : datas.map((data) => (
                             <tr id="userPTR2">
                                 {/* <td id="rank">{data.away}</td> */}
                                 <td id="td1">
                                     <div id="tdContent">
                                         <div id="tdRound">[{data.round}R]</div>
                                         <div id="tdName">{data.home}</div>
-                                    <img id="imglogo" src={data.homeImg}/>
-                                    <div id="blank">vs</div>
-                                    <img id="imglogo" src={data.awayImg}/>
-                                    <div id="tdName">{data.away}</div>
-                                    
-                                    
+                                        <img id="imglogo" src={data.homeImg} />
+                                        <div id="blank">vs</div>
+                                        <img id="imglogo" src={data.awayImg} />
+                                        <div id="tdName">{data.away}</div>
+
+
                                     </div></td>
                                 {/* <td id="rank">{data.home}</td> */}
                                 <td id="rank">
@@ -77,8 +77,8 @@ const MyPage = () => {
                                         data.home + " 승" :
                                         (
                                             data.myPredict === "AWAY" ?
-                                            data.away + " 승" :
-                                            "무승부"
+                                                data.away + " 승" :
+                                                "무승부"
                                         )
                                     }
                                 </td>
@@ -86,8 +86,8 @@ const MyPage = () => {
                                     {data.matchResult == null ?
                                         "시작 전" :
                                         data.myPredict === data.matchResult ?
-                                        '적중' :
-                                        '미적중'
+                                            '적중' :
+                                            '미적중'
                                     }
                                 </td>
                             </tr>
