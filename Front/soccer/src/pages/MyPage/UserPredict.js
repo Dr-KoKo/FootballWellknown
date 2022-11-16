@@ -57,7 +57,7 @@ const MyPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {datas.size > 0 ? null : datas.map((data) => (
+                        {datas.length === 0 ? null : datas.map((data) => (
                             <tr id="userPTR2">
                                 {/* <td id="rank">{data.away}</td> */}
                                 <td id="td1">
