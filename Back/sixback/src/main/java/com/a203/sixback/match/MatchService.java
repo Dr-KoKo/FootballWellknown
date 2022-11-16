@@ -54,6 +54,25 @@ public class MatchService {
         }
         return result;
     }
+    public List<MatchStatusVO> getMatchesByRoundBefore(int round) {
+        List<Matches> matches = matchesRepo.findAllByRound(round);
+        List<MatchStatusVO> result = new ArrayList<>();
+        for(Matches match : matches){
+            MatchVO matchVO = MatchVO.builder()
+                    .matchId(match.getId())
+                    .home(match.getHome().getName())
+                    .homeImage(match.getHome().getImage())
+                    .away(match.getAway().getName())
+                    .awayImage(match.getAway().getImage())
+                    .homeScore(match.getHomeScore())
+                    .date(match.getMatchDate().toString())
+                    .awayScore(match.getAwayScore())
+                    .stadium(match.getStadium())
+                    .build();
+            result.add(new MatchStatusVO(matchVO, match.getMatchStatus()));
+        }
+        return result;
+    }
     public List<MatchStatusVO> getMatchesByDate(int year, int month, int day){
         List<Matches> matches = matchesRepo.findAllByYearAndMonthAndDay(year,month,day);
         List<MatchStatusVO> result = new ArrayList<>();

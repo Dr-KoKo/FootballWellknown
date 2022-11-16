@@ -47,6 +47,11 @@ public class TeamController {
         ArrayList<TeamInfo> result = teamService.getTeamRanks();
         return ResponseEntity.status(200).body(TeamRankRes.of(200,"Success",result));
     }
+    @GetMapping("/ranks/before")
+    public ResponseEntity<BaseResponseBody> getTeamsRanksBefore(){
+        ArrayList<TeamInfo> result = teamService.getTeamRanksBefore();
+        return ResponseEntity.status(200).body(TeamRankRes.of(200,"Success",result));
+    }
     // 선수 세부정보 조회
     @GetMapping("/players/{playerId}")
     public ResponseEntity<BaseResponseBody> getPlayerDetails(@PathVariable("playerId") long playerId){

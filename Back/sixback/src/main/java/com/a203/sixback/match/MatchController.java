@@ -36,6 +36,11 @@ public class MatchController {
         List<MatchStatusVO> result = matchService.getMatchesByRound(round);
         return ResponseEntity.status(200).body(AllMatchRes.of(200,"Success",result));
     }
+    @GetMapping("/round/before")
+    public ResponseEntity<BaseResponseBody> getMatchesByRoundBefore(@RequestParam int round) throws Exception{
+        List<MatchStatusVO> result = matchService.getMatchesByRound(round);
+        return ResponseEntity.status(200).body(AllMatchRes.of(200,"Success",result));
+    }
     @GetMapping("/dates")
     public ResponseEntity<BaseResponseBody> getMatchesByMonth(@RequestParam int year, @RequestParam int month){
         List<MatchStatusVO> result = matchService.getMatchesByMonth(year,month);
