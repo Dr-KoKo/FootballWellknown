@@ -378,7 +378,22 @@ public class MatchService {
         MatchStatusVO result = new MatchStatusVO(matchVO, match.getMatchStatus());
         return result;
     }
-
+    public MatchStatusVO getMatchDetailBefore(long id) {
+        Matches match = matchesRepo.findById(id).get();
+        MatchVO matchVO = MatchVO.builder()
+                .matchId(match.getId())
+                .home(match.getHome().getName())
+                .homeImage(match.getHome().getImage())
+                .away(match.getAway().getName())
+                .awayImage(match.getAway().getImage())
+                .homeScore(match.getHomeScore())
+                .date(match.getMatchDate().toString())
+                .awayScore(match.getAwayScore())
+                .stadium(match.getStadium())
+                .build();
+        MatchStatusVO result = new MatchStatusVO(matchVO, match.getMatchStatus());
+        return result;
+    }
     // 라인업 나올시에 저장하는 거
     public void saveLineUps(Long matchId) throws Exception{
         JSONObject jsonObject= new JSONObject();
