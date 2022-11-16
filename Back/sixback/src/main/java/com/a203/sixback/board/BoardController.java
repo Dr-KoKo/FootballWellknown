@@ -124,13 +124,25 @@ public class BoardController {
         return boardService.postBoardLike(postBoardLikeReq);
     }
 
-    @PostMapping("/test/mysql")
+    @PostMapping("/comment/test/mysql")
     public ResponseEntity postCommentMySql(@RequestBody PostCommentReq postCommentReq) {
         return boardService.postCommentMySql(postCommentReq);
     }
 
-    @PostMapping("/test/mongo")
+    @GetMapping("/comment/test/mysql/{boardId}")
+    public ResponseEntity getCommentMySql(@PathVariable(value ="boardId") long boardId){
+        List<GetCommentRes> list = boardService.findCommentsMySql(boardId);
+        return ResponseEntity.status(200).body(list);
+    }
+
+    @PostMapping("/comment/test/mongo")
     public ResponseEntity postCommentMongo(@RequestBody PostCommentReq postCommentReq) {
         return boardService.postCommentMongo(postCommentReq);
+    }
+
+    @GetMapping("/comment/test/mongo/{boardId}")
+    public ResponseEntity getCommentMongo(@PathVariable(value ="boardId") long boardId){
+        List<GetCommentRes> list = boardService.findCommentsMongo(boardId);
+        return ResponseEntity.status(200).body(list);
     }
 }
