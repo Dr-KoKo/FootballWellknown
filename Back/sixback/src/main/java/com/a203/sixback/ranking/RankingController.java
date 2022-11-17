@@ -36,6 +36,7 @@ public class RankingController {
         try {
             result = rankingService.getDailyRankingList();
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BaseResponseBody.of(400, "잘못된 요청입니다."));
         }
         return ResponseEntity.ok().body(ResRankingDTO.of(200, "성공", result));
@@ -47,6 +48,7 @@ public class RankingController {
         try {
             result = rankingService.getWeeklyRankingList();
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BaseResponseBody.of(400, "잘못된 요청입니다."));
         }
         return ResponseEntity.ok().body(ResRankingDTO.of(200, "성공", result));
