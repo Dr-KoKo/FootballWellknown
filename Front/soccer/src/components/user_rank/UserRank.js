@@ -9,8 +9,10 @@ const UserRank = (props) => {
     const [userRank, setUserRank] = useState([]);
 
     useEffect(()=>{
-        setUserRank(props.list)
+        setUserRank(props.list);
+        console.log(props.list)
     },[props])
+    
 
     // slider 세팅
     const settings = {
@@ -33,7 +35,7 @@ const UserRank = (props) => {
             <Slider  {...settings}>
                 {userRank.map((item,i) => 
                     <div key={i} >
-                        <span style={{display:'inline-block', width:'30px'}}>{`${i+1}위`}</span>
+                        <span style={{display:'inline-block', width:'35px'}}>{`${i+1}위`}</span>
                         <span style={{display:'inline-block', fontWeight: 'bold',width:"250px"}}>
                             {`${item.value}`}
                         </span>
@@ -47,7 +49,7 @@ const UserRank = (props) => {
             <div id="rankBoard">
             {userRank.map((item,i) => 
                     <div key={i} style={{marginBottom:'0.2rem'}}>
-                        <span style={{display:'inline-block', width:'30px'}}>{`${i+1}위`}</span>
+                        <span style={{display:'inline-block', width:'35px'}}>{`${i+1}위`}</span>
                         <span style={{display:'inline-block', fontWeight: 'bold',width:"250px"}}>
                             {`${item.value}`}
                         </span>
