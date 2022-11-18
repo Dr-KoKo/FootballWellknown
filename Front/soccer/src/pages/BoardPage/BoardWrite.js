@@ -28,7 +28,7 @@ const BoardWrite = () => {
   const [teams, setTeams] = useState([]);
   const [matches, setMatches] = useState([]);
   const [team, setTeam] = useState(state.team);
-  const [round, setRound] = useState(13);
+  const [round, setRound] = useState(0);
   const [match, setMatch] = useState(state.match);
 
   
@@ -96,6 +96,11 @@ const BoardWrite = () => {
       createMatchList(result.data.result);
     }
   };
+
+  const onRoundChanged = async (event) => {
+    setRound(event.target.value);
+    createMatchList(event.target.value);
+  }
 
   const isValid =
     title.trim().length >= 2 &&
@@ -175,7 +180,7 @@ const BoardWrite = () => {
           {ctgName === "경기" && (
             <Grid item xs={3} sx={{marginRight: "1%"}}>
               <FormControl fullWidth>
-                <Select value={round} id="select-round">
+                <Select value={round} id="select-round" onChange={onRoundChanged}>
                   {Array(38)
                     .fill()
                     .map((round, i) => (
