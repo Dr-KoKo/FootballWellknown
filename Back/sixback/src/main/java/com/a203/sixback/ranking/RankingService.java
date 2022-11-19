@@ -136,6 +136,7 @@ public class RankingService {
         rankingCacheRepository.refreshWeeklyRanking();
     }
 
+    @Transactional
     public void resetRanking(){
         userRepo.findAll().stream().map(x->x.getNickname()).forEach(x->rankingCacheRepository.addScore(x,0));
     }
