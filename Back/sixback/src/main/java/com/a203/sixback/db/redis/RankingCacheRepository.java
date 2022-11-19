@@ -51,7 +51,7 @@ public class RankingCacheRepository {
         String _key = getKey(key);
 
         Long rank = rankingRedisTemplate.opsForZSet().reverseRank(_key, value);
-        Long _rank = rank==null? 0L:rank;
+        Long _rank = rank == null ? 0L : rank;
 
         log.info("Get rank from Redis {}:{}", _key, value, rank);
 
@@ -61,7 +61,10 @@ public class RankingCacheRepository {
     public List<ResponseRankingDTO> getRankingList(DayType key) {
         String _key = getKey(key);
 
-        Set<ZSetOperations.TypedTuple<String>> typedTuples = rankingRedisTemplate.opsForZSet().reverseRangeWithScores(_key, 0, 10);
+        Long size = rankingRedisTemplate.opsForZSet().size(_key);
+        size = size > 10 ? 10 : size;
+        Set<ZSetOperations.TypedTuple<String>> typedTuples = rankingRedisTemplate.opsForZSet().reverseRangeWithScores(_key, 0, size);
+//        Set<ZSetOperations.TypedTuple<String>> typedTuples = rankingRedisTemplate.opsForZSet().reverseRangeWithScores(_key, 0, 10);
 
         List<ResponseRankingDTO> collect = typedTuples.stream()
                 .map(ResponseRankingDTO::convertToResponseRankingDto)
@@ -71,20 +74,20 @@ public class RankingCacheRepository {
         return collect;
     }
 
-    public Long getUserNum(DayType key){
+    public Long getUserNum(DayType key) {
         String _key = getKey(key);
 
         return rankingRedisTemplate.opsForZSet().zCard(_key);
     }
 
-    public void refreshDailyRanking(){
+    public void refreshDailyRanking() {
         String key = getKey(DayType.DAILY);
         log.info("Delete rank from Redis {}", key);
         rankingRedisTemplate.delete(key);
         log.info("Delete rank from Redis Completed {}", key);
     }
 
-    public void refreshWeeklyRanking(){
+    public void refreshWeeklyRanking() {
         String key = getKey(DayType.WEEKLY);
         log.info("Delete rank from Redis {}", key);
         rankingRedisTemplate.delete(key);
@@ -92,7 +95,7 @@ public class RankingCacheRepository {
     }
 
     private String getKey(DayType dayType) {
-        return dayType.name()+"RANKING";
+        return dayType.name() + "RANKING";
     }
 
 }
