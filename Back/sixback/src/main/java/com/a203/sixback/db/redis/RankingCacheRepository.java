@@ -81,12 +81,14 @@ public class RankingCacheRepository {
         String key = getKey(DayType.DAILY);
         log.info("Delete rank from Redis {}", key);
         rankingRedisTemplate.delete(key);
+        log.info("Delete rank from Redis Completed {}", key);
     }
 
     public void refreshWeeklyRanking(){
         String key = getKey(DayType.WEEKLY);
         log.info("Delete rank from Redis {}", key);
         rankingRedisTemplate.delete(key);
+        log.info("Delete rank from Redis Completed {}", key);
     }
 
     private String getKey(DayType dayType) {
