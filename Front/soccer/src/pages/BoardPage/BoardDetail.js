@@ -54,7 +54,7 @@ const BoardDetail = () => {
 
   const createTeam = async (teamId) => {
     const result = await getTeam(teamId);
-    console.log(result);
+
     if (result.status === 200) {
       setTeam(result.data.result);
     }
@@ -62,9 +62,9 @@ const BoardDetail = () => {
 
   const createMatch = async (matchId) => {
     const result = await getMatch(matchId);
-    console.log(result);
+
     if (result.status === 200) {
-      console.log(result.data.result);
+
       setMatch(result.data.result.matchVO);
     }
   };
@@ -84,7 +84,7 @@ const BoardDetail = () => {
       comment: comment,
     });
     const result = await postComment(body);
-    console.log(result);
+    window.location.reload();
   };
 
   const postDeleteBoard = async () => {
