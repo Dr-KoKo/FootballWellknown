@@ -1,0 +1,16 @@
+.modify-box {
+    position: relative;
+}
+
+.modify-box::after{
+    position: absolute;
+    background-color: white;
+    opacity: 0.8;
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+}
+

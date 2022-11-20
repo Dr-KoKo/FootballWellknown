@@ -1,0 +1,40 @@
+.form {
+  width: 100%;
+  min-height: 5vh;
+  max-height: 5%;
+  background-color: #2979ff;
+  display: flex;
+  align-items: center;
+  border-radius: 0px 0px 15px 15px;
+}
+
+.buttonImg {
+  margin: auto;
+  width: 70%;
+}
+
+.input {
+  border: none;
+  height: 100%;
+  border-radius: 0;
+  padding-left: 5%;
+  width: 80%;
+  font-size: 1.2em;
+  border-radius: 0px 0px 0px 15px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
+
+.sendButton {
+  height: 6vh;
+  display: flex;
+  background-color: #2979ff;
+  border: none;
+  width: 20%;
+  height: 100%;
+  border-radius: 0px 0px 15px 0px;
+}

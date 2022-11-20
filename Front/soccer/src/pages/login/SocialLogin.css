@@ -1,0 +1,40 @@
+#socialLogin{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#socialLoginHead{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.social-login-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.social-login-form > a {
+    margin: 0px 5px;
+    
+  }
+    
+.social-login-form > a > img {
+    border-radius: 7px;
+    box-shadow: 2px 2px 5px 0px gray;
+}
+
+.social-login-form > a > img:hover {
+    border-radius: 7px;
+    box-shadow: 2px 2px 10px 0px gray;
+}
+
+  
+  .social-login-button {
+    width: 200px;
+    height: 50px;
+  }

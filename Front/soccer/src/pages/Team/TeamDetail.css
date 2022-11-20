@@ -1,0 +1,103 @@
+#teamDet{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+}
+
+#teamSummary{
+    /* background-color: #98c5e9; */
+    width: 60%;
+    justify-content: center;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    padding-right: 3%;
+    display: flex;
+    position: relative;
+}
+#teamSummary::after{
+    position: absolute;
+    background-color: white;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    content: "";
+    opacity: 0.3;
+    z-index: -1;
+    border-radius: 5px;
+}
+#image{
+    display: flex;
+    justify-content: center;
+    width: 40%;
+}
+#realImage{
+    width: 60%;
+}
+#table232{
+    margin-top: 5%;
+    width: 60%;
+    font-size: larger;
+}
+.th2{
+    /* text-decoration: 2px underline #44ec6c; */
+}
+#rank{
+    text-align: center;
+    width:15%;
+}
+#result{
+    text-align: center;
+    width:35%;
+}
+#pts{
+    text-align: center;
+    width: 15%;
+}
+#gd{
+    text-align: center;
+    width: 20%;
+}
+#buttons{
+    margin-left: 2%;
+    margin-top: 5%;
+    display: flex;
+    justify-content: space-between;
+    width: 58%;
+}
+
+#matchFrame{
+    position: relative;
+}
+#matchFrame:hover>#matchImg{
+    opacity: 1;
+}
+#matchFrame:hover>#matchText{
+    color: white;
+}
+
+#matchImg{
+    opacity: 0.4;
+    height: 200px;
+}
+#matchText{
+    color: black;
+    font-size: xx-large;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate( -50%, -50% );
+}
+.btn{
+    text-decoration: none;    
+    width: 33.4%;
+}
+.btns{
+    color: black;    
+    text-align: center;
+    width: 100%;
+    display: inline-block;
+}

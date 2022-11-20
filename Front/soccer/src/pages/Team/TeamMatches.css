@@ -1,0 +1,102 @@
+#frames{
+    width: 60%;
+}
+#matches{
+    margin-bottom: 5%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    
+}
+#finMatch{
+    margin-bottom: 5%;
+    /* align-items: center; */
+    display: flex;
+    border-radius: 5px;
+    padding-bottom: 5%;
+    padding-left: 2%;
+    padding-right: 2%;
+    position: relative;
+}
+#finMatch::after{
+    background-color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    content: "";
+    z-index: -1;
+    opacity: 0.8;
+}
+
+#matchLeft{
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+}
+#date{
+    height: 50%;
+    text-align: center;
+    margin-bottom: 15%;
+}
+#time{
+    font-size: 15vh;
+}
+#year{
+    font-size: x-large;
+}
+#place{
+    text-align: center;
+    font-size: larger;
+}
+#matchRight{
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#team{
+    margin-top: 10%;
+    width: 100%;
+    display: flex;
+    font-size: larger;
+    justify-content: space-between;
+    align-items: center;
+}
+.team{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+#logos{
+    width: 80%;
+}
+#score{
+    margin-top: 10%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+#vs{
+    font-size: larger;
+}
+.sc{
+    font-size: xx-large;
+}
+#matchfr{
+    margin-top: 5%;
+    display: flex;
+    width: 40%;
+    justify-content: space-between;
+    font-size: x-large;
+    margin-bottom: 5%;
+}
+#m:hover{
+    border-bottom: 3px solid #44EC6C;
+}
