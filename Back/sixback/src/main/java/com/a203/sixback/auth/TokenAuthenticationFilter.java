@@ -4,6 +4,8 @@ package com.a203.sixback.auth;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.http.HttpResponse;
+import org.json.simple.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -29,11 +31,18 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         AuthToken token = tokenProvider.convertAuthToken(tokenStr);
 
         if (token.validate()) {
-            Authentication authentication = tokenProvider.getAuthentication(token);
+            Authentication authentication =tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+        if(token!=null && !token.validate() && token.getExpiredTokenClaims()!=null){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().print("FAILED");
+        }
+        else{
+            filterChain.doFilter(request, response);
+        }
 
-        filterChain.doFilter(request, response);
+
     }
 }
 

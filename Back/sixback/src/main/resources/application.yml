@@ -1,0 +1,109 @@
+spring:
+  jpa:
+    generate-ddl: 'true'
+    hibernate:
+      ddl-auto: update
+    show-sql: 'false'
+  profiles:
+    include: key
+    active: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      data-source-properties:
+        rewriteBatchedStatements: 'true'
+      maximum-pool-size: '20'
+      password: ${spring.datasource.password}
+      username: ${spring.datasource.username}
+      driver-class-name: ${spring.datasource.driver-class-name}
+      jdbc-url: ${spring.datasource.url}
+      pool-name: jpa-hikari-pool
+    password: rhehdgnjs123
+    username: a203
+    url: jdbc:mysql://k7a203.p.ssafy.io:3306/six_back?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+#    username: root
+#    password: ssafy
+#    url: jdbc:mysql://localhost:3306/six_back
+
+  data:
+    mongodb:
+      username: a203
+      password: rhehdgnjs123
+      uri: mongodb://k7a203.p.ssafy.io:27017/six_back
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 271554785368-punan5dpcia650n8mm462r3oqr4hkkko.apps.googleusercontent.com
+            client-secret: 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
+            scope: profile, email
+          kakao:
+            authorization-grant-type: authorization_code
+            client-id: 9a7e7716d34ac02b96b4007c71bf8087
+            client-secret: SQuA7enTnq5t3M1COo8aqP7p5yzq3DTv
+            scope: account_email, profile_nickname, profile_image
+            client-authentication-method: post
+            # redirect-uri: http://localhost:8080/api/v1/login/oauth2/code/kakao
+            redirect-uri: https://football-wellknown.com/api/v1/login/oauth2/code/kakao
+            client-name: Kakao
+        provider:
+          kakao:
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-name-attribute: id
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+
+  redis:
+    url: redis://k7a203.p.ssafy.io:6379
+    port: '6379'
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+app:
+  oauth2:
+    # authorizedRedirectUris: http://localhost:3000/oauth/redirect
+    authorizedRedirectUris: https://football-wellknown.com/oauth/redirect
+  auth:
+    refreshTokenExpiry: '604800000'
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpiry: '1800000'
+cloud:
+  aws:
+    s3:
+      bucket:
+        value: k7a203-ckeditor-image-upload
+        url: https://s3.ap-northeast-2.amazonaws.com/k7a203-ckeditor-image-upload/
+    region:
+      static: ap-northeast-2
+    credentials:
+      accessKey: AKIAQXFVDSF7YR7GE27D
+      secretKey: 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
+    stack:
+      auto: 'false'
+cors:
+  allowed-origins: http://localhost:3000,https://football-wellknown.com
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: '*'
+  max-age: '3600'
+sever:
+  http:
+    port: '8080'
+server:
+  port: '8080'
+  servlet:
+    context-path: /api/v1
+#  ssl:
+#    key-store: classpath:keystore.p12
+#    key-store-type: PKCS12
+#    key-store-password: Y1Ya6uu54UwkgwVAX6wV15iYfmvnk2mM
+jwt:
+  secret: adbonFDsgdGawfsdfWERPwasbdfbo342ruusdhvsdSGUIdsaff
+  
+SCHEDULER-SERVER: ${SCHEDULER_SERVER}
+
+
+API-KEY: a67cd14e35bc9fe57a5134c095bc959c2b89956fc3c50d323b020ccef8a5bd05
