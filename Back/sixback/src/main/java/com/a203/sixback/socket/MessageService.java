@@ -12,9 +12,9 @@ public class MessageService {
 
     private final SimpMessageSendingOperations simpMessageSendingOperations;
 
-
-    public void sendMessage(ChatMessage message) {
-        log.info("{}", message.toString());
+    public void message(Message message) {
+        log.info(message.toString());
         simpMessageSendingOperations.convertAndSend("/sub/channel/" + message.getChannelId(), message);
     }
+
 }

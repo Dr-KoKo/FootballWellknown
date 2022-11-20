@@ -1,14 +1,16 @@
 package com.a203.sixback.db.entity;
 
 import com.a203.sixback.db.enums.TeamType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Builder
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class MatchDet {
@@ -50,9 +52,5 @@ public class MatchDet {
 
     public void setPassOn(int passOn){
         this.passOn = passOn;
-    }
-    public void setFormation(String formation, TeamType teamType){
-        this.formation = formation;
-        this.teamType = teamType;
     }
 }

@@ -26,13 +26,11 @@ public class ResGetUserPointDTO extends BaseResponseBody {
 
     @Getter
     public static class GetPointDTO{
-        private Long id;
         private LocalDateTime getDate;
         private String getType;
         private Integer point;
 
         public GetPointDTO(PointLog pointLog){
-            this.id = pointLog.getId();
             this.getDate = pointLog.getDistribute_time();
             this.getType = pointLog.getPe()!=null? "선수평가":"경기에측";
             this.point = pointLog.getPoint();

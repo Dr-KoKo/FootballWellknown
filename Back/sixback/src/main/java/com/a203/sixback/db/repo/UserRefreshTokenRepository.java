@@ -11,6 +11,4 @@ public interface UserRefreshTokenRepository extends JpaRepository<UserRefreshTok
     UserRefreshToken findByEmailAndRefreshToken(String email, String refreshToken);
     @Transactional
     Integer deleteUserRefreshTokenByRefreshToken(String refreshToken);
-
-    UserRefreshToken findOneByRefreshToken(String refreshToken);
 }

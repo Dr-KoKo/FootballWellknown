@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class CommentMongo {
     @Id
     private String id;
-    private long boardId;
+    private Long boardId;
     private String comment;
     private String author;
     private Long authorId;
