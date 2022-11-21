@@ -59,7 +59,7 @@ public class SchedulerController {
     }
 
     @Async
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 38 9 * * *")
     public void dailyRankingRefreshSchedule() throws Exception {
         if (isSchedulerServer){
             log.info("Initiate Delete Daily Ranking");
@@ -69,7 +69,7 @@ public class SchedulerController {
     }
 
     @Async
-    @Scheduled(cron = "0 0 0 * * 0")
+    @Scheduled(cron = "0 38 9 * * *")
     public void weeklyRankingRefreshSchedule() throws Exception {
         if (isSchedulerServer){
             log.info("Initiate Delete Weekly Ranking");
