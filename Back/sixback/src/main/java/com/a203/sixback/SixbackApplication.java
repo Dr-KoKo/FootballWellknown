@@ -4,6 +4,7 @@ import com.a203.sixback.auth.AppProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -15,8 +16,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 @EnableJpaAuditing
 @EnableAspectJAutoProxy
 @EnableScheduling
-@EnableJpaRepositories(basePackages = "com.a203.sixback.db.repo")
-@EnableMongoRepositories(basePackages = "com.a203.sixback.db.mongo")
+//@EnableJpaRepositories(basePackages = "com.a203.sixback.db.repo")
+//@EnableMongoRepositories(basePackages = "com.a203.sixback.db.mongo")
 public class SixbackApplication {
 	public static final String APPLICATION_LOCATIONS = "spring.config.location="
 

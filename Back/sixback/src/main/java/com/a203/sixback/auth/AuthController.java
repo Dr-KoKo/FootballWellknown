@@ -86,20 +86,19 @@ public class AuthController {
     @GetMapping("/refresh")
     public ApiResponse refreshToken (HttpServletRequest request, HttpServletResponse response) {
         // access token 확인
-        String accessToken = HeaderUtil.getAccessToken(request);
-        AuthToken authToken = tokenProvider.convertAuthToken(accessToken);
-        if (!authToken.validate()) {
-            return ApiResponse.invalidAccessToken();
-        }
+//        String accessToken = HeaderUtil.getAccessToken(request);
+//        AuthToken authToken = tokenProvider.convertAuthToken(accessToken);
+//        if (!authToken.validate()) {
+//            return ApiResponse.invalidAccessToken();
+//        }
 
         // expired access token 인지 확인
-        Claims claims = authToken.getExpiredTokenClaims();
-        if (claims == null) {
-            return ApiResponse.notExpiredTokenYet();
-        }
+//        Claims claims = authToken.getExpiredTokenClaims();
+//        if (claims == null) {
+//            return ApiResponse.notExpiredTokenYet();
+//        }
 
-        String email = claims.getSubject();
-        RoleType roleType = RoleType.of(claims.get("role", String.class));
+
 
         // refresh token
         String refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN)
@@ -107,20 +106,22 @@ public class AuthController {
                 .orElse((null));
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
 
-        if (authRefreshToken.validate()) {
+        if (!authRefreshToken.validate()) {
             return ApiResponse.invalidRefreshToken();
         }
 
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findOneByRefreshToken(refreshToken);
+
         // userId refresh token 으로 DB 확인
-        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByEmailAndRefreshToken(email, refreshToken);
+
         if (userRefreshToken == null) {
             return ApiResponse.invalidRefreshToken();
         }
 
         Date now = new Date();
         AuthToken newAccessToken = tokenProvider.createAuthToken(
-                email,
-                roleType.getCode(),
+                userRefreshToken.getEmail(),
+                RoleType.USER.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
 

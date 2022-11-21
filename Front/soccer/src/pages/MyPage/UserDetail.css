@@ -1,0 +1,109 @@
+/* #userDiv{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 80%;
+    margin-left: 10%;
+} */
+#medal{
+    margin-right: 10%;
+}
+#table{
+    margin-top: 5%;
+    width: 80%;
+    font-size: larger;
+}
+#ff{
+    display: flex;
+    flex-direction: column;
+}
+#image{
+    width: 40%;
+}
+#category{
+    text-align: center;
+    width: 20%;
+}
+#pts{
+    text-align: center;
+    width: 30%;
+}
+#userDet1{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+#teamTable{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+#teamTableHead{
+    display: flex;
+    width: 100%;
+    margin-bottom:3%;
+}
+#teamTableHeadTr{
+    display: flex;
+    width: 100%;
+    justify-content:space-between;
+    background-color: #44EC6C;
+    border-radius: 4px;
+}
+.rank{
+    text-align: center;
+    width: 8%;
+}
+#rankFont{
+    text-align: center;
+}
+.name{
+    width:26%;
+}
+.th{
+    width: 8%;
+    text-align: center;
+}
+#teamTableBody{
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+#teamTableBody::after{
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    opacity: 0.2;
+    background-color: white;
+
+}
+#teamTableBodyTr{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #b8b8b8;
+    margin-bottom: 5%;
+}
+#teamTableBodyTr:hover{
+    font-size: large;
+    border-radius: 5px;
+    border : 2px solid #44EC6C;
+}
+#teamTableTeam{
+    display: flex;
+    align-items: center;
+}
+#teamLogo{
+    margin-left: 5%;
+    width: 25%;
+}
+#teamName{
+    width: 70%;
+    text-align: center;
+}

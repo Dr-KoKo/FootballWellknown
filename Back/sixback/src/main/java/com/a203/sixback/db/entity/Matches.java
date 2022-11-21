@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(indexes = @Index(name="i_round", columnList = "round"))
 public class Matches {
     @Id
     @Column(name="id", columnDefinition = "BIGINT")
@@ -49,5 +50,6 @@ public class Matches {
     public void setScore(int homeScore, int awayScore){
         this.homeScore = homeScore;
         this.awayScore = awayScore;
+        this.matchStatus = MatchStatus.FIN;
     }
 }

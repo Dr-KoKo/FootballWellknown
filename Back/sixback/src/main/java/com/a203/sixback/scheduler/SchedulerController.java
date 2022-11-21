@@ -1,15 +1,11 @@
 package com.a203.sixback.scheduler;
 
-import com.a203.sixback.db.redis.MatchCacheRepository;
-import com.a203.sixback.db.repo.PointLogRepo;
-import com.a203.sixback.db.repo.PredictRepo;
+
 import com.a203.sixback.match.MatchService;
 import com.a203.sixback.match.vo.MatchStatusVO;
-//import com.a203.sixback.redis.RedisService;
+import com.a203.sixback.ranking.RankingService;
 import com.a203.sixback.scheduler.task.InitTask;
 import com.a203.sixback.scheduler.task.LineUpTask;
-import com.a203.sixback.socket.Message;
-import com.a203.sixback.socket.MessageService;
 import com.a203.sixback.team.vo.MatchVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,39 +13,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
-@Component
 @EnableAsync
+@Component
 public class SchedulerController {
+    @Autowired
+    private SchedulerService schedulerService;
     @Autowired(required = false)
     private MatchService matchService;
-
     @Autowired(required = false)
-    private MessageService messageService;
+    private RankingService rankingService;
 
-//    @Autowired(required = false)
-//    private RedisService redisService;
-
-    @Autowired(required = false)
-    private MatchCacheRepository matchCacheRepository;
-
-    @Autowired(required = false)
-    private PointLogRepo pointLogRepo;
-
-    @Autowired(required = false)
-    private PredictRepo predictRepo;
-
-    @Value("${API-KEY}")
-    private String apiKey;
+    @Value("${SCHEDULER-SERVER}")
+    private boolean isSchedulerServer;
 
     @Async
     @Scheduled(cron = "0 0 23 * * *")
-//    @Scheduled(cron = "0 43 13 * * *")
+//    @Scheduled(cron = "0 37 10 * * *")
     public void mainSchedule() throws Exception {
         log.info("SchedulerController Cron 실행");
 
@@ -61,21 +47,43 @@ public class SchedulerController {
 
         log.info("{}-{}-{}", year, month, day);
 
+        try {
+            if (isSchedulerServer) {
+                registerMatchSchedule(year, month, day);
+//                schedulerTest(2022, 11, 12, "0 37 10 * * *");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Async
+    @Scheduled(cron = "0 0 0 * * *")
+    public void dailyRankingRefreshSchedule() throws Exception {
+        if (isSchedulerServer){
+            log.info("Initiate Delete Daily Ranking");
+            rankingService.refreshDailyRanking();
+            rankingService.resetRanking();
+        }
+    }
+
+    @Async
+    @Scheduled(cron = "0 0 0 * * 0")
+    public void weeklyRankingRefreshSchedule() throws Exception {
+        if (isSchedulerServer){
+            log.info("Initiate Delete Weekly Ranking");
+            rankingService.refreshWeeklyRanking();
+            rankingService.resetRanking();
+        }
+    }
+    private void registerMatchSchedule(int year, int month, int day) throws Exception {
         StringBuilder sb = new StringBuilder();
 
         List<MatchStatusVO> list = matchService.getMatchesByDate(year, month, day);
 
-        log.info("{}의 경기 수: {}", now.toString(), list.size());
+        log.info("{}-{}-{}의 경기 수: {}", year, month, day, list.size());
 
-/*
-        long matchId = 1059375L;
-
-        Runnable task = new InitTask(matchId, messageService, matchService, matchCacheRepository, pointLogRepo, predictRepo);
-
-        sb.append("10 43 13 * * *");
-
-        MainScheduler.getInstance().start(task, sb.toString(), matchId);
-        */
         for (MatchStatusVO matchStatusVo : list) {
             MatchVO matchVO = matchStatusVo.getMatchVO();
             long matchId = matchVO.getMatchId();
@@ -92,7 +100,7 @@ public class SchedulerController {
                     .append(hour).append(" ").append("*").append(" ")
                     .append("*").append(" ").append("*");
 
-            Runnable task = new InitTask(matchId, messageService, matchService, matchCacheRepository, pointLogRepo, predictRepo);
+            Runnable task = new InitTask(matchId, schedulerService);
 
             log.info("Cron Trigger : {}", sb.toString());
 
@@ -109,9 +117,27 @@ public class SchedulerController {
                     .append("*").append(" ").append("*");
 
 
-            task = new LineUpTask(matchId, matchService);
+            task = new LineUpTask(matchId, schedulerService);
 
             MainScheduler.getInstance().start(task, sb.toString(), matchId * 2L);
+        }
+    }
+
+    private void schedulerTest(int year, int month, int day, String cronTrigger) throws Exception {
+        List<MatchStatusVO> list = matchService.getMatchesByDate(year, month, day);
+
+        for (MatchStatusVO matchStatusVo : list) {
+            MatchVO matchVO = matchStatusVo.getMatchVO();
+            long matchId = matchVO.getMatchId();
+            String date = matchVO.getDate();
+
+            Runnable task = new InitTask(matchId, schedulerService);
+
+            MainScheduler.getInstance().start(task, 3 + cronTrigger, matchId);
+
+            task = new LineUpTask(matchId, schedulerService);
+
+            MainScheduler.getInstance().start(task, 1 + cronTrigger, matchId * 2L);
         }
     }
 }
